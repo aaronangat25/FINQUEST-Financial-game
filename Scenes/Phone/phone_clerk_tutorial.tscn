@@ -1,0 +1,188 @@
+[gd_scene load_steps=12 format=3 uid="uid://c3qiy6g0oosl1"]
+
+[ext_resource type="Texture2D" uid="uid://cjg7vbywtdh8y" path="res://Assets/Phone/phone blank screen.png" id="1_pgmt3"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_xyqms"]
+[ext_resource type="Texture2D" uid="uid://crg3emmh02ldf" path="res://Assets/Phone/back button.png" id="3_84pmt"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wvnxx"]
+texture = ExtResource("1_pgmt3")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_na6jl"]
+bg_color = Color(0, 0, 0, 0.54901963)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7a1g5"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4frvk"]
+texture = ExtResource("3_84pmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rblbi"]
+texture = ExtResource("3_84pmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y3n7q"]
+texture = ExtResource("3_84pmt")
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_55p1q"]
+texture = ExtResource("3_84pmt")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kpv63"]
+
+[node name="phone_clerk_tutorial" type="CanvasLayer"]
+
+[node name="phoneclerktutorialcontrol" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -80.0
+offset_right = 45.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="phoneclerktutorial" type="Panel" parent="phoneclerktutorialcontrol"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_wvnxx")
+
+[node name="timetextlabel" type="Label" parent="phoneclerktutorialcontrol/phoneclerktutorial"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.522
+anchor_top = 0.319
+anchor_right = 0.522
+anchor_bottom = 0.319
+offset_left = -18.98
+offset_top = -11.540001
+offset_right = 21.02
+offset_bottom = 11.459999
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_xyqms")
+theme_override_font_sizes/font_size = 14
+text = "1:30"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="newnotif" type="Panel" parent="phoneclerktutorialcontrol/phoneclerktutorial"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.522
+anchor_top = 0.441
+anchor_right = 0.522
+anchor_bottom = 0.441
+offset_left = -22.98
+offset_top = -6.560005
+offset_right = 23.02
+offset_bottom = 29.439995
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_na6jl")
+
+[node name="newnotiftext" type="Label" parent="phoneclerktutorialcontrol/phoneclerktutorial/newnotif"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 2.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.74978, 0.74978, 0.74977994, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_xyqms")
+theme_override_font_sizes/font_size = 4
+text = "Store Clerk Job
+Mechanics:
+
+Match the items
+Help customers
+find products
+Earn based on
+speed + accuracy"
+
+[node name="stepsclerk" type="Panel" parent="phoneclerktutorialcontrol/phoneclerktutorial"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -29.0
+offset_top = -14.0
+offset_right = 31.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7a1g5")
+
+[node name="stepsclerktext" type="Label" parent="phoneclerktutorialcontrol/phoneclerktutorial/stepsclerk"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_xyqms")
+theme_override_font_sizes/font_size = 4
+text = "Complete the steps to earn:
+P100 (training pay)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackTextureButton" type="TextureButton" parent="phoneclerktutorialcontrol/phoneclerktutorial"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.22200002
+anchor_top = 0.76900005
+anchor_right = 0.328
+anchor_bottom = 0.822
+offset_left = 0.01999855
+offset_top = -0.040000916
+offset_right = 3.4799995
+offset_bottom = 3.4799957
+grow_vertical = 0
+scale = Vector2(0.7349311, 0.7165263)
+
+[node name="BackButton" type="Button" parent="phoneclerktutorialcontrol/phoneclerktutorial/BackTextureButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_4frvk")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_rblbi")
+theme_override_styles/hover = SubResource("StyleBoxTexture_y3n7q")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_55p1q")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_kpv63")

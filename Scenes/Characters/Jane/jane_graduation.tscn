@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://2vwp12xklupg"]
+
+[ext_resource type="Texture2D" uid="uid://c0tunbur61ae7" path="res://Assets/Characters/Jane/jane(oc)-grad cap (1).png" id="1_jhxc1"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mdkoi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jhxc1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="JaneGraduation" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(21, 26)
+scale = Vector2(0.040683597, 0.0406836)
+sprite_frames = SubResource("SpriteFrames_mdkoi")
+animation = &"idle"

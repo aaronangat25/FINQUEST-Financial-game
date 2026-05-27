@@ -1,0 +1,194 @@
+[gd_scene load_steps=8 format=3 uid="uid://c0c7466aj4hfm"]
+
+[ext_resource type="Script" uid="uid://bi2vtrukjiynm" path="res://GD Scripts/Chapter_4/chapter_4_scene_3.gd" id="1_lah4l"]
+[ext_resource type="Texture2D" uid="uid://dn08joy5hj581" path="res://Assets/Backgrounds/Chapter_4/classroom_bg.png" id="1_t5lfd"]
+[ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="2_yjwj4"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="3_horbi"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="4_lah4l"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yjwj4"]
+texture = ExtResource("1_t5lfd")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_olcjx"]
+bg_color = Color(1, 0.87058824, 0.34901962, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="chapter_4_scene_3" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lah4l")
+
+[node name="classroombg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_yjwj4")
+
+[node name="Jane2DThinkingAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.064
+anchor_top = 1.0
+anchor_right = 0.064
+anchor_bottom = 1.0
+offset_left = -2.7600002
+offset_top = -71.0
+offset_right = 42.239998
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d_thinking" parent="Jane2DThinkingAnchor" instance=ExtResource("2_yjwj4")]
+
+[node name="StatsScreen" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="StatsScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.625
+offset_top = -34.0
+offset_right = 31.625
+offset_bottom = 25.25
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_olcjx")
+
+[node name="HeaderName" type="Label" parent="StatsScreen/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.108
+anchor_right = 1.0
+anchor_bottom = 0.108
+offset_top = -2.0320003
+offset_bottom = 9.967999
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 6
+text = "Final Results Based on Choices"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MeetingResultName" type="Label" parent="StatsScreen/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.042000003
+anchor_top = 0.39900002
+anchor_right = 0.042000003
+anchor_bottom = 0.39900002
+offset_left = 1.9684999
+offset_top = -2.6407528
+offset_right = 46.5935
+offset_bottom = 3.359249
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 4
+text = "Meeting Setup "
+
+[node name="MeetingResultLabel" type="Label" parent="StatsScreen/Panel/MeetingResultName"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.5000001
+anchor_bottom = 1.5000001
+offset_top = -5.000003
+offset_right = 21.0
+offset_bottom = 2.9999971
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 4
+
+[node name="PrintingName" type="Label" parent="StatsScreen/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.66700006
+anchor_bottom = 0.66700006
+offset_left = 4.625
+offset_top = -4.5197525
+offset_right = 44.625
+offset_bottom = 0.4802475
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 4
+text = "Printing Decision"
+
+[node name="PrintingLabel" type="Label" parent="StatsScreen/Panel/PrintingName"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.106000006
+anchor_top = 1.3000001
+anchor_right = -0.106000006
+anchor_bottom = 1.3000001
+offset_left = 4.2400002
+offset_top = -2.5000005
+offset_right = 30.24
+offset_bottom = 4.4999995
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 4
+
+[node name="FeedbackLabel" type="Label" parent="StatsScreen/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -8.5
+offset_right = 20.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 1
+
+[node name="Chapter5_btn" type="Button" parent="StatsScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.512
+anchor_top = 1.1240001
+anchor_right = 0.512
+anchor_bottom = 1.1240001
+offset_left = -31.330002
+offset_top = -71.59001
+offset_right = 30.669998
+offset_bottom = -63.59001
+grow_horizontal = 2
+grow_vertical = 0
+focus_mode = 0
+theme = ExtResource("4_lah4l")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_horbi")
+theme_override_font_sizes/font_size = 6
+text = "Proceed to chapter 5"
