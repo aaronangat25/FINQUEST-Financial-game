@@ -24,7 +24,7 @@ var is_phone_clickable: bool = false
 var is_app_interacting: bool = false
 
 func _ready() -> void:
-	# 1. Setup Currency HUD
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
