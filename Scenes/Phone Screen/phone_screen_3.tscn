@@ -1,0 +1,231 @@
+[gd_scene load_steps=16 format=3 uid="uid://cgosq8fnfbc3k"]
+
+[ext_resource type="Texture2D" uid="uid://c8pscykde6dol" path="res://Assets/Phone/phone message app screen.png" id="1_852ga"]
+[ext_resource type="Texture2D" uid="uid://cplo7g32y1xtv" path="res://Assets/Phone/sis app icon.png" id="2_2hri1"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_je6fy"]
+[ext_resource type="Texture2D" uid="uid://b2yrvp5g5u3p1" path="res://Assets/Money UI/pop up star.png" id="4_2hri1"]
+[ext_resource type="Texture2D" uid="uid://crg3emmh02ldf" path="res://Assets/Phone/back button.png" id="5_7jrf4"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_je6fy"]
+texture = ExtResource("1_852ga")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7jrf4"]
+texture = ExtResource("2_2hri1")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_urkgf"]
+texture = ExtResource("4_2hri1")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmbps"]
+bg_color = Color(0.75686276, 0.88235295, 0.3882353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18431373, 0.18431373, 0.18431373, 0.4117647)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hri1"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tmbps"]
+texture = ExtResource("5_7jrf4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iouwg"]
+texture = ExtResource("5_7jrf4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7llrf"]
+texture = ExtResource("5_7jrf4")
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xdokt"]
+texture = ExtResource("5_7jrf4")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ui84m"]
+
+[node name="phone_screen_3" type="CanvasLayer"]
+
+[node name="PhoneScreenControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PhoneScreen" type="Panel" parent="PhoneScreenControl"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -80.0
+offset_right = 45.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_je6fy")
+
+[node name="SISicon" type="Panel" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -7.0
+offset_top = 37.0
+offset_right = 11.25
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_7jrf4")
+
+[node name="SIStext" type="Label" parent="PhoneScreenControl/PhoneScreen/SISicon"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.78800005
+anchor_right = 0.5
+anchor_bottom = 0.78800005
+offset_left = -8.0
+offset_top = 1.9979992
+offset_right = 8.0
+offset_bottom = 6.997999
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_je6fy")
+theme_override_font_sizes/font_size = 4
+text = "SIS"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="popupstar" type="Panel" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.03456
+offset_top = -4.1093597
+offset_right = 26.077217
+offset_bottom = 45.891335
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.031141587
+theme_override_styles/panel = SubResource("StyleBoxTexture_urkgf")
+
+[node name="SISgrade" type="Panel" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.522
+anchor_top = 0.55
+anchor_right = 0.522
+anchor_bottom = 0.55
+offset_left = -18.98
+offset_top = 5.0
+offset_right = 19.02
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tmbps")
+
+[node name="SISgradetext" type="Label" parent="PhoneScreenControl/PhoneScreen/SISgrade"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.042000003
+anchor_right = 1.0530001
+anchor_bottom = 0.87500006
+offset_left = -1.0
+offset_top = -0.0040000677
+offset_right = -0.014003754
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_je6fy")
+theme_override_font_sizes/font_size = 10
+text = "1.0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ExamStartsControl" type="Control" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -16.0
+offset_right = 25.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ExamStartsPop" type="Panel" parent="PhoneScreenControl/PhoneScreen/ExamStartsControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2hri1")
+
+[node name="ExamStartsText" type="Label" parent="PhoneScreenControl/PhoneScreen/ExamStartsControl/ExamStartsPop"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_je6fy")
+theme_override_font_sizes/font_size = 4
+text = "Your Grades
+are:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackTextureButton" type="TextureButton" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.22200002
+anchor_top = 0.76900005
+anchor_right = 0.328
+anchor_bottom = 0.822
+offset_left = 0.01999855
+offset_top = -0.040000916
+offset_right = 3.4799995
+offset_bottom = 3.4799957
+grow_vertical = 0
+scale = Vector2(0.7349311, 0.7165263)
+
+[node name="BackButton" type="Button" parent="PhoneScreenControl/PhoneScreen/BackTextureButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_tmbps")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_iouwg")
+theme_override_styles/hover = SubResource("StyleBoxTexture_7llrf")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_xdokt")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ui84m")

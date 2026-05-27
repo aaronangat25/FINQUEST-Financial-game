@@ -1,0 +1,264 @@
+[gd_scene load_steps=13 format=3 uid="uid://bpyiex7k525gq"]
+
+[ext_resource type="Texture2D" uid="uid://blin181gl0mgk" path="res://Assets/Backgrounds/Chapter 1/cashier/cashiermarket.png" id="1_3teta"]
+[ext_resource type="Script" uid="uid://bi8kcbvan7sb5" path="res://GD Scripts/Chapter 1/Chapter 1 Cashier/chapter_1_cashier.gd" id="1_ml0cs"]
+[ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="2_vq5m8"]
+[ext_resource type="PackedScene" uid="uid://mt61q630rwl3" path="res://Scenes/Characters/Bea/bea_2d.tscn" id="4_fm7wn"]
+[ext_resource type="PackedScene" uid="uid://dhodmcgot88w8" path="res://Scenes/Characters/Student/student_2d.tscn" id="5_fm7wn"]
+[ext_resource type="Texture2D" uid="uid://deckpramrlq7y" path="res://Assets/Receipt/receiptpixel.png" id="6_r432w"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="7_psde6"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="8_psde6"]
+[ext_resource type="PackedScene" uid="uid://dpx2tgtkh5d7j" path="res://Scenes/Characters/Jane/jane_2_dbig.tscn" id="9_kclok"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ml0cs"]
+texture = ExtResource("1_3teta")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kclok"]
+texture = ExtResource("6_r432w")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kclok"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="chapter_1_cashier" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ml0cs")
+
+[node name="cashiermarketbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ml0cs")
+
+[node name="KylieDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.0
+anchor_right = 0.067
+anchor_bottom = 1.0
+offset_left = -0.03000021
+offset_top = -57.0
+offset_right = 31.982225
+offset_bottom = -20.274689
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.8121897, 0.9257922)
+
+[node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("2_vq5m8")]
+
+[node name="BeaDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top = 1.0
+anchor_right = 0.05
+anchor_bottom = 1.0
+offset_top = -54.0
+offset_right = 27.5
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bea2d" parent="BeaDialogueAnchor" instance=ExtResource("4_fm7wn")]
+
+[node name="StudentDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top = 1.0
+anchor_right = 0.05
+anchor_bottom = 1.0
+offset_top = -54.5
+offset_right = 29.0
+offset_bottom = -23.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="student2d" parent="StudentDialogueAnchor" instance=ExtResource("5_fm7wn")]
+
+[node name="ReceiptControl" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -44.5
+offset_right = 45.0
+offset_bottom = 44.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Receipt" type="Panel" parent="ReceiptControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_kclok")
+
+[node name="Receipttext" type="Label" parent="ReceiptControl/Receipt"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -27.0
+offset_right = 20.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_psde6")
+theme_override_font_sizes/font_size = 4
+text = "----------------------
+Instant noodles: ₱30
+Water: ₱20
+Total: ₱50
+They give ₱100.
+----------------------
+What is the
+correct change?"
+
+[node name="ChooseControl4" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.156
+anchor_right = 0.5
+anchor_bottom = 0.156
+offset_left = -35.0
+offset_top = -5.960001
+offset_right = 36.0
+offset_bottom = 79.04
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChooseResponse4" type="Panel" parent="ChooseControl4"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.141
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 4.0149994
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kclok")
+
+[node name="ChooseResponseext4" type="Label" parent="ChooseControl4/ChooseResponse4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("7_psde6")
+theme_override_font_sizes/font_size = 6
+text = "Choose your response:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="ChooseControl4/ChooseResponse4"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.012
+anchor_top = 0.625
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.004000008
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_fonts/font = ExtResource("7_psde6")
+theme_override_font_sizes/font_size = 4
+text = "Correct answer Earn P120 (training pay)"
+horizontal_alignment = 1
+
+[node name="ChoicesContainer4" type="VBoxContainer" parent="ChooseControl4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.75
+offset_top = -17.0
+offset_right = 14.75
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="30A_btn" type="Button" parent="ChooseControl4/ChoicesContainer4"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_psde6")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_psde6")
+theme_override_font_sizes/font_size = 4
+text = "A. ₱30 "
+
+[node name="40B_btn" type="Button" parent="ChooseControl4/ChoicesContainer4"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_psde6")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_psde6")
+theme_override_font_sizes/font_size = 4
+text = "B. ₱40 "
+autowrap_mode = 2
+
+[node name="50C_btn" type="Button" parent="ChooseControl4/ChoicesContainer4"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("8_psde6")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_psde6")
+theme_override_font_sizes/font_size = 4
+text = "C. ₱50 "
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -18.5
+offset_top = -48.000008
+offset_right = 27.22139
+offset_bottom = 13.544403
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.92954314, 0.861167)
+
+[node name="jane2dbig" parent="JaneBigAnchor" instance=ExtResource("9_kclok")]

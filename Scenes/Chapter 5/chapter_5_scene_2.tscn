@@ -1,0 +1,125 @@
+[gd_scene load_steps=11 format=3 uid="uid://jboy1qxfyymy"]
+
+[ext_resource type="Script" uid="uid://b4mp63h2rsnkx" path="res://chapter_5_scene_2.gd" id="1_41qbh"]
+[ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="2_3qik8"]
+[ext_resource type="Texture2D" uid="uid://bs5da4lpd5p64" path="res://Assets/Backgrounds/Chapter_5/dormbg.png" id="2_ehtb3"]
+[ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="3_ehtb3"]
+[ext_resource type="Texture2D" uid="uid://42ueilk8j4os" path="res://Assets/Phone/phone ringing (1).png" id="4_qeumg"]
+[ext_resource type="PackedScene" uid="uid://c8ro4frat6h0t" path="res://Scenes/Characters/Mom/mom_2d.tscn" id="5_v0p5b"]
+[ext_resource type="PackedScene" uid="uid://dmjk2gh75xy1" path="res://Scenes/Characters/Dad/dad_2d.tscn" id="6_fdvrf"]
+[ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="8_qeumg"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qeumg"]
+texture = ExtResource("2_ehtb3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nkfkm"]
+texture = ExtResource("4_qeumg")
+
+[node name="chapter_5_scene_2" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_41qbh")
+
+[node name="dormbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qeumg")
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("2_3qik8")]
+
+[node name="PhoneMini" parent="." instance=ExtResource("3_ehtb3")]
+
+[node name="PhoneRinging" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.522
+anchor_top = 0.303
+anchor_right = 0.522
+anchor_bottom = 0.303
+offset_left = -23.98
+offset_top = -24.48
+offset_right = 24.02
+offset_bottom = 24.52
+theme_override_styles/panel = SubResource("StyleBoxTexture_nkfkm")
+
+[node name="JaneDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.006
+anchor_right = 0.067
+anchor_bottom = 1.006
+offset_left = -0.03000021
+offset_top = -56.96
+offset_right = 39.97
+offset_bottom = 0.039993286
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d" parent="JaneDialogueAnchor" instance=ExtResource("2_3qik8")]
+
+[node name="MomAnchor" type="Control" parent="."]
+z_index = 2
+layout_mode = 1
+anchor_left = 0.93900007
+anchor_top = 1.0
+anchor_right = 0.93900007
+anchor_bottom = 1.0
+offset_left = -26.51001
+offset_top = -58.0
+offset_right = 4.48999
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="mom2d" parent="MomAnchor" instance=ExtResource("5_v0p5b")]
+
+[node name="DadAnchor" type="Control" parent="."]
+z_index = 2
+layout_mode = 1
+anchor_left = 0.93900007
+anchor_top = 1.0
+anchor_right = 0.93900007
+anchor_bottom = 1.0
+offset_left = -29.01001
+offset_top = -61.0
+offset_right = 1.9899902
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="dad2d" parent="DadAnchor" instance=ExtResource("6_fdvrf")]
+
+[node name="Jane2DThinkingAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.064
+anchor_top = 1.0
+anchor_right = 0.064
+anchor_bottom = 1.0
+offset_left = -2.7600002
+offset_top = -71.0
+offset_right = 42.239998
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d_thinking" parent="Jane2DThinkingAnchor" instance=ExtResource("8_qeumg")]

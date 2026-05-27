@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhodmcgot88w8"]
+
+[ext_resource type="Script" uid="uid://c504pwg48oh1r" path="res://GD Scripts/Characters/student2d/student_2d.gd" id="1_ntrsv"]
+[ext_resource type="Texture2D" uid="uid://bc6u5qnpvwu4d" path="res://Assets/Characters/Student/student-1.png" id="2_4su5u"]
+[ext_resource type="Texture2D" uid="uid://dykoofw5vkkuu" path="res://Assets/Characters/Student/student-2.png" id="3_5141k"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w8cmb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_4su5u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_5141k")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}]
+
+[node name="student2d" type="Node2D"]
+script = ExtResource("1_ntrsv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(15, 15)
+scale = Vector2(0.0184375, 0.018906267)
+sprite_frames = SubResource("SpriteFrames_w8cmb")
+animation = &"idle"

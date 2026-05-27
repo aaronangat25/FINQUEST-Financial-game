@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://8yp65av6vvwi"]
+
+[ext_resource type="Texture2D" uid="uid://b1w7u4owkmfen" path="res://Assets/Backgrounds/Chapter 1/dorm/dormbg.png" id="1_fo2fn"]
+[ext_resource type="Script" uid="uid://lt0fyhfvscf5" path="res://GD Scripts/Chapter 1/chapter_1_end.gd" id="1_qvppv"]
+[ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="2_qvppv"]
+[ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="3_5luoy"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ymrcc"]
+texture = ExtResource("1_fo2fn")
+
+[node name="chapter_1_end" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qvppv")
+
+[node name="dormbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ymrcc")
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("2_qvppv")]
+
+[node name="PhoneMini" parent="." instance=ExtResource("3_5luoy")]
