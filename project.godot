@@ -19,6 +19,15 @@ config/icon="res://icon.svg"
 
 TransitionManager="*res://Scenes/transition_manager.tscn"
 Global="*res://GD Scripts/Currency/global.gd"
+DatabaseManager="*res://Managers/DatabaseManager.gd"
+GameManager="*res://Managers/GameManager.gd"
+SaveManager="*res://Managers/SaveManager.gd"
+AchievementSystem="*res://Systems/AchievementSystem.gd"
+ChapterSystem="*res://Systems/ChapterSystem.gd"
+EconomySystem="*res://Systems/EconomySystem.gd"
+EndingSystem="*res://Systems/EndingSystem.gd"
+MinigameSystem="*res://Systems/MinigameSystem.gd"
+AudioManager="*res://Managers/AudioManager.gd"
 
 [display]
 
@@ -29,6 +38,10 @@ window/size/window_height_override=640
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
 
 [file_customization]
 

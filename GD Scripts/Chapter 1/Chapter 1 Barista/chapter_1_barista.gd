@@ -24,6 +24,7 @@ var active_gray_screen
 var active_tutorial
 
 func _ready() -> void:
+	AudioManager.play_coffeeshop_music() # Seamlessly drops the general/menu music and changes to the coffee shop vibe
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	

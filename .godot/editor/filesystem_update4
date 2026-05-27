@@ -1,11 +1,12 @@
-res://Scenes/Chapter 5/chapter_5_scene_4.tscn
+res://Scenes/Main Screen/main_screen.tscn
 res://Assets/Dialogue Box/dialogue_box_theme.tres
 res://Assets/Dialogue Box/name_box_theme.tres
 res://Assets/Buttons/main_menu_btn.tres
 res://Assets/Buttons/chapter_selection_btn.tres
-res://Scenes/Chapter 5/chapter_5_scene_4.gd
-res://Scenes/Chapter 5/chapter_5_scene_3.tscn
-res://Scenes/Chapter 5/chapter_5_scene_3.gd
-res://GD Scripts/Chapter_5/chapter_5_scene_1.gd
-res://chapter_5_scene_2.gd
-res://Scenes/Chapter 5/chapter_5_scene_2.tscn
+res://Managers/AudioManager.gd
+res://GD Scripts/Main Menu/main_screen.gd
+res://Scenes/Characters/Jane/jane_graduation.tscn
+res://GD Scripts/Prologue/prologue.gd
+res://GD Scripts/Chapter 1/Chapter 1 Barista/chapter_1_barista.gd
+res://GD Scripts/Chapter_3/chapter_3_scene_4.gd
+res://Scenes/Chapter 1/chapter_1.tscn

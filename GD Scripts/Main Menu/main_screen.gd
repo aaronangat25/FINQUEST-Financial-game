@@ -6,6 +6,9 @@ const NEXT_SCENE = "res://Scenes/Chapter Selection/chapter_selection.tscn"
 @onready var play_btn = $main_menu_bg/menu_button_container/playbtn
 
 func _ready():
+	AudioManager.play_menu_music() # Starts menu music looping instantly
+	
+	# Your existing fade-in tween code below...
 	# 1. Spawn a black screen that starts completely opaque 
 	var fade_rect = ColorRect.new()
 	fade_rect.color = Color(0, 0, 0, 1) 
