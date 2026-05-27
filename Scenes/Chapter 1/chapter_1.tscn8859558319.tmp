@@ -1,0 +1,146 @@
+[gd_scene load_steps=30 format=3 uid="uid://cymg8qvmd30u4"]
+
+[ext_resource type="Script" uid="uid://yq7ceftel5bb" path="res://GD Scripts/Chapter 1/chapter_1.gd" id="1_4t63r"]
+[ext_resource type="Texture2D" uid="uid://dvugqdojkp3e5" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_00.png" id="2_hvl1i"]
+[ext_resource type="Texture2D" uid="uid://eo86pd5e5nuc" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_05.png" id="7_ljfhx"]
+[ext_resource type="Texture2D" uid="uid://bxmwq1gpo7bc4" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_06.png" id="8_qcgrj"]
+[ext_resource type="Texture2D" uid="uid://ukyp36r2vuex" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_07.png" id="9_yfiiw"]
+[ext_resource type="Texture2D" uid="uid://by72gbnksy8kd" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_08.png" id="10_dhnme"]
+[ext_resource type="Texture2D" uid="uid://b8cnf34o8iw6d" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_09.png" id="11_uy4wc"]
+[ext_resource type="Texture2D" uid="uid://cpm7gtyyc840a" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_10.png" id="12_c0un2"]
+[ext_resource type="Texture2D" uid="uid://bjs4mtos0eo2w" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_11.png" id="13_7cpan"]
+[ext_resource type="Texture2D" uid="uid://q8f3ms3ejnf2" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_12.png" id="14_afgq5"]
+[ext_resource type="Texture2D" uid="uid://cjje4rycbxr0r" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_13.png" id="15_5d533"]
+[ext_resource type="Texture2D" uid="uid://nton7ht036wk" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_14.png" id="16_o66nx"]
+[ext_resource type="Texture2D" uid="uid://b28jwcj02i0mw" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_15.png" id="17_ry38j"]
+[ext_resource type="Texture2D" uid="uid://7cq3dj0fft42" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_16.png" id="18_jf4sv"]
+[ext_resource type="Texture2D" uid="uid://c4dbg81tc5cep" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_17.png" id="19_q126t"]
+[ext_resource type="Texture2D" uid="uid://b5chpt2uw1het" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_18.png" id="20_b8y7l"]
+[ext_resource type="Texture2D" uid="uid://bjr56h0ho4fo1" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_19.png" id="21_wc08t"]
+[ext_resource type="Texture2D" uid="uid://c3fx1acgo3f2u" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_20.png" id="22_kktx5"]
+[ext_resource type="Texture2D" uid="uid://c15g0aq4mwa5r" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_01.png" id="23_dytjr"]
+[ext_resource type="Texture2D" uid="uid://bkoryh1xl0oc6" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_21.png" id="23_gn6vu"]
+[ext_resource type="Texture2D" uid="uid://bvvjexeie17ov" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_02.png" id="24_kbln7"]
+[ext_resource type="Texture2D" uid="uid://lijvhdybs607" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_22.png" id="24_kef6x"]
+[ext_resource type="Texture2D" uid="uid://1mjfhaq2hcyf" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_23.png" id="25_q7h23"]
+[ext_resource type="Texture2D" uid="uid://r7h0hqnigfkc" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_03.png" id="25_sxs15"]
+[ext_resource type="Texture2D" uid="uid://bj6dpe1n61x5c" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_04.png" id="26_hcdcd"]
+[ext_resource type="Texture2D" uid="uid://b1lt1h3sygigb" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_24.png" id="26_ld74y"]
+[ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="27_dytjr"]
+[ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="28_kbln7"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t1d3b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hvl1i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_dytjr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_kbln7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_sxs15")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_hcdcd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ljfhx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_qcgrj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_yfiiw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_dhnme")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_uy4wc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_c0un2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_7cpan")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_afgq5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_5d533")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_o66nx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_ry38j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_jf4sv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_q126t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_b8y7l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_wc08t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_kktx5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_gn6vu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_kef6x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_q7h23")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_ld74y")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 8.0
+}]
+
+[node name="Chapter_1" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4t63r")
+
+[node name="busarrivalbg" type="AnimatedSprite2D" parent="."]
+position = Vector2(45.156242, 80.03124)
+scale = Vector2(0.035034183, 0.03332032)
+sprite_frames = SubResource("SpriteFrames_t1d3b")
+animation = &"idle"
+frame = 3
+frame_progress = 0.036252145
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("27_dytjr")]
+
+[node name="PhoneMini" parent="." instance=ExtResource("28_kbln7")]

@@ -1,0 +1,104 @@
+[gd_scene load_steps=12 format=3 uid="uid://dur8n81dn5e6v"]
+
+[ext_resource type="Script" uid="uid://byq43afe3oukx" path="res://GD Scripts/Phone Mini/phone_mini.gd" id="1_h1w2g"]
+[ext_resource type="Texture2D" uid="uid://bbi65hijyynii" path="res://Assets/Phone/phone notif.png" id="1_kvtyp"]
+[ext_resource type="Texture2D" uid="uid://b2o4wm3f5whpj" path="res://Assets/Phone/phone normal.png" id="2_h1w2g"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3hwmq"]
+texture = ExtResource("2_h1w2g")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k3a5i"]
+texture = ExtResource("2_h1w2g")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i25rx"]
+texture = ExtResource("2_h1w2g")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h1w2g"]
+texture = ExtResource("2_h1w2g")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t0mlw"]
+texture = ExtResource("1_kvtyp")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ioerq"]
+texture = ExtResource("1_kvtyp")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sc1ak"]
+texture = ExtResource("1_kvtyp")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kvtyp"]
+texture = ExtResource("1_kvtyp")
+
+[node name="PhoneMini" type="CanvasLayer"]
+follow_viewport_enabled = true
+script = ExtResource("1_h1w2g")
+
+[node name="phonebody" type="TextureRect" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TextureButton" type="TextureButton" parent="phonebody"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -28.0
+offset_top = -36.0
+offset_right = 4.5
+offset_bottom = -2.75
+grow_horizontal = 0
+grow_vertical = 0
+rotation = 0.39959776
+
+[node name="phonenormal" type="Button" parent="phonebody/TextureButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -11.0
+offset_right = 7.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0349464, 1.0105221)
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_3hwmq")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_k3a5i")
+theme_override_styles/hover = SubResource("StyleBoxTexture_i25rx")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_h1w2g")
+
+[node name="phonenotif" type="Button" parent="phonebody/TextureButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.25
+offset_top = -11.125
+offset_right = 7.25
+offset_bottom = 11.125
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_t0mlw")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ioerq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sc1ak")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_kvtyp")
+
+[connection signal="pressed" from="phonebody/TextureButton/phonenotif" to="." method="_on_phonenotif_pressed"]

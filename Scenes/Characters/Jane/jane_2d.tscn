@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://bgxei0u48xj6i"]
+
+[ext_resource type="Texture2D" uid="uid://l0b2egvxebvs" path="res://Assets/Characters/Jane/jane(oc)-1.png" id="1_bx5va"]
+[ext_resource type="Script" uid="uid://b4m4woivbarxc" path="res://GD Scripts/Characters/jane2d/jane_2d.gd" id="1_jlet4"]
+[ext_resource type="Texture2D" uid="uid://fhstj7u4heqc" path="res://Assets/Characters/Jane/jane(oc)-2.png" id="2_jlet4"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mky7j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_bx5va")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_jlet4")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}]
+
+[node name="jane2d" type="Node2D"]
+script = ExtResource("1_jlet4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(12, 16)
+scale = Vector2(0.002229404, 0.0024200801)
+sprite_frames = SubResource("SpriteFrames_mky7j")
+animation = &"idle"

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmjk2gh75xy1"]
+
+[ext_resource type="Script" uid="uid://bsy6bvf2mbyy8" path="res://GD Scripts/Characters/dad2d/dad_2d.gd" id="1_aq4re"]
+[ext_resource type="Texture2D" uid="uid://by5i68md2kesa" path="res://Assets/Characters/Dad/Dad-1.png" id="2_huvn8"]
+[ext_resource type="Texture2D" uid="uid://jqece1w61lnw" path="res://Assets/Characters/Dad/Dad-2.png" id="3_no0hj"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_etl2k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_huvn8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_no0hj")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}]
+
+[node name="dad2d" type="Node2D"]
+script = ExtResource("1_aq4re")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(17.375, 20.125)
+scale = Vector2(0.023499997, 0.0265)
+sprite_frames = SubResource("SpriteFrames_etl2k")
+animation = &"idle"
