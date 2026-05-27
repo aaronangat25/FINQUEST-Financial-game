@@ -1,0 +1,398 @@
+[gd_scene load_steps=16 format=3 uid="uid://b8bx4n1y8odkx"]
+
+[ext_resource type="Script" uid="uid://c441oruigciwu" path="res://GD Scripts/Chapter_2/chapter_2_scene_1.gd" id="1_4exjk"]
+[ext_resource type="Texture2D" uid="uid://c5xua0nxjxu8i" path="res://Assets/Backgrounds/Chapter_2/dorm/dormbg.png" id="2_4exjk"]
+[ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="3_6rxx3"]
+[ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="4_w0vfb"]
+[ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="5_j4sdf"]
+[ext_resource type="Script" uid="uid://bkf3jb8kg5s3c" path="res://GD Scripts/New Feature Control/new_feature_control.gd" id="6_j4sdf"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="7_3e66v"]
+[ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="8_3e66v"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="9_67erm"]
+[ext_resource type="PackedScene" uid="uid://dpx2tgtkh5d7j" path="res://Scenes/Characters/Jane/jane_2_dbig.tscn" id="10_6y3at"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4exjk"]
+texture = ExtResource("2_4exjk")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_67erm"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6y3at"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ihr8v"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ym0qg"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="chapter_2_scene_1" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4exjk")
+
+[node name="dormbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_4exjk")
+
+[node name="Jane2DThinkingAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.064
+anchor_top = 1.0
+anchor_right = 0.064
+anchor_bottom = 1.0
+offset_left = -2.7600002
+offset_top = -71.0
+offset_right = 42.239998
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d_thinking" parent="Jane2DThinkingAnchor" instance=ExtResource("3_6rxx3")]
+
+[node name="PhoneMini" parent="." instance=ExtResource("4_w0vfb")]
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("5_j4sdf")]
+
+[node name="FeatureCanvas" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="NewFeatureControl1" type="Control" parent="FeatureCanvas"]
+layout_mode = 3
+anchor_left = 0.5
+anchor_top = 0.625
+anchor_right = 0.5
+anchor_bottom = 0.625
+offset_left = -26.0
+offset_top = -12.0
+offset_right = 30.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_j4sdf")
+
+[node name="newfeature1" type="Panel" parent="FeatureCanvas/NewFeatureControl1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_67erm")
+
+[node name="newfeature1text" type="Label" parent="FeatureCanvas/NewFeatureControl1/newfeature1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 1
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 4
+text = "New Feature Unlocked!
+Contacts/message app
+SIS (where you can check
+grades)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="JaneDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.006
+anchor_right = 0.067
+anchor_bottom = 1.006
+offset_left = -0.03000021
+offset_top = -56.96
+offset_right = 39.97
+offset_bottom = 0.039993286
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d" parent="JaneDialogueAnchor" instance=ExtResource("5_j4sdf")]
+
+[node name="KylieDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.93200004
+anchor_top = 1.0
+anchor_right = 0.93200004
+anchor_bottom = 1.0
+offset_left = -24.879997
+offset_top = -59.0
+offset_right = 6.8390427
+offset_bottom = -1.7221375
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.85122335, 1.0300663)
+
+[node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("8_3e66v")]
+
+[node name="ChooseControl5" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.156
+anchor_right = 0.5
+anchor_bottom = 0.156
+offset_left = -35.0
+offset_top = -5.960001
+offset_right = 36.0
+offset_bottom = 79.04
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChooseResponse5" type="Panel" parent="ChooseControl5"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.141
+offset_left = -2.0
+offset_right = 2.0
+offset_bottom = 0.01499939
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6y3at")
+
+[node name="ChooseResponseext5" type="Label" parent="ChooseControl5/ChooseResponse5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 6
+text = "Choose your response:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChoicesContainer5" type="VBoxContainer" parent="ChooseControl5"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.0
+offset_top = -20.0
+offset_right = 26.0
+offset_bottom = 9.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="studycafe_btn" type="Button" parent="ChooseControl5/ChoicesContainer5"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("9_67erm")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 4
+text = "A. Study at cafe
+( P150, + Focus )"
+
+[node name="studydormlounge_btn" type="Button" parent="ChooseControl5/ChoicesContainer5"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("9_67erm")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 4
+text = "B. Study at dorm lounge
+ ( P0, - Focus )
+"
+autowrap_mode = 2
+
+[node name="ChooseControl6" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.156
+anchor_right = 0.5
+anchor_bottom = 0.156
+offset_left = -35.0
+offset_top = -5.960001
+offset_right = 36.0
+offset_bottom = 79.04
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChooseResponse6" type="Panel" parent="ChooseControl6"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.141
+offset_left = -3.0
+offset_right = 2.0
+offset_bottom = 0.01499939
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ihr8v")
+
+[node name="ChooseResponseext6" type="Label" parent="ChooseControl6/ChooseResponse6"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 6
+text = "Choose your response:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChoicesContainer6" type="VBoxContainer" parent="ChooseControl6"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -17.0
+offset_right = 30.0
+offset_bottom = 9.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="ridetricylce_btn" type="Button" parent="ChooseControl6/ChoicesContainer6"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("9_67erm")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 4
+text = "A. Ride tricycle (–P30, on time)"
+
+[node name="walk_btn" type="Button" parent="ChooseControl6/ChoicesContainer6"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("9_67erm")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 4
+text = "B. Walk (P0, late but saves money)"
+autowrap_mode = 2
+
+[node name="JaneBigAnchor2" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -18.5
+offset_top = -48.000008
+offset_right = 27.22139
+offset_bottom = 13.544403
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.92954314, 0.861167)
+
+[node name="jane2dbig" parent="JaneBigAnchor2" instance=ExtResource("10_6y3at")]
+
+[node name="ExamStartsControl" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_top = 19.0
+offset_right = 27.0
+offset_bottom = 31.0
+grow_horizontal = 2
+
+[node name="ExamStartsPop" type="Panel" parent="ExamStartsControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ym0qg")
+
+[node name="ExamStartsText" type="Label" parent="ExamStartsControl/ExamStartsPop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_fonts/font = ExtResource("7_3e66v")
+theme_override_font_sizes/font_size = 7
+text = "Exam Starts"
+horizontal_alignment = 1
+vertical_alignment = 1

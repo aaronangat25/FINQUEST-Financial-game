@@ -1,0 +1,213 @@
+[gd_scene load_steps=11 format=3 uid="uid://dprfpjhlvl61o"]
+
+[ext_resource type="Texture2D" uid="uid://c3m81124vpm5t" path="res://Assets/Backgrounds/Chapter 1/store clerk/clerkmarketbg.png" id="1_mxvau"]
+[ext_resource type="Script" uid="uid://dhalqepa833uq" path="res://GD Scripts/Chapter 1/Chapter 1 Storeclerk/chapter_1_storeclerk.gd" id="1_y82gm"]
+[ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="2_kmpbs"]
+[ext_resource type="PackedScene" uid="uid://wxgvprf03dsj" path="res://Scenes/Characters/Jen/jen_2d.tscn" id="4_7ctob"]
+[ext_resource type="PackedScene" uid="uid://dhodmcgot88w8" path="res://Scenes/Characters/Student/student_2d.tscn" id="5_vgl86"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="6_7demm"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="7_i5noc"]
+[ext_resource type="PackedScene" uid="uid://dpx2tgtkh5d7j" path="res://Scenes/Characters/Jane/jane_2_dbig.tscn" id="8_i5noc"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kmpbs"]
+texture = ExtResource("1_mxvau")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4aof"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="chapter_1_storeclerk" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y82gm")
+
+[node name="clerkmarketbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_kmpbs")
+
+[node name="KylieDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.0
+anchor_right = 0.067
+anchor_bottom = 1.0
+offset_left = -0.03000021
+offset_top = -57.0
+offset_right = 31.982225
+offset_bottom = -20.274689
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.8121897, 0.9257922)
+
+[node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("2_kmpbs")]
+
+[node name="JenDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.0
+anchor_right = 0.067
+anchor_bottom = 1.0
+offset_left = -0.03000021
+offset_top = -55.5
+offset_right = 27.97
+offset_bottom = -24.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jen2d" parent="JenDialogueAnchor" instance=ExtResource("4_7ctob")]
+
+[node name="StudentDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top = 1.0
+anchor_right = 0.05
+anchor_bottom = 1.0
+offset_top = -54.5
+offset_right = 29.0
+offset_bottom = -23.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="student2d" parent="StudentDialogueAnchor" instance=ExtResource("5_vgl86")]
+
+[node name="ChooseControl3" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.156
+anchor_right = 0.5
+anchor_bottom = 0.156
+offset_left = -35.0
+offset_top = -5.960001
+offset_right = 36.0
+offset_bottom = 79.04
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChooseResponse3" type="Panel" parent="ChooseControl3"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.141
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 4.0149994
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l4aof")
+
+[node name="ChooseResponseext3" type="Label" parent="ChooseControl3/ChooseResponse3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("6_7demm")
+theme_override_font_sizes/font_size = 6
+text = "Choose your response:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="ChooseControl3/ChooseResponse3"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.012
+anchor_top = 0.625
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.004000008
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_fonts/font = ExtResource("6_7demm")
+theme_override_font_sizes/font_size = 4
+text = "Correct answer Earn P100 (training pay)"
+horizontal_alignment = 1
+
+[node name="ChoicesContainer3" type="VBoxContainer" parent="ChooseControl3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.0
+offset_top = -17.0
+offset_right = 28.5
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="Aisle1A_btn" type="Button" parent="ChooseControl3/ChoicesContainer3"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("7_i5noc")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_7demm")
+theme_override_font_sizes/font_size = 4
+text = "A. “Sa aisle 1, right side.”"
+
+[node name="StorageB_btn" type="Button" parent="ChooseControl3/ChoicesContainer3"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("7_i5noc")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_7demm")
+theme_override_font_sizes/font_size = 4
+text = "B. “Sa back storage po.”"
+autowrap_mode = 2
+
+[node name="CashierC_btn" type="Button" parent="ChooseControl3/ChoicesContainer3"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("7_i5noc")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_7demm")
+theme_override_font_sizes/font_size = 4
+text = "C. “Sa cashier area.”
+"
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -18.5
+offset_top = -48.000008
+offset_right = 27.22139
+offset_bottom = 13.544403
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.92954314, 0.861167)
+
+[node name="jane2dbig" parent="JaneBigAnchor" instance=ExtResource("8_i5noc")]

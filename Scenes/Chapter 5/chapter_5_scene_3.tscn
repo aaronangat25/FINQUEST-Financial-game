@@ -1,0 +1,211 @@
+[gd_scene load_steps=9 format=3 uid="uid://ddi5y0onesp1u"]
+
+[ext_resource type="Texture2D" uid="uid://bs5da4lpd5p64" path="res://Assets/Backgrounds/Chapter_5/dormbg.png" id="1_enq5g"]
+[ext_resource type="Script" uid="uid://cp3oy3vae4ns7" path="res://Scenes/Chapter 5/chapter_5_scene_3.gd" id="1_y1fgo"]
+[ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="2_y1fgo"]
+[ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="3_1gwqa"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="4_ic283"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="5_sntpc"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o4jk1"]
+texture = ExtResource("1_enq5g")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c5hq7"]
+bg_color = Color(0.99215686, 0.8745098, 0.5294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="chapter_5_scene_3" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y1fgo")
+
+[node name="dormbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_o4jk1")
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("2_y1fgo")]
+
+[node name="JaneBigAnchor2" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor2" instance=ExtResource("2_y1fgo")]
+
+[node name="JaneBigAnchor3" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor3" instance=ExtResource("2_y1fgo")]
+
+[node name="JaneDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.006
+anchor_right = 0.067
+anchor_bottom = 1.006
+offset_left = -0.03000021
+offset_top = -56.96
+offset_right = 39.97
+offset_bottom = 0.039993286
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d" parent="JaneDialogueAnchor" instance=ExtResource("2_y1fgo")]
+
+[node name="Jane2DThinkingAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.064
+anchor_top = 1.0
+anchor_right = 0.064
+anchor_bottom = 1.0
+offset_left = -2.7600002
+offset_top = -71.0
+offset_right = 42.239998
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d_thinking" parent="Jane2DThinkingAnchor" instance=ExtResource("3_1gwqa")]
+
+[node name="ChooseControl11" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.156
+anchor_right = 0.5
+anchor_bottom = 0.156
+offset_left = -35.0
+offset_top = -5.960001
+offset_right = 36.0
+offset_bottom = 79.04
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChoiceAppears" type="Panel" parent="ChooseControl11"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.042000003
+anchor_right = 0.97200006
+anchor_bottom = 0.12900001
+offset_left = -2.982
+offset_top = -3.0
+offset_right = 0.98799896
+offset_bottom = 5.034999
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c5hq7")
+
+[node name="ChoiceAppears" type="Label" parent="ChooseControl11/ChoiceAppears"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 1.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("4_ic283")
+theme_override_font_sizes/font_size = 6
+text = "Choice Appears: 
+Graduation Preparation
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChoicesContainer10" type="VBoxContainer" parent="ChooseControl11"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -29.0
+offset_top = -21.0
+offset_right = 30.5
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="newOutfit_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("5_sntpc")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_ic283")
+theme_override_font_sizes/font_size = 4
+text = "A. Buy New Outfit + Celebration Dinner
+(-P2,500, +Confidence, +Happiness)
+"
+
+[node name="simpleOutfit_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("5_sntpc")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_ic283")
+theme_override_font_sizes/font_size = 4
+text = "B. Simple Outfit + Family Dinner
+(-P1,200, Balanced)"
+autowrap_mode = 2
+
+[node name="borrowOutfit_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("5_sntpc")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_ic283")
+theme_override_font_sizes/font_size = 4
+text = "C. Borrow Outfit + Small Celebration
+(-P500, +Savings)"

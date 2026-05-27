@@ -1,0 +1,93 @@
+[gd_scene load_steps=8 format=3 uid="uid://bujnqq5ovcn6t"]
+
+[ext_resource type="Script" uid="uid://bc34ky3gxu8y4" path="res://GD Scripts/Dialogue Box/dialogue_box.gd" id="1_1u8g5"]
+[ext_resource type="Theme" uid="uid://qna80o4ibgm5" path="res://Assets/Dialogue Box/dialogue_box_theme.tres" id="2_iv0sh"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_kwsxp"]
+[ext_resource type="Theme" uid="uid://bovrwrrxqfbtv" path="res://Assets/Dialogue Box/name_box_theme.tres" id="4_w7k2d"]
+[ext_resource type="Texture2D" uid="uid://c4ycnrepm4snn" path="res://Assets/Dialogue Box/dialoguebox (1).png" id="5_c4bs8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w7k2d"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kqe7d"]
+texture = ExtResource("5_c4bs8")
+expand_margin_left = 4.0
+expand_margin_top = 10.0
+expand_margin_right = 4.0
+expand_margin_bottom = 10.0
+
+[node name="DialogueBox" type="CanvasLayer"]
+layer = 2
+script = ExtResource("1_1u8g5")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 6
+
+[node name="texturerectContainer" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme = ExtResource("2_iv0sh")
+
+[node name="TextLabel" type="RichTextLabel" parent="MarginContainer/texturerectContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_top = 0.171
+anchor_right = 1.0
+anchor_bottom = 0.88900006
+offset_left = -0.54400015
+offset_top = 0.23799992
+offset_right = -4.0
+offset_bottom = 0.44199944
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.8235294, 0.627451, 0.43137255, 1)
+theme_override_fonts/normal_font = ExtResource("2_kwsxp")
+theme_override_font_sizes/normal_font_size = 4
+theme_override_styles/normal = SubResource("StyleBoxEmpty_w7k2d")
+
+[node name="Indicator" type="Label" parent="MarginContainer/texturerectContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.93600005
+anchor_top = 0.72700006
+anchor_right = 0.93600005
+anchor_bottom = 0.72700006
+offset_left = -2.6240005
+offset_top = -3.9940014
+offset_right = 3.3759995
+offset_bottom = 4.0059986
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.8235294, 0.627451, 0.43137255, 1)
+theme_override_font_sizes/font_size = 5
+horizontal_alignment = 2
+
+[node name="Panel" type="PanelContainer" parent="MarginContainer/texturerectContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.061000004
+anchor_top = 0.95500004
+anchor_right = 0.061000004
+anchor_bottom = 0.95500004
+offset_left = 0.87599945
+offset_top = -3.0100002
+offset_right = 13.875999
+offset_bottom = 3.9899998
+grow_vertical = 0
+theme = ExtResource("4_w7k2d")
+theme_override_styles/panel = SubResource("StyleBoxTexture_kqe7d")
+
+[node name="NameLabel" type="Label" parent="MarginContainer/texturerectContainer/Panel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8235294, 0.627451, 0.43137255, 1)
+theme_override_fonts/font = ExtResource("2_kwsxp")
+theme_override_font_sizes/font_size = 6
+horizontal_alignment = 1

@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://qna80o4ibgm5"]
+
+[ext_resource type="Texture2D" uid="uid://c4ycnrepm4snn" path="res://Assets/Dialogue Box/dialoguebox (1).png" id="1_50plk"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pltio"]
+texture = ExtResource("1_50plk")
+expand_margin_left = 4.0
+expand_margin_top = 40.0
+expand_margin_right = 5.0
+expand_margin_bottom = 40.0
+
+[resource]
+Panel/styles/panel = SubResource("StyleBoxTexture_pltio")
