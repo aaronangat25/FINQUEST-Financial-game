@@ -1,5 +1,10 @@
+res://Scenes/Endings/bankrupt_ending.tscn
 res://Assets/Dialogue Box/dialogue_box_theme.tres
 res://Assets/Dialogue Box/name_box_theme.tres
 res://Assets/Buttons/main_menu_btn.tres
 res://Assets/Buttons/chapter_selection_btn.tres
-res://Scenes/Endings/bankrupt_ending.tscn
+res://GD Scripts/Endings/bankrupt_ending.gd
+res://Scenes/Phone Screen/phone_screen_6_1.tscn
+res://GD Scripts/Phone Screen/phone_screen_6_1.gd
+res://Scenes/Game End/game_end_cholce.tscn
+res://GD Scripts/Game End/game_end_cholce.gd

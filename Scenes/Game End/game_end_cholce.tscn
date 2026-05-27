@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=3 uid="uid://bw7wf6fg4b08f"]
+
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="1_0soxu"]
+[ext_resource type="Script" uid="uid://f8exj0x5xumk" path="res://GD Scripts/Game End/game_end_cholce.gd" id="1_41eep"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_41eep"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_86vvn"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="game_end_cholce" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_41eep")
+
+[node name="blackbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_86vvn")
+
+[node name="menu_button_container" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.5
+offset_top = -11.0
+offset_right = 24.5
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="playbtn" type="Button" parent="menu_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_0soxu")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_41eep")
+theme_override_font_sizes/font_size = 10
+text = "Restart"
+
+[node name="optionbtn" type="Button" parent="menu_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_0soxu")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_41eep")
+theme_override_font_sizes/font_size = 10
+text = "Main Menu"
+autowrap_mode = 2
