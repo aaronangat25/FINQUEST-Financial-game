@@ -1,11 +1,4 @@
-res://Scenes/Chapter 5/chapter_5_scene_4.tscn
 res://Assets/Dialogue Box/dialogue_box_theme.tres
 res://Assets/Dialogue Box/name_box_theme.tres
 res://Assets/Buttons/main_menu_btn.tres
 res://Assets/Buttons/chapter_selection_btn.tres
-res://Scenes/Chapter 5/chapter_5_scene_4.gd
-res://Scenes/Chapter 5/chapter_5_scene_3.tscn
-res://Scenes/Chapter 5/chapter_5_scene_3.gd
-res://GD Scripts/Chapter_5/chapter_5_scene_1.gd
-res://chapter_5_scene_2.gd
-res://Scenes/Chapter 5/chapter_5_scene_2.tscn
