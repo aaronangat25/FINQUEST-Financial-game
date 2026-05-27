@@ -57,6 +57,9 @@ const CHAPTER_1_SCENE = "res://Scenes/Chapter 1/chapter_1.tscn"
 
 
 func _ready():
+	AudioManager.play_chapter_music() # Fires up GENERAL MUSIC.mp3 immediately!
+	
+	# Rest of your dialogue, UI initialization, or layout setup code below...
 	input_locked = true # Lock inputs during the opening animation!
 	
 	stats_screen.hide()
