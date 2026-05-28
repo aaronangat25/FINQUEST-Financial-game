@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dvdk20ki36r7p"]
+[gd_scene load_steps=20 format=3 uid="uid://dvdk20ki36r7p"]
 
 [ext_resource type="Texture2D" uid="uid://b4eefiwad4a1q" path="res://Assets/Backgrounds/Chapter 1/sunrise/sprite_00.png" id="1_3wr00"]
 [ext_resource type="Script" uid="uid://b3jhjlsdshqo3" path="res://GD Scripts/Chapter 1/Chapter 1 Scene 2/chapter_1_scene_2.gd" id="1_h01dw"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="14_2p08c"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="15_im627"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="16_glh36"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="17_glh36"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_s3j1w"]
 animations = [{
@@ -204,3 +205,5 @@ theme_override_fonts/font = ExtResource("15_im627")
 theme_override_font_sizes/font_size = 4
 text = "C. Resto– P200
  (Expensive, overspending)"
+
+[node name="pause_btn" parent="." instance=ExtResource("17_glh36")]

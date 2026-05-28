@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://k64l1okgmjre"]
+[gd_scene load_steps=10 format=3 uid="uid://k64l1okgmjre"]
 
 [ext_resource type="Texture2D" uid="uid://lpdwubnnvi6s" path="res://Assets/Backgrounds/Chapter_4/printerbg.png" id="1_cfw3x"]
 [ext_resource type="Script" uid="uid://3r8lf4dj20vy" path="res://GD Scripts/Chapter_4/chapter_4_scene_2.gd" id="1_vr65j"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://wxgvprf03dsj" path="res://Scenes/Characters/Jen/jen_2d.tscn" id="4_h2j68"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="5_s81hl"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="6_6r3wq"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="7_6r3wq"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vr65j"]
 texture = ExtResource("1_cfw3x")
@@ -165,3 +166,5 @@ theme_override_fonts/font = ExtResource("5_s81hl")
 theme_override_font_sizes/font_size = 4
 text = "C. Share Digital Copy Only
  (P0)"
+
+[node name="pause_btn" parent="." instance=ExtResource("7_6r3wq")]

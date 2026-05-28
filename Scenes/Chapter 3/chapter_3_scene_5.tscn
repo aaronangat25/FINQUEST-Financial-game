@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://ikjrmtyyndxy"]
+[gd_scene load_steps=10 format=3 uid="uid://ikjrmtyyndxy"]
 
 [ext_resource type="Texture2D" uid="uid://c5xua0nxjxu8i" path="res://Assets/Backgrounds/Chapter_2/dorm/dormbg.png" id="1_abquf"]
 [ext_resource type="Script" uid="uid://dprnxr35tvn3t" path="res://GD Scripts/Chapter_3/chapter_3_scene_5.gd" id="1_xr332"]
 [ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="2_ptkjg"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="4_a4rpe"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="5_fi5xn"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="6_fi5xn"]
+[ext_resource type="PackedScene" uid="uid://8qhlywmd4o2r" path="res://Scenes/Loading Screen/SavingScreen.tscn" id="7_7r7fh"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ptkjg"]
 texture = ExtResource("1_abquf")
@@ -167,3 +169,27 @@ theme_override_fonts/font = ExtResource("4_a4rpe")
 theme_override_font_sizes/font_size = 6
 text = "Proceed to chapter 4
 "
+
+[node name="MainMenu_btn" type="Button" parent="StatsScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.512
+anchor_top = 1.1240001
+anchor_right = 0.512
+anchor_bottom = 1.1240001
+offset_left = -31.080002
+offset_top = -55.84001
+offset_right = 30.919998
+offset_bottom = -47.84001
+grow_horizontal = 2
+grow_vertical = 0
+focus_mode = 0
+theme = ExtResource("5_fi5xn")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_a4rpe")
+theme_override_font_sizes/font_size = 6
+text = "main menu"
+
+[node name="pause_btn" parent="." instance=ExtResource("6_fi5xn")]
+
+[node name="SavingScreen" parent="." instance=ExtResource("7_7r7fh")]

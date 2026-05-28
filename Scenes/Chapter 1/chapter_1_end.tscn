@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://8yp65av6vvwi"]
+[gd_scene load_steps=11 format=3 uid="uid://8yp65av6vvwi"]
 
 [ext_resource type="Texture2D" uid="uid://b1w7u4owkmfen" path="res://Assets/Backgrounds/Chapter 1/dorm/dormbg.png" id="1_fo2fn"]
 [ext_resource type="Script" uid="uid://lt0fyhfvscf5" path="res://GD Scripts/Chapter 1/chapter_1_end.gd" id="1_qvppv"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="3_5luoy"]
 [ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="5_5luoy"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="6_ymrcc"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="7_ng0xx"]
+[ext_resource type="PackedScene" uid="uid://8qhlywmd4o2r" path="res://Scenes/Loading Screen/SavingScreen.tscn" id="8_qppjh"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ymrcc"]
 texture = ExtResource("1_fo2fn")
@@ -128,3 +130,7 @@ grow_vertical = 0
 scale = Vector2(1.6422871, 1.6164367)
 
 [node name="jane2d" parent="JaneBigAnchor2" instance=ExtResource("2_qvppv")]
+
+[node name="pause_btn" parent="." instance=ExtResource("7_ng0xx")]
+
+[node name="SavingScreen" parent="." instance=ExtResource("8_qppjh")]
