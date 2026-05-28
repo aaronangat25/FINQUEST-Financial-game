@@ -5,6 +5,7 @@ const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
 # --- NODE REFERENCES ---
+@onready var saving_screen = $SavingScreen
 @onready var jane_graduation_anchor = $JaneGraduationAnchor
 @onready var jane_graduation_sprite = $JaneGraduationAnchor/JaneGraduation
 
@@ -20,13 +21,15 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 
 # Summary Evaluation Overlay Panel
 @onready var stats_screen = $StatsScreen
-@onready var chapter_5_btn = $StatsScreen/Chapter5_btn
+@onready var ending_btn = $StatsScreen/Ending_btn
+@onready var main_menu_btn = $StatsScreen/MainMenu_btn
 
 var currency_hud
 var active_dialogue_box
 
 # Localized tracking state variable
 var career_choice: String = ""
+var is_transitioning: bool = false
 
 func _ready() -> void:
 	# 1. Instantiate Core Currency Hud Element
@@ -50,6 +53,14 @@ func _ready() -> void:
 	if stats_screen:
 		stats_screen.hide()
 		stats_screen.modulate.a = 0.0
+		
+	# Hide both navigation buttons on startup so they appear later together
+	if ending_btn:
+		ending_btn.hide()
+		ending_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if main_menu_btn:
+		main_menu_btn.hide()
+		main_menu_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			
 	await get_tree().process_frame
 	
@@ -157,21 +168,112 @@ func _show_stats_summary_screen() -> void:
 		t_panel.tween_property(stats_screen, "modulate:a", 1.0, 0.5)
 		await t_panel.finished
 		
-	# Connect the exit button handler inside the summary matrix
-	if chapter_5_btn and not chapter_5_btn.pressed.is_connected(_on_final_chapter_exit_pressed):
-		chapter_5_btn.pressed.connect(_on_final_chapter_exit_pressed)
+	# 3. Fade in Ending_btn and MainMenu_btn together on the layout
+	var t_show_buttons = create_tween().set_parallel(true)
+	
+	if ending_btn:
+		ending_btn.show()
+		ending_btn.modulate.a = 0.0
+		ending_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		t_show_buttons.tween_property(ending_btn, "modulate:a", 1.0, 0.5)
+		if not ending_btn.pressed.is_connected(_on_final_chapter_exit_pressed):
+			ending_btn.pressed.connect(_on_final_chapter_exit_pressed)
+			
+	if main_menu_btn:
+		main_menu_btn.show()
+		main_menu_btn.modulate.a = 0.0
+		main_menu_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		t_show_buttons.tween_property(main_menu_btn, "modulate:a", 1.0, 0.5)
+		if not main_menu_btn.pressed.is_connected(_on_main_menu_pressed):
+			main_menu_btn.pressed.connect(_on_main_menu_pressed)
 
 
-# --- STEP 5: GAME CONCLUSION ROUTINE ---
+# --- STEP 5: GAME CONCLUSION ROUTINE (CONTINUE TO ENDING) ---
 func _on_final_chapter_exit_pressed() -> void:
-	if chapter_5_btn:
-		chapter_5_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if is_transitioning: return
+	is_transitioning = true
+	
+	if ending_btn: ending_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
+	
+	if currency_hud: currency_hud.hide()
+	if stats_screen: stats_screen.hide()
+	
+	# Explicitly target Row 6 (Chapter 5) so it marks it completed and unlocks Row 7 (Ending)
+	GameManager.current_chapter = 6
+	
+	var next_scene_path = "res://Scenes/Ending/ending.tscn"
+	_execute_save_and_blackout(next_scene_path, true)
+
+
+# --- MAIN MENU PRESSED EVENT ---
+func _on_main_menu_pressed() -> void:
+	if is_transitioning: return
+	is_transitioning = true
+	
+	if ending_btn: ending_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
+	
+	if currency_hud: currency_hud.hide()
+	if stats_screen: stats_screen.hide()
+	
+	# Explicitly target Row 6 (Chapter 5) so it marks it completed and unlocks Row 7 (Ending)
+	GameManager.current_chapter = 6
+	
+	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
+	_execute_save_and_blackout(main_menu_path, false)
+
+
+# --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
+func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bool) -> void:
+	# 1. Fire up the saving overlay asset node
+	if saving_screen:
+		saving_screen.process_mode = PROCESS_MODE_ALWAYS
+		saving_screen.show()
 		
-	if TransitionManager.has_method("fade_to_black"):
-		await TransitionManager.fade_to_black()
-		
-	print("Chapter 5 Career Summary Complete. Returning to Main Game Summary Screen Matrix...")
-	#get_tree().change_scene_to_file("res://Scenes/Menu/game_summary_screen.tscn")
+	GameManager.complete_current_chapter(100.0)
+	print("[DATABASE] Chapter 5 Progression committed smoothly.")
+	
+	# 3-second wait delay animation timing
+	await get_tree().create_timer(3.0).timeout
+	
+	# 2. Instant local background blackout mask canvas layout override block
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1)
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	if saving_screen:
+		saving_screen.hide()
+		saving_screen.process_mode = PROCESS_MODE_DISABLED
+	
+	# 3. Handle specific level banner tweens if continuing forward
+	if run_cinematic_card:
+		if TransitionManager.has_method("fade_to_black"):
+			await TransitionManager.fade_to_black()
+			
+		var title_label = TransitionManager.get_node_or_null("TitleLabel")
+		if title_label:
+			title_label.modulate.a = 0.0
+			title_label.show()
+			
+			title_label.text = "THE ENDING"
+			var t1 = create_tween()
+			t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t1.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			var t2 = create_tween()
+			t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t2.finished
+			title_label.hide()
+			
+			await get_tree().create_timer(1.0).timeout
+			
+		get_tree().change_scene_to_file(destination_path)
+	else:
+		get_tree().change_scene_to_file(destination_path)
 
 
 # --- HELPER UTILITIES ---

@@ -6,12 +6,13 @@ const GRAY_SCREEN_SCENE = preload("res://Scenes/Gray Screen/gray_screen.tscn")
 const PHONE_LOCK_SCREEN_2 = preload("res://Scenes/Phone/phone_lock_screen_2.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
-# --- NODE REFERENCES ---
+# --- NODE REFERENCES MATCHING YOUR SCENE TREE EXACTLY ---
+@onready var saving_screen = $SavingScreen
 @onready var jane_big = $JaneBigAnchor/jane2d
 @onready var phone_mini = $PhoneMini 
 @onready var kylie = $KylieDialogueAnchor/kylie2d 
 @onready var jane_smile_notif = $Janesmilenotif 
-@onready var jane_2d_big = $JaneBigAnchor2/jane2d 
+@onready var jane_2d_big = $JaneBigAnchor2/jane2d
 
 var currency_hud
 var active_gray_screen
@@ -56,7 +57,7 @@ func _play_end_sequence() -> void:
 	is_phone_clickable = true
 
 
-#  RESTRICTED CLICK DETECTION (CANVASLAYER SAFE)
+# RESTRICTED CLICK DETECTION (CANVASLAYER SAFE)
 func _input(event: InputEvent) -> void:
 	if is_phone_clickable and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		
@@ -154,8 +155,36 @@ func _on_padlock_pressed() -> void:
 			
 	await get_tree().create_timer(3.5).timeout
 	
-	await TransitionManager.fade_to_black()
+	# =================================================================
+	# STEP 1: TRIGGER SAVING OVERLAY 
+	# =================================================================
+	if currency_hud:
+		currency_hud.hide()
+		
+	GameManager.current_chapter = 2
+	print("[SYSTEM] Running database save sequence for Chapter 1.")
 	
+	# Wake up save overlay and show it for 2 seconds
+	saving_screen.process_mode = PROCESS_MODE_ALWAYS
+	saving_screen.show()
+	GameManager.complete_current_chapter(100.0)
+	await get_tree().create_timer(2.0).timeout
+	
+	# =================================================================
+	# STEP 2: INSTANT BLACKOUT OVERLAY (NO FADE ANIMATION GLIMPSE)
+	# =================================================================
+	# We create an instant solid black background canvas block to replace the save graphic 
+	# without requesting an animated transition from TransitionManager.
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1) # Full solid black alpha instantly
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	# Clean up and hide the saving overlay asset node behind the new dark background mask
+	saving_screen.hide()
+	saving_screen.process_mode = PROCESS_MODE_DISABLED
+	
+	# Fetch TitleLabel straight from the transition system singleton container 
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
 		title_label.text = "CHAPTER 2"
@@ -185,5 +214,6 @@ func _on_padlock_pressed() -> void:
 		await t4.finished
 		
 		title_label.hide()
-		
+	
+	# Change scenes seamlessly directly inside engine tree core
 	get_tree().change_scene_to_file("res://Scenes/Chapter 2/chapter_2_scene_1.tscn")

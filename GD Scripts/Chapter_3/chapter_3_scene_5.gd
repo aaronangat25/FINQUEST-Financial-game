@@ -7,11 +7,15 @@ signal result_clicked
 const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
-# --- NODE REFERENCES ---
+# --- NODE REFERENCES MATCHING YOUR SCENE TREE EXACTLY ---
+@onready var saving_screen = $SavingScreen
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var stats_screen = $StatsScreen
 @onready var stats_panel = $StatsScreen/Panel 
+
+# FIXED: Node paths corrected to point directly to children of StatsScreen
 @onready var next_button = $StatsScreen/Chapter4_btn 
+@onready var main_menu_button = $StatsScreen/MainMenu_btn
 
 @onready var total_label = $StatsScreen/Panel/TotalName/TotalLabel
 @onready var feedback_label = $StatsScreen/Panel/FeedbackLabel
@@ -28,7 +32,9 @@ var is_transitioning: bool = false
 func _ready() -> void:
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
-	currency_hud.show()
+	
+	if currency_hud.has_method("show"):
+		currency_hud.show()
 	
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	
@@ -39,6 +45,10 @@ func _ready() -> void:
 	if next_button: 
 		next_button.hide()
 		next_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		
+	if main_menu_button:
+		main_menu_button.hide()
+		main_menu_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	await get_tree().process_frame
 	
@@ -104,7 +114,6 @@ func _play_intro_sequence() -> void:
 func _show_evaluation_stats() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# --- NO MORE INITIAL VARIABLES ---
 	# Grab the exact expenses tracked perfectly by Global script
 	var total_expenses = Global.total_expenses
 	
@@ -193,13 +202,13 @@ func _show_evaluation_stats() -> void:
 		await tween_box_out.finished 
 	active_dialogue_box.queue_free()
 		
-	# 6. FINALLY: Show the Chapter 4 Button!
+	# 6. FINALLY: Show BOTH the Chapter 4 and Main Menu Navigation Buttons!
 	if stats_screen: stats_screen.show() 
 	
+	# Setup Chapter 4 Continue Button
 	if next_button:
 		next_button.show()
 		next_button.mouse_filter = Control.MOUSE_FILTER_STOP
-		
 		next_button.modulate.a = 0.0
 		var btn_tween = create_tween()
 		btn_tween.tween_property(next_button, "modulate:a", 1.0, 0.5)
@@ -207,30 +216,111 @@ func _show_evaluation_stats() -> void:
 		if not next_button.pressed.is_connected(_on_next_pressed):
 			next_button.pressed.connect(_on_next_pressed)
 
+	# Setup Exit to Main Menu Button
+	if main_menu_button:
+		main_menu_button.show()
+		main_menu_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		main_menu_button.modulate.a = 0.0
+		var menu_btn_tween = create_tween()
+		menu_btn_tween.tween_property(main_menu_button, "modulate:a", 1.0, 0.5)
+		
+		if not main_menu_button.pressed.is_connected(_on_main_menu_pressed):
+			main_menu_button.pressed.connect(_on_main_menu_pressed)
 
+# --- CONTINUE TO CHAPTER 4 BUTTON CLICKED ---
 func _on_next_pressed() -> void:
-	# Use our secret lock instead of disabling the button, so it stays looking normal!
 	if is_transitioning: return
 	is_transitioning = true 
 	
-	print("Chapter 1-3 Summary Complete! Transitioning to Chapter 4...")
+	if next_button: next_button.disabled = true
+	if main_menu_button: main_menu_button.disabled = true
 	
-	# 1. Wait 2 seconds after clicking
-	await get_tree().create_timer(2.0).timeout
+	print("Chapter 3 Complete! Preparing 3-second database save sequence...")
 	
-	# 2. Fade to black
-	await TransitionManager.fade_to_black()
+	if currency_hud: currency_hud.hide()
+	if stats_screen: stats_screen.hide()
 	
-	# 3. Transition to Chapter 4 Scene 1
+	# FIXED: Set tracker explicitly to 4 (Chapter 3's row entry in SQLite)
+	# This ensures Row 4 is marked COMPLETED, and Row 5 (Chapter 4) gets UNLOCKED!
+	GameManager.current_chapter = 4
+	
+	# Trigger saving overlay (runs the 3-second timer internally)
 	var next_scene_path = "res://Scenes/Chapter 4/chapter_4_scene_1.tscn" 
+	_execute_save_and_blackout(next_scene_path, true)
+
+
+# --- QUIT TO MAIN MENU BUTTON CLICKED ---
+func _on_main_menu_pressed() -> void:
+	if is_transitioning: return
+	is_transitioning = true 
 	
-	ResourceLoader.load_threaded_request(next_scene_path)
-	var load_status = ResourceLoader.load_threaded_get_status(next_scene_path)
+	if next_button: next_button.disabled = true
+	if main_menu_button: main_menu_button.disabled = true
 	
-	while load_status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		await get_tree().create_timer(0.1).timeout 
-		load_status = ResourceLoader.load_threaded_get_status(next_scene_path)
+	print("Quitting to Main Menu. Running database save sequence first...")
+	
+	if currency_hud: currency_hud.hide()
+	if stats_screen: stats_screen.hide()
+	
+	# FIXED: Set tracker explicitly to 4 (Chapter 3's row entry in SQLite)
+	# This ensures Row 4 is marked COMPLETED, and Row 5 (Chapter 4) gets UNLOCKED!
+	GameManager.current_chapter = 4
+	
+	# Trigger saving overlay and point destination path back home
+	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
+	_execute_save_and_blackout(main_screen_path, false)
+
+
+# --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
+func _execute_save_and_blackout(destination_path: String, play_cinematic_card: bool) -> void:
+	# 1. Fire up the saving overlay asset node
+	saving_screen.process_mode = PROCESS_MODE_ALWAYS
+	saving_screen.show()
+	GameManager.complete_current_chapter(100.0)
+	
+	# Mirror the 3-second timer delay perfectly to match our overlay settings change
+	await get_tree().create_timer(3.0).timeout
+	
+	# 2. Drop the local solid black background cover block to stop graphics frame flickering
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1)
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	# Securely deactivate save overlay asset layer behind the new black mask
+	saving_screen.hide()
+	saving_screen.process_mode = PROCESS_MODE_DISABLED
+	
+	# 3. Handle specific level banner tweens if continuing forward
+	if play_cinematic_card:
+		var title_label = TransitionManager.get_node_or_null("TitleLabel")
+		if title_label:
+			title_label.text = "CHAPTER 4"
+			title_label.modulate.a = 0.0
+			title_label.show()
+			
+			var t1 = create_tween()
+			t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t1.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			var t2 = create_tween()
+			t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t2.finished
+			title_label.hide()
+			
+		# Handle threaded asynchronous loading sequence for next level assets
+		ResourceLoader.load_threaded_request(destination_path)
+		var load_status = ResourceLoader.load_threaded_get_status(destination_path)
 		
-	if load_status == ResourceLoader.THREAD_LOAD_LOADED:
-		var new_scene = ResourceLoader.load_threaded_get(next_scene_path)
-		get_tree().change_scene_to_packed(new_scene)
+		while load_status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			await get_tree().create_timer(0.1).timeout 
+			load_status = ResourceLoader.load_threaded_get_status(destination_path)
+			
+		if load_status == ResourceLoader.THREAD_LOAD_LOADED:
+			var new_scene = ResourceLoader.load_threaded_get(destination_path)
+			get_tree().change_scene_to_packed(new_scene)
+	else:
+		# If heading back to main menu, shift instantly through engine core tree roots
+		get_tree().change_scene_to_file(destination_path)

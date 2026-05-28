@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dg2n2ryfg7io"]
+[gd_scene load_steps=13 format=3 uid="uid://dg2n2ryfg7io"]
 
 [ext_resource type="Script" uid="uid://wjbf0td7ou5g" path="res://GD Scripts/Chapter_5/chapter_5_scene_1.gd" id="1_hp7wv"]
 [ext_resource type="Texture2D" uid="uid://bs5da4lpd5p64" path="res://Assets/Backgrounds/Chapter_5/dormbg.png" id="1_ieons"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://42ueilk8j4os" path="res://Assets/Phone/phone ringing (1).png" id="7_hnplw"]
 [ext_resource type="PackedScene" uid="uid://c8ro4frat6h0t" path="res://Scenes/Characters/Mom/mom_2d.tscn" id="8_kfnga"]
 [ext_resource type="PackedScene" uid="uid://dmjk2gh75xy1" path="res://Scenes/Characters/Dad/dad_2d.tscn" id="9_1vq3f"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="10_kfnga"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hp7wv"]
 texture = ExtResource("1_ieons")
@@ -138,3 +139,5 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="jane2d" parent="JaneDialogueAnchor" instance=ExtResource("5_h77nb")]
+
+[node name="pause_btn" parent="." instance=ExtResource("10_kfnga")]

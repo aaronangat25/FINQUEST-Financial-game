@@ -1,10 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://cm8tbio3iitnc"]
+[gd_scene load_steps=11 format=3 uid="uid://cm8tbio3iitnc"]
 
 [ext_resource type="Script" uid="uid://cb8v5psejyqy5" path="res://Scenes/Chapter 5/chapter_5_scene_4.gd" id="1_glthg"]
 [ext_resource type="Texture2D" uid="uid://bqy0pd8uarr4c" path="res://Assets/Backgrounds/Chapter_5/taftbg.png" id="1_odowo"]
 [ext_resource type="PackedScene" uid="uid://2vwp12xklupg" path="res://Scenes/Characters/Jane/jane_graduation.tscn" id="2_pjocw"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="3_glthg"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="4_i3v6j"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="6_i3v6j"]
+[ext_resource type="PackedScene" uid="uid://8qhlywmd4o2r" path="res://Scenes/Loading Screen/SavingScreen.tscn" id="7_46tpv"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y7u5v"]
 texture = ExtResource("1_odowo")
@@ -41,6 +43,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_glthg")
+
+[node name="pause_btn" parent="." instance=ExtResource("6_i3v6j")]
 
 [node name="taftbg" type="Panel" parent="."]
 layout_mode = 1
@@ -278,7 +282,7 @@ theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 4
 horizontal_alignment = 1
 
-[node name="Chapter5_btn" type="Button" parent="StatsScreen"]
+[node name="Ending_btn" type="Button" parent="StatsScreen"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.512
@@ -296,4 +300,26 @@ theme = ExtResource("4_i3v6j")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 6
-text = "Proceed to chapter 5"
+text = "Proceed to Ending"
+
+[node name="MainMenu_btn" type="Button" parent="StatsScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.512
+anchor_top = 1.1240001
+anchor_right = 0.512
+anchor_bottom = 1.1240001
+offset_left = -31.080002
+offset_top = -59.84001
+offset_right = 30.919998
+offset_bottom = -51.84001
+grow_horizontal = 2
+grow_vertical = 0
+focus_mode = 0
+theme = ExtResource("4_i3v6j")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_glthg")
+theme_override_font_sizes/font_size = 6
+text = "main menu"
+
+[node name="SavingScreen" parent="." instance=ExtResource("7_46tpv")]

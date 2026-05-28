@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3 uid="uid://b03cb50shac20"]
+
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="1_4tywa"]
+[ext_resource type="Script" uid="uid://nqb3xu25e2jo" path="res://Scenes/pause_btn.gd" id="1_dunn7"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_dunn7"]
+
+[node name="pause_btn" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_dunn7")
+
+[node name="pause_btn" type="Button" parent="."]
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 22.0
+offset_bottom = 33.0
+text = "II"
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="menu_button_container" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.78800005
+anchor_right = 0.5
+anchor_bottom = 0.78800005
+offset_left = -18.5
+offset_top = -14.868004
+offset_right = 21.5
+offset_bottom = 25.131996
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="resume_btn" type="Button" parent="Panel/menu_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_4tywa")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_dunn7")
+theme_override_font_sizes/font_size = 8
+text = "RESUME"
+autowrap_mode = 2
+
+[node name="mainmenu_btn" type="Button" parent="Panel/menu_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_4tywa")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_dunn7")
+theme_override_font_sizes/font_size = 6
+text = "MAIN MENU"
+
+[node name="chapter_label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -41.5
+offset_top = 39.0
+offset_right = 42.059998
+offset_bottom = 54.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_dunn7")
+text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

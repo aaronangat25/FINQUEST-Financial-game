@@ -5,6 +5,7 @@ const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
 # --- NODE REFERENCES ---
+@onready var saving_screen = $SavingScreen
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var stat_screen = $StatsScreen
 
@@ -13,9 +14,11 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var printing_label = stat_screen.find_child("PrintingLabel", true, false)
 @onready var feedback_label = stat_screen.find_child("FeedbackLabel", true, false)
 @onready var chapter5_btn = stat_screen.find_child("Chapter5_btn", true, false)
+@onready var main_menu_btn = stat_screen.find_child("MainMenu_btn", true, false)
 
 var currency_hud
 var active_dialogue_box
+var is_transitioning: bool = false
 
 func _ready() -> void:
 	# 1. Spawn Currency HUD
@@ -26,6 +29,7 @@ func _ready() -> void:
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if stat_screen: stat_screen.hide()
 	if chapter5_btn: chapter5_btn.hide()
+	if main_menu_btn: main_menu_btn.hide()
 	
 	await get_tree().process_frame
 	
@@ -176,67 +180,129 @@ func _play_result_dialogue(reaction_text: String) -> void:
 	
 	# Loop through all items inside StatScreen (Panel, Labels, etc.)
 	for child in stat_screen.get_children():
-		# If the item is NOT the Chapter 5 button, fade it to 0
-		if child != chapter5_btn:
+		# Protect both the Chapter 5 continue button and the new main menu button from hiding
+		if child != chapter5_btn and child != main_menu_btn:
 			t_ui.tween_property(child, "modulate:a", 0.0, 1.0)
 			
 	await t_ui.finished
 	
+	# Reveal both navigation buttons at the exact same time
+	var t_show_buttons = create_tween().set_parallel(true)
 	
 	if chapter5_btn:
 		chapter5_btn.show()
 		chapter5_btn.modulate.a = 0.0
-		var t_btn = create_tween()
-		t_btn.tween_property(chapter5_btn, "modulate:a", 1.0, 1.0)
-		
+		t_show_buttons.tween_property(chapter5_btn, "modulate:a", 1.0, 1.0)
 		if not chapter5_btn.pressed.is_connected(_on_chapter_5_btn_pressed):
 			chapter5_btn.pressed.connect(_on_chapter_5_btn_pressed)
+			
+	if main_menu_btn:
+		main_menu_btn.show()
+		main_menu_btn.modulate.a = 0.0
+		t_show_buttons.tween_property(main_menu_btn, "modulate:a", 1.0, 1.0)
+		if not main_menu_btn.pressed.is_connected(_on_main_menu_pressed):
+			main_menu_btn.pressed.connect(_on_main_menu_pressed)
 
 
-# --- SEQUENTIAL TITLE TRANSITION ---
+# --- CONTINUE BUTTON EVENT ---
 func _on_chapter_5_btn_pressed() -> void:
-	print("Proceeding to Chapter 5!")
+	if is_transitioning: return
+	is_transitioning = true
 	
-	# 1. Fade to Black
-	if TransitionManager.has_method("fade_to_black"):
-		await TransitionManager.fade_to_black()
+	if chapter5_btn: chapter5_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
 	
-	var title_label = TransitionManager.get_node_or_null("TitleLabel")
-	if title_label:
-		title_label.modulate.a = 0.0
-		title_label.show()
-		
-		# 2. Fade IN "CHAPTER 5" (1.0 duration)
-		title_label.text = "CHAPTER 5"
-		var t1 = create_tween()
-		t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
-		await t1.finished
-		
-		# Wait while player reads it
-		await get_tree().create_timer(2.0).timeout
-		
-		# 3. Fade OUT "CHAPTER 5" (1.0 duration)
-		var t2 = create_tween()
-		t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
-		await t2.finished
-		
-		# 4. Change text while invisible, then Fade IN "GRADUATION" (1.0 duration)
-		title_label.text = "GRADUATION"
-		var t3 = create_tween()
-		t3.tween_property(title_label, "modulate:a", 1.0, 1.0)
-		await t3.finished
-		
-		# Wait while player reads it
-		await get_tree().create_timer(2.0).timeout
-		
-		# 5. Fade OUT "GRADUATION" (1.0 duration)
-		var t4 = create_tween()
-		t4.tween_property(title_label, "modulate:a", 0.0, 1.0)
-		await t4.finished
-		title_label.hide()
-		
-		# 6. Final Wait before Scene Change
-		await get_tree().create_timer(1.0).timeout
+	if currency_hud: currency_hud.hide()
+	if stat_screen: stat_screen.hide()
 	
-	# 7. Change Scene
-	get_tree().change_scene_to_file("res://Scenes/Chapter 5/chapter_5_scene_1.tscn")
+	# Set tracking index row position to 5 (Chapter 4 data location entry inside SQLite table)
+	GameManager.current_chapter = 5
+	
+	var next_scene_path = "res://Scenes/Chapter 5/chapter_5_scene_1.tscn"
+	_execute_save_and_transition(next_scene_path, true)
+
+
+# --- MAIN MENU BUTTON EVENT ---
+func _on_main_menu_pressed() -> void:
+	if is_transitioning: return
+	is_transitioning = true
+	
+	if chapter5_btn: chapter5_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
+	
+	if currency_hud: currency_hud.hide()
+	if stat_screen: stat_screen.hide()
+	
+	# Set tracking index row position to 5 (Chapter 4 data location entry inside SQLite table)
+	GameManager.current_chapter = 5
+	
+	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
+	_execute_save_and_transition(main_menu_path, false)
+
+
+# --- REUSABLE SYSTEM TRANSACTION HANDLER ---
+func _execute_save_and_transition(destination_path: String, run_chapter_card: bool) -> void:
+	# 1. Engage Save overlay layer
+	if saving_screen:
+		saving_screen.process_mode = PROCESS_MODE_ALWAYS
+		saving_screen.show()
+		
+	GameManager.complete_current_chapter(100.0)
+	print("[DATABASE] Chapter 4 Progression committed smoothly.")
+	
+	# Wait for your configured 3-second delay animation
+	await get_tree().create_timer(3.0).timeout
+	
+	# 2. Add local black screen overlay mask to hide core tree elements cleanly
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1)
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	if saving_screen:
+		saving_screen.hide()
+		saving_screen.process_mode = PROCESS_MODE_DISABLED
+		
+	# 3. Handle specific title sequence layout configurations if continuing forward
+	if run_chapter_card:
+		if TransitionManager.has_method("fade_to_black"):
+			await TransitionManager.fade_to_black()
+			
+		var title_label = TransitionManager.get_node_or_null("TitleLabel")
+		if title_label:
+			title_label.modulate.a = 0.0
+			title_label.show()
+			
+			# Fade IN "CHAPTER 5" (1.0 duration)
+			title_label.text = "CHAPTER 5"
+			var t1 = create_tween()
+			t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t1.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			# Fade OUT "CHAPTER 5" (1.0 duration)
+			var t2 = create_tween()
+			t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t2.finished
+			
+			# Fade IN "GRADUATION" (1.0 duration)
+			title_label.text = "GRADUATION"
+			var t3 = create_tween()
+			t3.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t3.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			# Fade OUT "GRADUATION" (1.0 duration)
+			var t4 = create_tween()
+			t4.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t4.finished
+			title_label.hide()
+			
+			await get_tree().create_timer(1.0).timeout
+			
+		get_tree().change_scene_to_file(destination_path)
+	else:
+		# If retreating back to selection lobby, swap scene tree target nodes directly
+		get_tree().change_scene_to_file(destination_path)

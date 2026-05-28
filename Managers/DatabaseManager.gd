@@ -300,12 +300,15 @@ func create_default_player_stats(player_id : int):
 # DEFAULT CHAPTER PROGRESS
 # =========================================
 
+# =========================================
+# DEFAULT CHAPTER PROGRESS (FIXED RANGE)
+# =========================================
 func create_default_chapter_progress(player_id : int):
-
-	for chapter in range(1, 6):
+	# Loop from 1 to 7 (range(1, 8) stops right before 8)
+	for chapter in range(1, 8):
 		var unlocked = 0
 		if chapter == 1:
-			unlocked = 1
+			unlocked = 1 # Prologue is the only one unlocked initially
 
 		db.query_with_bindings("""
 		INSERT INTO chapter_progress (
@@ -321,6 +324,7 @@ func create_default_chapter_progress(player_id : int):
 			unlocked,
 			0
 		])
+	print("[DATABASE] Default chapter progress records (1 to 7) generated.")
 
 # =========================================
 # DEFAULT MINIGAME DATA
@@ -461,30 +465,19 @@ func save_player_choice(player_id : int, chapter_number : int, scene_key : Strin
 # =========================================
 
 func complete_chapter(player_id : int, chapter_number : int, grade : float):
-
+	# 1. Marks current chapter (e.g., Prologue = 1) as completed
 	db.query_with_bindings("""
 	UPDATE chapter_progress
-	SET
-		is_completed = 1,
-		completion_grade = ?,
-		completed_at = CURRENT_TIMESTAMP
-	WHERE player_id = ?
-	AND chapter_number = ?;
-	""", [
-		grade,
-		player_id,
-		chapter_number
-	])
+	SET is_completed = 1, completion_grade = ?, completed_at = CURRENT_TIMESTAMP
+	WHERE player_id = ? AND chapter_number = ?;
+	""", [grade, player_id, chapter_number])
 
+	# 2. Instantly unlocks the NEXT sequential record row (e.g., Chapter 1 = 2)
 	db.query_with_bindings("""
 	UPDATE chapter_progress
 	SET is_unlocked = 1
-	WHERE player_id = ?
-	AND chapter_number = ?;
-	""", [
-		player_id,
-		chapter_number + 1
-	])
+	WHERE player_id = ? AND chapter_number = ?;
+	""", [player_id, chapter_number + 1])
 
 # =========================================
 # SAVE GAME

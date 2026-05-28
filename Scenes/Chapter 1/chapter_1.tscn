@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://cymg8qvmd30u4"]
+[gd_scene load_steps=41 format=3 uid="uid://cymg8qvmd30u4"]
 
 [ext_resource type="Script" uid="uid://yq7ceftel5bb" path="res://GD Scripts/Chapter 1/chapter_1.gd" id="1_4t63r"]
 [ext_resource type="Texture2D" uid="uid://dvugqdojkp3e5" path="res://Assets/Backgrounds/Chapter 1/bus arrival/sprite_00.png" id="2_hvl1i"]
@@ -35,6 +35,7 @@
 [ext_resource type="Script" uid="uid://bkf3jb8kg5s3c" path="res://GD Scripts/New Feature Control/new_feature_control.gd" id="31_uwq6l"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="33_62mhy"]
 [ext_resource type="Script" uid="uid://cvj77tl6thsih" path="res://GD Scripts/Chapter 1/Choose Control/choose_control.gd" id="33_ljfhx"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="36_yfiiw"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t1d3b"]
 animations = [{
@@ -428,3 +429,5 @@ theme_override_fonts/font = ExtResource("29_sxs15")
 theme_override_font_sizes/font_size = 4
 text = "C. “Cashiering sounds easier
 for beginners. Saan meron?”"
+
+[node name="pause_btn" parent="." instance=ExtResource("36_yfiiw")]

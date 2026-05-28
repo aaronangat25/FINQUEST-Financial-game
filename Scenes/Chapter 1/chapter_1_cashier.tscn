@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpyiex7k525gq"]
+[gd_scene load_steps=14 format=3 uid="uid://bpyiex7k525gq"]
 
 [ext_resource type="Texture2D" uid="uid://blin181gl0mgk" path="res://Assets/Backgrounds/Chapter 1/cashier/cashiermarket.png" id="1_3teta"]
 [ext_resource type="Script" uid="uid://bi8kcbvan7sb5" path="res://GD Scripts/Chapter 1/Chapter 1 Cashier/chapter_1_cashier.gd" id="1_ml0cs"]
@@ -9,6 +9,7 @@
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="7_psde6"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="8_psde6"]
 [ext_resource type="PackedScene" uid="uid://dpx2tgtkh5d7j" path="res://Scenes/Characters/Jane/jane_2_dbig.tscn" id="9_kclok"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="10_76u8e"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ml0cs"]
 texture = ExtResource("1_3teta")
@@ -262,3 +263,5 @@ grow_vertical = 0
 scale = Vector2(0.92954314, 0.861167)
 
 [node name="jane2dbig" parent="JaneBigAnchor" instance=ExtResource("9_kclok")]
+
+[node name="pause_btn" parent="." instance=ExtResource("10_76u8e")]

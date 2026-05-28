@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cjnl5decylv1s"]
+[gd_scene load_steps=8 format=3 uid="uid://cjnl5decylv1s"]
 
 [ext_resource type="Texture2D" uid="uid://c5xua0nxjxu8i" path="res://Assets/Backgrounds/Chapter_2/dorm/dormbg.png" id="1_57wld"]
 [ext_resource type="Script" uid="uid://bgy577gv2i7e8" path="res://GD Scripts/Chapter_3/chapter_3_scene_4.gd" id="1_m8wka"]
 [ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="2_mvovw"]
 [ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="2_q8wt4"]
 [ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="3_mvovw"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="6_632xj"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ovmcp"]
 texture = ExtResource("1_57wld")
@@ -57,3 +58,5 @@ grow_vertical = 0
 scale = Vector2(1.2426955, 1.1460433)
 
 [node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("3_mvovw")]
+
+[node name="pause_btn" parent="." instance=ExtResource("6_632xj")]
