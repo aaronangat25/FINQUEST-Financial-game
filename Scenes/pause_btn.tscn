@@ -1,8 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://b03cb50shac20"]
+[gd_scene load_steps=10 format=3 uid="uid://b03cb50shac20"]
 
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="1_4tywa"]
 [ext_resource type="Script" uid="uid://nqb3xu25e2jo" path="res://Scenes/pause_btn.gd" id="1_dunn7"]
+[ext_resource type="Texture2D" uid="uid://dsnjvq3c5sdt4" path="res://Assets/Buttons/pausebtn_normal.png" id="2_6yf8w"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_dunn7"]
+[ext_resource type="Texture2D" uid="uid://vh6jn3eldkn3" path="res://Assets/Buttons/pausebtn_clicked.png" id="5_dwd7g"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dwd7g"]
+texture = ExtResource("2_6yf8w")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kfpgq"]
+texture = ExtResource("2_6yf8w")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6csjr"]
+texture = ExtResource("5_dwd7g")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dwd7g"]
+bg_color = Color(0, 0, 0, 0.3529412)
 
 [node name="pause_btn" type="CanvasLayer"]
 process_mode = 3
@@ -11,18 +25,20 @@ script = ExtResource("1_dunn7")
 [node name="pause_btn" type="Button" parent="."]
 offset_left = 2.0
 offset_top = 2.0
-offset_right = 22.0
-offset_bottom = 33.0
-text = "II"
+offset_right = 14.0
+offset_bottom = 15.0
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_dwd7g")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kfpgq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_6csjr")
 
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dwd7g")
 
 [node name="menu_button_container" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
@@ -46,7 +62,7 @@ theme = ExtResource("1_4tywa")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_dunn7")
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 10
 text = "RESUME"
 autowrap_mode = 2
 
@@ -57,17 +73,17 @@ theme = ExtResource("1_4tywa")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_dunn7")
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 10
 text = "MAIN MENU"
 
 [node name="chapter_label" type="Label" parent="Panel"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -41.5
+anchors_preset = -1
+anchor_left = 0.514
+anchor_right = 0.514
+offset_left = -41.76
 offset_top = 39.0
-offset_right = 42.059998
+offset_right = 41.8
 offset_bottom = 54.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
