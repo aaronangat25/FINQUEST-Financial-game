@@ -1,5 +1,11 @@
 extends Control
 
+# =========================================
+# FINQUEST PROLOGUE UTILITY RUNTIME
+# =========================================
+
+@onready var saving_screen = $SavingScreen # Path to your instantiated scene node
+
 @onready var dialogue_box = $DialogueBox
 @onready var background = $sunrise_bg 
 @onready var transition_manager = $Transition_Manager
@@ -54,30 +60,43 @@ var lunch_spent = 0
 
 const CHAPTER_1_SCENE = "res://Scenes/Chapter 1/chapter_1.tscn" 
 @onready var chapter1_btn = $StatsScreen/Panel/Chapter1_btn
+@onready var main_menu_btn = $StatsScreen/Panel/main_menu_btn
 
 
 func _ready():
+<<<<<<< Updated upstream
+=======
+	# --- AUDIO INITIALIZATION ---
+>>>>>>> Stashed changes
+	AudioManager.play_chapter_music() # Fires up GENERAL MUSIC.mp3 immediately!
+	
 	input_locked = true # Lock inputs during the opening animation!
 	
-	# --- THE CRITICAL ANTI-BLINK FIX ---
+<<<<<<< Updated upstream
+	stats_screen.hide()
+	stats_screen.modulate.a = 0.0
+=======
+	# --- HIS CRITICAL ANTI-BLINK FIXES ---
 	# Forcefully hide everything on frame initialization so they don't blink on reload
 	if is_instance_valid(stats_screen):
 		stats_screen.hide()
 		stats_screen.modulate.a = 0.0
+>>>>>>> Stashed changes
 	
-	if is_instance_valid(choices_container):
-		choices_container.hide()
-		choices_container.modulate.a = 0.0
-		
-	if is_instance_valid(choices_container2):
-		choices_container2.hide()
-		choices_container2.modulate.a = 0.0 
+	choices_container.hide()
+	choices_container2.hide()
+	choices_container2.modulate.a = 0.0 
 	
+<<<<<<< Updated upstream
+	choices_container3.hide()
+	choices_container3.modulate.a = 0.0
+=======
 	if is_instance_valid(choices_container3):
 		choices_container3.hide()
 		choices_container3.modulate.a = 0.0
 	# -------------------------------------
 	
+	# --- HIS TRANSITION TITLE CARD FADE-OUT OPTIMIZATION ---
 	# Handle clean title fade out if TransitionManager has title labels active
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label and title_label.visible:
@@ -89,6 +108,7 @@ func _ready():
 	# Cleanly clear away the curtain layer smoothly
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
+>>>>>>> Stashed changes
 	
 	dialogue_box.line_started.connect(_on_line_started)
 	dialogue_box.line_finished.connect(_on_line_finished) 
@@ -103,6 +123,17 @@ func _ready():
 	
 	rideatrain_btn1.pressed.connect(_on_rideatrain_home_pressed)
 	walktohome_btn.pressed.connect(_on_walktohome_pressed)
+	
+<<<<<<< Updated upstream
+	#chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
+	main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
+=======
+	# Connect your navigation buttons cleanly
+	if chapter1_btn and not chapter1_btn.pressed.is_connected(_on_chapter1_btn_pressed):
+		chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
+	if main_menu_btn and not main_menu_btn.pressed.is_connected(_on_main_menu_btn_pressed):
+		main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
+>>>>>>> Stashed changes
 		
 	var breakfast_sequence = [
 		{"speaker": "", "text": "The sun is rising."},
@@ -110,7 +141,7 @@ func _ready():
 		{"speaker": "Jane", "text": "Opo! I'm excited... and kinda nervous."},
 		{"speaker": "Dad", "text": "You'll do great, anak. Eto ang weekly allowance mo: P500.", "show_dad": true, "hide_mom": true, "add_money": 500},
 		{"speaker": "Mom", "text": "Remember, that has to cover your lunch, transportation, and any school needs until Friday.", "show_mom": true, "hide_dad": true},
-		{"speaker": "Jane", "text": "Opo mom! I’ll spend it wisely."},
+		{"speaker": "Jane", "text": "Opo mom! I’ll spend it wiisely."},
 		{"speaker": "Mom", "text": "Lagi mo sinasabi yan."},
 		{"speaker": "Dad", "text": "Just make smart choices, okay? Every peso counts.", "show_dad": true, "hide_mom": true}
 	]
@@ -135,14 +166,14 @@ func _on_line_started(line_data):
 		dad.appear("idle", true)
 	if line_data.has("hide_dad") and line_data["hide_dad"] == true:
 		dad.exit() 
-
+		
 func _on_line_finished(line_data):
 	if line_data.has("add_money"):
 		currency_hud.add_money(line_data["add_money"])
 
 func _on_dialogue_finished():
 	if input_locked: return 
-	input_locked = true     
+	input_locked = true     # Lock while UI animates in/out
 	
 	if current_scene == "breakfast":
 		jane.exit(true)
@@ -166,7 +197,7 @@ func _on_dialogue_finished():
 		tween.tween_property(choices_container2, "modulate:a", 1.0, 0.5)
 		
 		await tween.finished
-		input_locked = false 
+		input_locked = false # Let player click choices
 		
 	elif current_scene == "after_lunch":
 		jane.exit(true) 
@@ -174,10 +205,10 @@ func _on_dialogue_finished():
 		
 		if lunch_choice == "bread":
 			rideatrain_btn1.show() 
-			walktohome_btn.hide()   
+			walktohome_btn.hide()  
 		elif lunch_choice == "siomai":
 			rideatrain_btn1.show() 
-			walktohome_btn.show()   
+			walktohome_btn.show()  
 			
 		jane_big.modulate.a = 0.0 
 		jane_big.show()           
@@ -188,7 +219,7 @@ func _on_dialogue_finished():
 		tween.tween_property(choices_container3, "modulate:a", 1.0, 0.5)
 		
 		await tween.finished
-		input_locked = false 
+		input_locked = false # Let player click choices
 		
 	elif current_scene == "evening":
 		jane.exit(true)
@@ -221,6 +252,8 @@ func show_choice_buttons():
 	await tween.finished
 	input_locked = false 
 
+# --- BUTTON CLICK FUNCTIONS ---
+
 func _on_rideatrain_pressed():
 	if input_locked: return
 	input_locked = true
@@ -239,6 +272,8 @@ func _on_walkschool_pressed():
 	if input_locked: return
 	input_locked = true
 	execute_choice_transition(WALK_BG)
+
+# --- THE CINEMATIC CHOICE TRANSITION ---
 
 func execute_choice_transition(new_bg):
 	choices_container.hide()
@@ -308,6 +343,8 @@ func show_after_lunch_dialogue():
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(sequence)
 	input_locked = false
+	
+# --- GOING HOME FUNCTIONS ---
 
 func _on_rideatrain_home_pressed():
 	if input_locked: return
@@ -371,12 +408,56 @@ func show_stats_screen():
 	await tween.finished
 	input_locked = false 
 
+# =========================================
+# PROCEED DIRECTLY TO CHAPTER 1 BUTTON
+# =========================================
 func _on_chapter1_btn_pressed():
 	if input_locked: return
 	input_locked = true
 	
 	chapter1_btn.disabled = true 
+	main_menu_btn.disabled = true 
 	stats_screen.hide()
 	currency_hud.hide() 
 	
-	TransitionManager.transition_to(CHAPTER_1_SCENE, "CHAPTER 1")
+<<<<<<< Updated upstream
+	# --- FIXED: Force the sandbox cache to clean balances BEFORE saving progress!
+	GameManager.flush_buffer_to_database()
+	
+	saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
+=======
+	GameManager.flush_buffer_to_database()
+	
+	if is_instance_valid(saving_screen) and saving_screen.has_method("trigger_save_sequence"):
+		saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
+	else:
+		TransitionManager.transition_to(CHAPTER_1_SCENE, "CHAPTER 1")
+>>>>>>> Stashed changes
+
+# =========================================
+# SAVE PROGRESS AND EXIT TO MAIN MENU BUTTON
+# =========================================
+func _on_main_menu_btn_pressed():
+	if input_locked: return
+	input_locked = true
+	
+	chapter1_btn.disabled = true
+	main_menu_btn.disabled = true 
+	stats_screen.hide()
+	currency_hud.hide()
+	
+<<<<<<< Updated upstream
+	# --- FIXED: Wipes tutorial cash records safely on menu drop exit
+	GameManager.flush_buffer_to_database()
+	
+	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
+	saving_screen.trigger_save_sequence(main_screen_path)
+=======
+	GameManager.flush_buffer_to_database()
+	
+	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
+	if is_instance_valid(saving_screen) and saving_screen.has_method("trigger_save_sequence"):
+		saving_screen.trigger_save_sequence(main_screen_path)
+	else:
+		TransitionManager.transition_to(main_screen_path)
+>>>>>>> Stashed changes
