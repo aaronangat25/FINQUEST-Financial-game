@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://8qhlywmd4o2r"]
+
+[ext_resource type="Script" uid="uid://b3exbob7d1kwc" path="res://Scenes/Loading Screen/SavingScreen.gd" id="1_h5ct6"]
+[ext_resource type="Texture2D" uid="uid://mw180wigih40" path="res://Assets/Backgrounds/Loading Screen/SAVING PROGRESS BG.png" id="1_vlyaw"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h5ct6"]
+texture = ExtResource("1_vlyaw")
+
+[node name="SavingScreen" type="CanvasLayer"]
+script = ExtResource("1_h5ct6")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_h5ct6")

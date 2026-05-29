@@ -5,6 +5,7 @@ const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
 # --- NODE REFERENCES ---
+@onready var saving_screen = $SavingScreen
 @onready var jane_graduation_anchor = $JaneGraduationAnchor
 @onready var jane_graduation_sprite = $JaneGraduationAnchor/JaneGraduation
 
@@ -20,21 +21,20 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 
 # Summary Evaluation Overlay Panel
 @onready var stats_screen = $StatsScreen
-@onready var chapter_5_btn = $StatsScreen/Chapter5_btn
+@onready var ending_btn = $StatsScreen/Ending_btn
+@onready var main_menu_btn = $StatsScreen/MainMenu_btn
 
 var currency_hud
 var active_dialogue_box
 
-# Localized tracking state variable
 var career_choice: String = ""
+var is_transitioning: bool = false
 
 func _ready() -> void:
-	# 1. Instantiate Core Currency Hud Element
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
 	
-	# 2. Strict Runtime Layout Visibility Defaults Reset
 	if jane_graduation_anchor: jane_graduation_anchor.hide()
 	if jane_graduation_sprite:
 		jane_graduation_sprite.hide()
@@ -46,13 +46,22 @@ func _ready() -> void:
 	if choice_appears_banner: choice_appears_banner.hide()
 	if choices_container: choices_container.hide()
 	
-	# Keep stats panel matrix safe and invisible on launch
 	if stats_screen:
 		stats_screen.hide()
 		stats_screen.modulate.a = 0.0
+		
+	if ending_btn:
+		ending_btn.hide()
+		ending_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if main_menu_btn:
+		main_menu_btn.hide()
+		main_menu_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			
 	await get_tree().process_frame
 	
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+		
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.fade_from_black()
 		
@@ -63,7 +72,6 @@ func _ready() -> void:
 func _play_intro_monologue() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# Fade In Dialogue Box Container Frame FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -74,7 +82,6 @@ func _play_intro_monologue() -> void:
 		box_visual.modulate.a = 0.0
 		await create_tween().tween_property(box_visual, "modulate:a", 1.0, 0.5).finished
 		
-	# Fade In Jane Graduation Cap Sprite SECOND
 	if jane_graduation_anchor: jane_graduation_anchor.show()
 	if jane_graduation_sprite:
 		jane_graduation_sprite.show()
@@ -82,12 +89,10 @@ func _play_intro_monologue() -> void:
 			jane_graduation_sprite.appear("idle", false)
 		await create_tween().tween_property(jane_graduation_sprite, "modulate:a", 1.0, 0.5).finished
 	
-	# Execute text typewriter block sequence
 	active_dialogue_box.is_fading = false
 	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": "Graduate na ako… pero ano na ang next step?"}])
 	await active_dialogue_box.dialogue_finished
 	
-	# Clear out old overlay panels smoothly before displaying choice pathways
 	var t_clear = create_tween().set_parallel(true)
 	if box_visual: t_clear.tween_property(box_visual, "modulate:a", 0.0, 0.4)
 	if jane_graduation_sprite: t_clear.tween_property(jane_graduation_sprite, "modulate:a", 0.0, 0.4)
@@ -96,7 +101,6 @@ func _play_intro_monologue() -> void:
 	if jane_graduation_sprite: jane_graduation_sprite.hide()
 	if jane_graduation_anchor: jane_graduation_anchor.hide()
 	active_dialogue_box.queue_free()
-	
 	_show_graduation_choices()
 
 
@@ -113,7 +117,6 @@ func _show_graduation_choices() -> void:
 		t_menu.tween_property(choose_control, "modulate:a", 1.0, 0.5)
 		await t_menu.finished
 		
-	# Connect Button Hooks Bulletproofly
 	if apply_corporate_btn and not apply_corporate_btn.pressed.is_connected(_on_corporate_selected):
 		apply_corporate_btn.pressed.connect(_on_corporate_selected)
 		
@@ -128,50 +131,143 @@ func _show_graduation_choices() -> void:
 func _on_corporate_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Corporate"
+	
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_career_pathway", "Corporate")
 	_show_stats_summary_screen()
 
 func _on_business_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Business"
+	
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_career_pathway", "Business")
 	_show_stats_summary_screen()
 
 func _on_stop_first_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Stop"
+	
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_career_pathway", "Stop")
 	_show_stats_summary_screen()
 
 
 # --- STEP 4: DISPLAY STATS SCREEN OVERLAY DIRECTLY ---
 func _show_stats_summary_screen() -> void:
-	# 1. Fade out choice menu selection block cleanly
 	if choose_control:
 		var t_out = create_tween()
 		t_out.tween_property(choose_control, "modulate:a", 0.0, 0.4)
 		await t_out.finished
 		choose_control.hide()
 
-	# 2. Bring up the StatsScreen overlay panel smoothly
 	if stats_screen:
 		stats_screen.show()
 		var t_panel = create_tween()
 		t_panel.tween_property(stats_screen, "modulate:a", 1.0, 0.5)
 		await t_panel.finished
 		
-	# Connect the exit button handler inside the summary matrix
-	if chapter_5_btn and not chapter_5_btn.pressed.is_connected(_on_final_chapter_exit_pressed):
-		chapter_5_btn.pressed.connect(_on_final_chapter_exit_pressed)
+	var t_show_buttons = create_tween().set_parallel(true)
+	
+	if ending_btn:
+		ending_btn.show()
+		ending_btn.modulate.a = 0.0
+		ending_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		t_show_buttons.tween_property(ending_btn, "modulate:a", 1.0, 0.5)
+		if not ending_btn.pressed.is_connected(_on_final_chapter_exit_pressed):
+			ending_btn.pressed.connect(_on_final_chapter_exit_pressed)
+			
+	if main_menu_btn:
+		main_menu_btn.show()
+		main_menu_btn.modulate.a = 0.0
+		main_menu_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		t_show_buttons.tween_property(main_menu_btn, "modulate:a", 1.0, 0.5)
+		if not main_menu_btn.pressed.is_connected(_on_main_menu_pressed):
+			main_menu_btn.pressed.connect(_on_main_menu_pressed)
 
 
-# --- STEP 5: GAME CONCLUSION ROUTINE ---
+# --- STEP 5: GAME CONCLUSION ROUTINE (CONTINUE TO ENDING) ---
 func _on_final_chapter_exit_pressed() -> void:
-	if chapter_5_btn:
-		chapter_5_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if is_transitioning: return
+	is_transitioning = true
+	
+	if ending_btn: ending_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
+	
+	if currency_hud: currency_hud.hide()
+	if stats_screen: stats_screen.hide()
+	
+	GameManager.current_chapter = 6
+	var next_scene_path = "res://Scenes/Ending/ending.tscn"
+	_execute_save_and_blackout(next_scene_path, true)
+
+
+# --- MAIN MENU PRESSED EVENT ---
+func _on_main_menu_pressed() -> void:
+	if is_transitioning: return
+	is_transitioning = true
+	
+	if ending_btn: ending_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
+	
+	if currency_hud: currency_hud.hide()
+	if stats_screen: stats_screen.hide()
+	
+	GameManager.current_chapter = 6
+	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
+	_execute_save_and_blackout(main_menu_path, false)
+
+
+# --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
+func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bool) -> void:
+	# --- MASTER SAVE TRANSACTION FLUSH ---
+	# Writes clothing rental/purchases and final path tracking logs down to SQLite permanently!
+	GameManager.flush_buffer_to_database()
+	
+	if saving_screen:
+		saving_screen.process_mode = PROCESS_MODE_ALWAYS
+		saving_screen.show()
 		
-	if TransitionManager.has_method("fade_to_black"):
-		await TransitionManager.fade_to_black()
-		
-	print("Chapter 5 Career Summary Complete. Returning to Main Game Summary Screen Matrix...")
-	#get_tree().change_scene_to_file("res://Scenes/Menu/game_summary_screen.tscn")
+	GameManager.complete_current_chapter(100.0)
+	print("[DATABASE] Chapter 5 Progression committed smoothly.")
+	
+	await get_tree().create_timer(3.0).timeout
+	
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1)
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	if saving_screen:
+		saving_screen.hide()
+		saving_screen.process_mode = PROCESS_MODE_DISABLED
+	
+	if run_cinematic_card:
+		if TransitionManager.has_method("fade_to_black"):
+			await TransitionManager.fade_to_black()
+			
+		var title_label = TransitionManager.get_node_or_null("TitleLabel")
+		if title_label:
+			title_label.modulate.a = 0.0
+			title_label.show()
+			
+			title_label.text = "THE ENDING"
+			var t1 = create_tween()
+			t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t1.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			var t2 = create_tween()
+			t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t2.finished
+			title_label.hide()
+			
+			await get_tree().create_timer(1.0).timeout
+			
+		get_tree().change_scene_to_file(destination_path)
+	else:
+		get_tree().change_scene_to_file(destination_path)
 
 
 # --- HELPER UTILITIES ---

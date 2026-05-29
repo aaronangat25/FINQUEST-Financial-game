@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b8bx4n1y8odkx"]
+[gd_scene load_steps=18 format=3 uid="uid://b8bx4n1y8odkx"]
 
 [ext_resource type="Script" uid="uid://c441oruigciwu" path="res://GD Scripts/Chapter_2/chapter_2_scene_1.gd" id="1_4exjk"]
 [ext_resource type="Texture2D" uid="uid://c5xua0nxjxu8i" path="res://Assets/Backgrounds/Chapter_2/dorm/dormbg.png" id="2_4exjk"]
@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="8_3e66v"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="9_67erm"]
 [ext_resource type="PackedScene" uid="uid://dpx2tgtkh5d7j" path="res://Scenes/Characters/Jane/jane_2_dbig.tscn" id="10_6y3at"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="11_ihr8v"]
+[ext_resource type="PackedScene" uid="uid://8qhlywmd4o2r" path="res://Scenes/Loading Screen/SavingScreen.tscn" id="12_ym0qg"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4exjk"]
 texture = ExtResource("2_4exjk")
@@ -396,3 +398,7 @@ theme_override_font_sizes/font_size = 7
 text = "Exam Starts"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="pause_btn" parent="." instance=ExtResource("11_ihr8v")]
+
+[node name="SavingScreen" parent="." instance=ExtResource("12_ym0qg")]

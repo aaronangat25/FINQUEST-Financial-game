@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dprfpjhlvl61o"]
+[gd_scene load_steps=12 format=3 uid="uid://dprfpjhlvl61o"]
 
 [ext_resource type="Texture2D" uid="uid://c3m81124vpm5t" path="res://Assets/Backgrounds/Chapter 1/store clerk/clerkmarketbg.png" id="1_mxvau"]
 [ext_resource type="Script" uid="uid://dhalqepa833uq" path="res://GD Scripts/Chapter 1/Chapter 1 Storeclerk/chapter_1_storeclerk.gd" id="1_y82gm"]
@@ -8,6 +8,7 @@
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="6_7demm"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="7_i5noc"]
 [ext_resource type="PackedScene" uid="uid://dpx2tgtkh5d7j" path="res://Scenes/Characters/Jane/jane_2_dbig.tscn" id="8_i5noc"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="9_l4aof"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kmpbs"]
 texture = ExtResource("1_mxvau")
@@ -211,3 +212,5 @@ grow_vertical = 0
 scale = Vector2(0.92954314, 0.861167)
 
 [node name="jane2dbig" parent="JaneBigAnchor" instance=ExtResource("8_i5noc")]
+
+[node name="pause_btn" parent="." instance=ExtResource("9_l4aof")]

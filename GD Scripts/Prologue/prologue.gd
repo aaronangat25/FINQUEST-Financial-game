@@ -1,5 +1,11 @@
 extends Control
 
+# =========================================
+# FINQUEST PROLOGUE UTILITY RUNTIME
+# =========================================
+
+@onready var saving_screen = $SavingScreen # Path to your instantiated scene node
+
 @onready var dialogue_box = $DialogueBox
 @onready var background = $sunrise_bg 
 @onready var transition_manager = $Transition_Manager
@@ -54,12 +60,12 @@ var lunch_spent = 0
 
 const CHAPTER_1_SCENE = "res://Scenes/Chapter 1/chapter_1.tscn" 
 @onready var chapter1_btn = $StatsScreen/Panel/Chapter1_btn
+@onready var main_menu_btn = $StatsScreen/Panel/main_menu_btn
 
 
 func _ready():
 	AudioManager.play_chapter_music() # Fires up GENERAL MUSIC.mp3 immediately!
 	
-	# Rest of your dialogue, UI initialization, or layout setup code below...
 	input_locked = true # Lock inputs during the opening animation!
 	
 	stats_screen.hide()
@@ -85,6 +91,9 @@ func _ready():
 	
 	rideatrain_btn1.pressed.connect(_on_rideatrain_home_pressed)
 	walktohome_btn.pressed.connect(_on_walktohome_pressed)
+	
+	#chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
+	main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
 		
 	var breakfast_sequence = [
 		{"speaker": "", "text": "The sun is rising."},
@@ -122,9 +131,8 @@ func _on_line_finished(line_data):
 	if line_data.has("add_money"):
 		currency_hud.add_money(line_data["add_money"])
 
-# 4. RUNS WHEN THE DIALOGUE BOX CLOSES
 func _on_dialogue_finished():
-	if input_locked: return # Double-signal protection!
+	if input_locked: return 
 	input_locked = true     # Lock while UI animates in/out
 	
 	if current_scene == "breakfast":
@@ -191,7 +199,7 @@ func transition_to_outside():
 		{"speaker": "Jane", "text": "Okay, first decision of the day...", "show_jane": true}
 	]
 	dialogue_box.start_dialogue(outside_sequence, 1.0)
-	input_locked = false # Let player read
+	input_locked = false 
 
 func show_choice_buttons():
 	await get_tree().create_timer(0.5).timeout
@@ -202,7 +210,7 @@ func show_choice_buttons():
 	jane_big.appear()
 	
 	await tween.finished
-	input_locked = false # Now safe to click buttons
+	input_locked = false 
 
 # --- BUTTON CLICK FUNCTIONS ---
 
@@ -224,7 +232,6 @@ func _on_walkschool_pressed():
 	if input_locked: return
 	input_locked = true
 	execute_choice_transition(WALK_BG)
-
 
 # --- THE CINEMATIC CHOICE TRANSITION ---
 
@@ -259,7 +266,6 @@ func execute_choice_transition(new_bg):
 		{"speaker": "Jane", "text": "Hmm... should I go for the full meal or save a bit?"}
 	]
 	
-# --- THE FIX: Force the dialogue box to become visible again! ---
 	dialogue_box.show()
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(canteen_sequence, 0.5)
@@ -291,10 +297,8 @@ func show_after_lunch_dialogue():
 		{"speaker": "Jane", "text": "OKAY, TAPOS NA AKONG KUMAIN! ANONG WAY KAYA AKO UUWI?", "show_jane": true}
 	]
 	
-	# THE MAGIC DELAY: Absorbs spam-clicks into empty space!
 	await get_tree().create_timer(0.5).timeout
 	
-# --- THE FIX: Force the dialogue box to become visible again! ---
 	dialogue_box.show() 
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(sequence)
@@ -340,7 +344,6 @@ func execute_going_home_transition(transit_bg):
 		{"speaker": "Jane", "text": evening_text, "show_jane": true}
 	]
 	
-# --- THE FIX: Force the dialogue box to become visible again! ---
 	dialogue_box.show()
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(evening_sequence, 0.5)
@@ -363,14 +366,39 @@ func show_stats_screen():
 	tween.tween_property(stats_screen, "modulate:a", 1.0, 1.0)
 	
 	await tween.finished
-	input_locked = false # Let them proceed
+	input_locked = false 
 
+# =========================================
+# PROCEED DIRECTLY TO CHAPTER 1 BUTTON
+# =========================================
 func _on_chapter1_btn_pressed():
 	if input_locked: return
 	input_locked = true
 	
 	chapter1_btn.disabled = true 
+	main_menu_btn.disabled = true 
 	stats_screen.hide()
 	currency_hud.hide() 
 	
-	TransitionManager.transition_to(CHAPTER_1_SCENE, "CHAPTER 1")
+	# --- FIXED: Force the sandbox cache to clean balances BEFORE saving progress!
+	GameManager.flush_buffer_to_database()
+	
+	saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
+
+# =========================================
+# SAVE PROGRESS AND EXIT TO MAIN MENU BUTTON
+# =========================================
+func _on_main_menu_btn_pressed():
+	if input_locked: return
+	input_locked = true
+	
+	chapter1_btn.disabled = true
+	main_menu_btn.disabled = true 
+	stats_screen.hide()
+	currency_hud.hide()
+	
+	# --- FIXED: Wipes tutorial cash records safely on menu drop exit
+	GameManager.flush_buffer_to_database()
+	
+	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
+	saving_screen.trigger_save_sequence(main_screen_path)

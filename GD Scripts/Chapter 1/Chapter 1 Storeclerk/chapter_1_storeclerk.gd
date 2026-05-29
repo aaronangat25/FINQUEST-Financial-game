@@ -38,14 +38,24 @@ func _ready() -> void:
 	jen_dialogue.modulate.a = 0.0
 	kylie.modulate.a = 0.0
 	student_dialogue.modulate.a = 0.0
-	jane_big.modulate.a = 0.0 # <-- HIDE JANE INITIALLY
+	jane_big.modulate.a = 0.0
 	
 	choose_control_3.modulate.a = 0.0
 	choose_control_3.hide()
 	
-	aisle_btn.pressed.connect(func(): _on_store_choice_made(100))
-	storage_btn.pressed.connect(func(): _on_store_choice_made(0))
-	cashier_btn.pressed.connect(func(): _on_store_choice_made(0))
+	# FIXED: Appended GameManager database log hooks to match structural selections
+	aisle_btn.pressed.connect(func(): 
+		GameManager.log_choice("chap1_clerk_assistance", "A")
+		_on_store_choice_made(100)
+	)
+	storage_btn.pressed.connect(func(): 
+		GameManager.log_choice("chap1_clerk_assistance", "B")
+		_on_store_choice_made(0)
+	)
+	cashier_btn.pressed.connect(func(): 
+		GameManager.log_choice("chap1_clerk_assistance", "C")
+		_on_store_choice_made(0)
+	)
 	
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.transition_finished
@@ -136,7 +146,6 @@ func _on_tutorial_back_pressed() -> void:
 	
 	var box_visual = active_dialogue_box.get_node("MarginContainer/texturerectContainer")
 	if box_visual:
-		# Pre-fill name tag to prevent stretching bug
 		var name_label = active_dialogue_box.get_node("MarginContainer/texturerectContainer/Panel/NameLabel")
 		if name_label: name_label.text = "Student" 
 		
@@ -174,15 +183,17 @@ func _on_tutorial_back_pressed() -> void:
 	choose_control_3.show()
 	var tween_choice = create_tween()
 	tween_choice.tween_property(choose_control_3, "modulate:a", 1.0, 0.5)
-	jane_big.appear() # <- Jane fades in at the exact same time!
+	jane_big.appear()
 
 # --- HANDLING THE STORE CHOICE ---
 func _on_store_choice_made(reward: int) -> void:
 	if reward > 0:
 		currency_hud.add_money(reward)
+		
+	# FIXED: Stage the sandbox pocket money increase directly inside your memory tracking buffers
+	GameManager.stage_finance_change(0, reward, "Chapter 1 Clerk Part-Time Training Reward")
 	
 	# --- JANE AND CHOICES FADE OUT TOGETHER ---
-	# We use a direct tween here because Big Jane doesn't have an exit() function!
 	var jane_tween = create_tween()
 	jane_tween.tween_property(jane_big, "modulate:a", 0.0, 0.5)
 	

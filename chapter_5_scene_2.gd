@@ -7,13 +7,13 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 # --- NODE REFERENCES ---
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking 
 @onready var jane_big_anchor = $JaneBigAnchor
-@onready var jane_big_sprite = $JaneBigAnchor/jane2d       # Base background room child sprite
-@onready var phone_mini = $PhoneMini              # Mini phone CanvasLayer
-@onready var phone_ringing = $PhoneRinging        # Call ring graphics layer
+@onready var jane_big_sprite = $JaneBigAnchor/jane2d       
+@onready var phone_mini = $PhoneMini              
+@onready var phone_ringing = $PhoneRinging        
 @onready var mom_anchor = $MomAnchor
-@onready var mom_sprite = $MomAnchor/mom2d        # Target child sprite explicitly
+@onready var mom_sprite = $MomAnchor/mom2d        
 @onready var dad_anchor = $DadAnchor
-@onready var dad_sprite = $DadAnchor/dad2d        # Target child sprite explicitly
+@onready var dad_sprite = $DadAnchor/dad2d        
 @onready var jane_talking = $JaneDialogueAnchor/jane2d
 
 var currency_hud
@@ -52,6 +52,10 @@ func _ready() -> void:
 			
 	await get_tree().process_frame
 	
+	# Force display synchronization on scene ready load
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+	
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.fade_from_black()
 		
@@ -62,7 +66,6 @@ func _ready() -> void:
 func _play_ringing_intro() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# --- FIXED: Jane remains HIDDEN during this initial narrator dialogue block ---
 	if jane_big_anchor: jane_big_anchor.hide()
 	if jane_big_sprite: jane_big_sprite.hide()
 		
@@ -72,7 +75,6 @@ func _play_ringing_intro() -> void:
 	active_dialogue_box.is_fading = true 
 	active_dialogue_box.show()
 	
-	# Target the Panel node container directly to hide the empty name tag box
 	var name_box_panel = active_dialogue_box.get_node_or_null("MarginContainer/texturerectContainer/Panel")
 	if name_box_panel:
 		name_box_panel.hide()
@@ -100,7 +102,7 @@ func _play_ringing_intro() -> void:
 		await t_box_out.finished
 	active_dialogue_box.queue_free()
 	
-	# --- FIXED: NOW WE SHOW HER ALONGSIDE THE MINI PHONE ---
+	# Now we show her alongside the mini phone ring alerts
 	if jane_big_anchor:
 		jane_big_anchor.show()
 		jane_big_anchor.modulate.a = 1.0
@@ -129,10 +131,9 @@ func _input(event: InputEvent) -> void:
 				if phone_ui is Control and phone_ui.get_global_rect().has_point(event.position):
 					
 					is_phone_waiting_for_click = false
-					
 					if phone_mini: phone_mini.hide()
 					
-					# --- FIXED: MAKE HER DISAPPEAR INSTANTLY WHEN THE CALL IS ANSWERED ---
+					# Make her disappear instantly when the call is answered
 					if jane_big_sprite: jane_big_sprite.hide()
 					if jane_big_anchor: jane_big_anchor.hide()
 					
@@ -146,7 +147,7 @@ func _start_family_call_conversation() -> void:
 		phone_ringing.modulate.a = 1.0
 
 	# =====================================================================
-	# Turn 1: Mom Dialogue Frame (Jane stays hidden)
+	# Turn 1: Mom Dialogue Frame
 	# =====================================================================
 	if mom_anchor:
 		mom_anchor.show()
@@ -192,7 +193,7 @@ func _start_family_call_conversation() -> void:
 	await get_tree().process_frame
 
 	# =====================================================================
-	# Turn 3: Jane Responds on Call (Jane Dialogue Anchor shows up)
+	# Turn 3: Jane Responds on Call
 	# =====================================================================
 	if jane_talking:
 		var talking_parent = jane_talking.get_parent()
@@ -270,7 +271,7 @@ func _start_family_call_conversation() -> void:
 	await get_tree().process_frame
 
 	# =====================================================================
-	# Turn 6: Jane Thinking Reflection Monologue (Using thinking anchor)
+	# Turn 6: Jane Thinking Reflection Monologue
 	# =====================================================================
 	if jane_thinking:
 		var thinking_parent = jane_thinking.get_parent()
@@ -302,7 +303,6 @@ func _start_family_call_conversation() -> void:
 	await t_end.finished
 	
 	if phone_ringing: phone_ringing.hide()
-	
 	_transition_to_scene_3()
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c4uva1ygakwhy"]
+[gd_scene load_steps=11 format=3 uid="uid://c4uva1ygakwhy"]
 
 [ext_resource type="Texture2D" uid="uid://c5xua0nxjxu8i" path="res://Assets/Backgrounds/Chapter_2/dorm/dormbg.png" id="1_jl2ek"]
 [ext_resource type="Script" uid="uid://cnlkeoha0g52" path="res://GD Scripts/Chapter_4/chapter_4_scene_1.gd" id="1_r7jdt"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="4_r7jdt"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="6_ivwhr"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="7_n5tmh"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="8_n5tmh"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tdy03"]
 texture = ExtResource("1_jl2ek")
@@ -153,3 +154,5 @@ theme_override_font_sizes/font_size = 4
 text = "B. Online Meeting
  (P0)"
 autowrap_mode = 2
+
+[node name="pause_btn" parent="." instance=ExtResource("8_n5tmh")]

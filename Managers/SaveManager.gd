@@ -9,7 +9,14 @@ extends Node
 # =========================================
 
 func save_game():
+	# --- ADD THIS MASTER LOCK REGULATION LINE ---
+	# If the player is in Chapter 1, BLOCK the saving engine from writing 
+	# temporary tutorial pocket change into your persistent SQLite rows!
+	if GameManager.current_chapter == 1:
+		print("[SAVE GUARD] Chapter 1 active. Auto-save rejected to protect sandbox data integrity.")
+		return
 
+	# Your original untouched save logic rows continue below safely:
 	DatabaseManager.db.query_with_bindings("""
 	UPDATE player_stats
 	SET

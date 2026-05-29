@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://0b83lb0ura16"]
+[gd_scene load_steps=7 format=3 uid="uid://0b83lb0ura16"]
 
 [ext_resource type="Script" uid="uid://bxis7lyauap84" path="res://GD Scripts/Chapter 1/Chapter 1 Barista/chapter_1_barista.gd" id="1_ih8hf"]
 [ext_resource type="Texture2D" uid="uid://d2dxt38a1qxw8" path="res://Assets/Backgrounds/Chapter 1/barista/cafebg.png" id="1_o68jc"]
 [ext_resource type="PackedScene" uid="uid://brhcl4me1umq4" path="res://Scenes/Characters/Leo/leo_2d.tscn" id="3_c4fx8"]
 [ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="4_otv2o"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="5_otv2o"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ih8hf"]
 texture = ExtResource("1_o68jc")
@@ -73,3 +74,5 @@ grow_vertical = 2
 scale = Vector2(0.8121897, 0.9257922)
 
 [node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("4_otv2o")]
+
+[node name="pause_btn" parent="." instance=ExtResource("5_otv2o")]

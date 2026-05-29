@@ -24,16 +24,14 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 var currency_hud
 var active_dialogue_box
 
-# --- FIXED: Localized button selection state variable ---
 var graduation_choice: String = ""
 
 func _ready() -> void:
-	# 1. Instantiate Core Currency Hud Element
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
 	
-	# 2. Strict Scene Layer Visibility Defaults Reset
+	# Strict Scene Layer Visibility Defaults Reset
 	if jane_big_anchor: jane_big_anchor.hide()
 	if jane_big_anchor2: jane_big_anchor2.hide()
 	if jane_big_anchor3: jane_big_anchor3.hide()
@@ -51,6 +49,9 @@ func _ready() -> void:
 			
 	await get_tree().process_frame
 	
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+		
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.fade_from_black()
 		
@@ -61,7 +62,6 @@ func _ready() -> void:
 func _play_intro_sequence() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# Fade In Dialogue Box FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -72,7 +72,6 @@ func _play_intro_sequence() -> void:
 		box_visual.modulate.a = 0.0
 		await create_tween().tween_property(box_visual, "modulate:a", 1.0, 0.5).finished
 		
-	# Fade IN Thinking Jane SECOND
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 0.0
@@ -84,7 +83,6 @@ func _play_intro_sequence() -> void:
 	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": "May graduation pa… syempre may gastos ulit."}])
 	await active_dialogue_box.dialogue_finished
 	
-	# Clear out characters smoothly before choice menu appears
 	var t_clear = create_tween().set_parallel(true)
 	if jane_thinking: t_clear.tween_property(jane_thinking, "modulate:a", 0.0, 0.4)
 	if box_visual: t_clear.tween_property(box_visual, "modulate:a", 0.0, 0.4)
@@ -92,7 +90,6 @@ func _play_intro_sequence() -> void:
 	
 	if jane_thinking: jane_thinking.hide()
 	active_dialogue_box.queue_free()
-	
 	_show_graduation_choices()
 
 
@@ -109,7 +106,6 @@ func _show_graduation_choices() -> void:
 		t_menu.tween_property(choose_control, "modulate:a", 1.0, 0.5)
 		await t_menu.finished
 		
-	# Connect Button Hooks Bulletproofly
 	if new_outfit_btn and not new_outfit_btn.pressed.is_connected(_on_choice_a_selected):
 		new_outfit_btn.pressed.connect(_on_choice_a_selected)
 		
@@ -123,10 +119,14 @@ func _show_graduation_choices() -> void:
 # --- STEP 3: CHOICE BUTTON CALLBACKS ---
 func _on_choice_a_selected() -> void:
 	_disable_all_buttons()
-	graduation_choice = "A" # Saving to the local file variable now
+	graduation_choice = "A"
 	
-	if currency_hud and currency_hud.has_method("add_money"):
-		currency_hud.add_money(-2500)
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_graduation_outfit", "A")
+	GameManager.stage_finance_change(0, -2500, "Purchased a premium brand-new graduation dress outfit")
+	
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 		
 	_handle_immediate_reflection(jane_big_anchor, "Deserve ko rin naman siguro ito…")
 
@@ -134,8 +134,12 @@ func _on_choice_b_selected() -> void:
 	_disable_all_buttons()
 	graduation_choice = "B"
 	
-	if currency_hud and currency_hud.has_method("add_money"):
-		currency_hud.add_money(-1200)
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_graduation_outfit", "B")
+	GameManager.stage_finance_change(0, -1200, "Purchased a standard simple graduation outfit")
+	
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 		
 	_handle_immediate_reflection(jane_big_anchor2, "Simple pero memorable pa rin.")
 
@@ -143,27 +147,28 @@ func _on_choice_c_selected() -> void:
 	_disable_all_buttons()
 	graduation_choice = "C"
 	
-	if currency_hud and currency_hud.has_method("add_money"):
-		currency_hud.add_money(-500)
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_graduation_outfit", "C")
+	GameManager.stage_finance_change(0, -500, "Paid rental and dry cleaning for a borrowed graduation outfit")
+	
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 		
 	_handle_immediate_reflection(jane_big_anchor3, "Mas importante ang future kaysa isang araw lang ng gastos.")
 
 
 # --- STEP 4: DIRECT SELECTION REFLECTION ---
 func _handle_immediate_reflection(target_anchor: Control, jane_reflection: String) -> void:
-	# 1. Fade out choice menu selection interface cleanly
 	if choose_control:
 		var t_out = create_tween()
 		t_out.tween_property(choose_control, "modulate:a", 0.0, 0.4)
 		await t_out.finished
 		choose_control.hide()
 
-	# 2. Open specific background variant scene layout anchor 
 	if target_anchor:
 		target_anchor.show()
 		target_anchor.modulate.a = 1.0
 
-	# 3. Instantiate dialogue node directly for Jane's inner thought reaction
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -174,7 +179,6 @@ func _handle_immediate_reflection(target_anchor: Control, jane_reflection: Strin
 		box_visual.modulate.a = 0.0
 		await create_tween().tween_property(box_visual, "modulate:a", 1.0, 0.4).finished
 
-	# 4. Reveal Thinking Jane avatar sprite
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 0.0
@@ -186,7 +190,6 @@ func _handle_immediate_reflection(target_anchor: Control, jane_reflection: Strin
 	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": jane_reflection}])
 	await active_dialogue_box.dialogue_finished
 
-	# Clean exit breakdown sequence
 	var t_clear = create_tween().set_parallel(true)
 	if jane_thinking: t_clear.tween_property(jane_thinking, "modulate:a", 0.0, 0.4)
 	if box_visual: t_clear.tween_property(box_visual, "modulate:a", 0.0, 0.4)
@@ -196,7 +199,6 @@ func _handle_immediate_reflection(target_anchor: Control, jane_reflection: Strin
 	if jane_thinking: jane_thinking.hide()
 	if target_anchor: target_anchor.hide()
 	active_dialogue_box.queue_free()
-
 	_transition_to_ending()
 
 
@@ -205,7 +207,6 @@ func _disable_all_buttons() -> void:
 	var buttons = [new_outfit_btn, simple_outfit_btn, borrow_outfit_btn]
 	for btn in buttons:
 		if btn:
-			# Blocks further player input/clicks completely 
 			btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _transition_to_ending() -> void:

@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://jboy1qxfyymy"]
+[gd_scene load_steps=12 format=3 uid="uid://jboy1qxfyymy"]
 
 [ext_resource type="Script" uid="uid://b4mp63h2rsnkx" path="res://chapter_5_scene_2.gd" id="1_41qbh"]
 [ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="2_3qik8"]
 [ext_resource type="Texture2D" uid="uid://bs5da4lpd5p64" path="res://Assets/Backgrounds/Chapter_5/dormbg.png" id="2_ehtb3"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="2_v0p5b"]
 [ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="3_ehtb3"]
 [ext_resource type="Texture2D" uid="uid://42ueilk8j4os" path="res://Assets/Phone/phone ringing (1).png" id="4_qeumg"]
 [ext_resource type="PackedScene" uid="uid://c8ro4frat6h0t" path="res://Scenes/Characters/Mom/mom_2d.tscn" id="5_v0p5b"]
@@ -23,6 +24,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_41qbh")
+
+[node name="pause_btn" parent="." instance=ExtResource("2_v0p5b")]
 
 [node name="dormbg" type="Panel" parent="."]
 layout_mode = 1

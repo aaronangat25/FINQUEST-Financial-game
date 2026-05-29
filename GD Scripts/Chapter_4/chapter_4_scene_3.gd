@@ -5,6 +5,7 @@ const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
 # --- NODE REFERENCES ---
+@onready var saving_screen = $SavingScreen
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var stat_screen = $StatsScreen
 
@@ -13,34 +14,35 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var printing_label = stat_screen.find_child("PrintingLabel", true, false)
 @onready var feedback_label = stat_screen.find_child("FeedbackLabel", true, false)
 @onready var chapter5_btn = stat_screen.find_child("Chapter5_btn", true, false)
+@onready var main_menu_btn = stat_screen.find_child("MainMenu_btn", true, false)
 
 var currency_hud
 var active_dialogue_box
+var is_transitioning: bool = false
 
 func _ready() -> void:
-	# 1. Spawn Currency HUD
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	
-	# 2. Setup Initial State
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if stat_screen: stat_screen.hide()
 	if chapter5_btn: chapter5_btn.hide()
+	if main_menu_btn: main_menu_btn.hide()
 	
 	await get_tree().process_frame
 	
-	# 3. Transition: Fade out black screen
+	# Force visual ledger totals sync on evaluation card load
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+	
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
 	
-	# 4. Wait 2 seconds
 	await get_tree().create_timer(2.0).timeout
-	
 	_play_intro_sequence()
 
 # STEP 1: INTRO DIALOGUE
 func _play_intro_sequence() -> void:
-	# Rule 1.0: Box FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -53,7 +55,6 @@ func _play_intro_sequence() -> void:
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
 		await t_box_in.finished
 	
-	# Rule 1.0: Jane SECOND
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 0.0
@@ -66,32 +67,27 @@ func _play_intro_sequence() -> void:
 	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": "Ito na ‘yon… lahat ng pagod, gastos, at effort—dito magbubunga."}])
 	await active_dialogue_box.dialogue_finished
 	
-	# Rule 1.0: Fade out Jane FIRST
 	if jane_thinking:
 		var t_jane_out = create_tween()
 		t_jane_out.tween_property(jane_thinking, "modulate:a", 0.0, 1.0)
 		await t_jane_out.finished
 		jane_thinking.exit(true)
 		
-	# Rule 1.0: Fade out Box SECOND
 	if box_visual:
 		var t_box_out = create_tween()
 		t_box_out.tween_property(box_visual, "modulate:a", 0.0, 1.0)
 		await t_box_out.finished
 	active_dialogue_box.queue_free()
-	
 	_calculate_and_show_results()
 
 # STEP 2: LOGIC & STAT SCREEN
 func _calculate_and_show_results() -> void:
-	# PULL CHOICES FROM GLOBAL SCRIPT
 	var meeting = Global.choice_meeting 
 	var printing = Global.choice_printing 
 	
 	var final_feedback = ""
 	var jane_reaction = ""
 	
-	# Format text with just "=" to prevent doubling
 	if meeting_label:
 		if meeting == "A": meeting_label.text = "= Face-to-Face"
 		elif meeting == "B": meeting_label.text = "= Online Meeting"
@@ -103,16 +99,19 @@ func _calculate_and_show_results() -> void:
 		elif printing == "C": printing_label.text = "= Digital Copy"
 		else: printing_label.text = "= No Data"
 
-
 	var color_green = Color("2ecc71") 
-	var color_red = Color("e74c3c")   
+	var color_red = Color("e74c3c")    
 	
+	# Determine her scoring thresholds and update database variables dynamically
+	var end_grade = 1.25
 	if meeting == "A" and printing == "A":
+		end_grade = 1.0
 		final_feedback = "RESULT: OUTSTANDING DEFENSE (1.0)"
 		jane_reaction = "Worth it lahat ng pagod… napasa ko!"
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
 		
 	elif printing == "C":
+		end_grade = 1.50
 		final_feedback = "RESULT: STRUGGLED DEFENSE (1.50)"
 		jane_reaction = "Nakaraos… pero sobrang hirap. Kailangan ko pang bumawi."
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_red)
@@ -125,18 +124,16 @@ func _calculate_and_show_results() -> void:
 	if feedback_label:
 		feedback_label.text = final_feedback
 
-	# Show Stat Screen
 	stat_screen.show()
 	stat_screen.modulate.a = 0.0
 	var t_stat = create_tween()
 	t_stat.tween_property(stat_screen, "modulate:a", 1.0, 1.0)
 	await t_stat.finished
 
-	_play_result_dialogue(jane_reaction)
+	_play_result_dialogue(jane_reaction, end_grade)
 
 # STEP 3: REACTION & BUTTON 
-func _play_result_dialogue(reaction_text: String) -> void:
-	# Rule 1.0: Box FIRST
+func _play_result_dialogue(reaction_text: String, earned_grade: float) -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -149,7 +146,6 @@ func _play_result_dialogue(reaction_text: String) -> void:
 		t_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
 		await t_in.finished
 		
-	# Rule 1.0: Jane SECOND
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 0.0
@@ -162,7 +158,6 @@ func _play_result_dialogue(reaction_text: String) -> void:
 	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": reaction_text}])
 	await active_dialogue_box.dialogue_finished
 	
-	# Rule 1.0: Fade out Jane and Box
 	var t_fade_final = create_tween().set_parallel(true)
 	if jane_thinking: t_fade_final.tween_property(jane_thinking, "modulate:a", 0.0, 1.0)
 	if box_visual: t_fade_final.tween_property(box_visual, "modulate:a", 0.0, 1.0)
@@ -171,72 +166,125 @@ func _play_result_dialogue(reaction_text: String) -> void:
 	if jane_thinking: jane_thinking.exit(true)
 	active_dialogue_box.queue_free()
 	
-	
 	var t_ui = create_tween().set_parallel(true)
 	
-	# Loop through all items inside StatScreen (Panel, Labels, etc.)
 	for child in stat_screen.get_children():
-		# If the item is NOT the Chapter 5 button, fade it to 0
-		if child != chapter5_btn:
+		if child != chapter5_btn and child != main_menu_btn:
 			t_ui.tween_property(child, "modulate:a", 0.0, 1.0)
 			
 	await t_ui.finished
 	
+	var t_show_buttons = create_tween().set_parallel(true)
 	
 	if chapter5_btn:
 		chapter5_btn.show()
 		chapter5_btn.modulate.a = 0.0
-		var t_btn = create_tween()
-		t_btn.tween_property(chapter5_btn, "modulate:a", 1.0, 1.0)
-		
-		if not chapter5_btn.pressed.is_connected(_on_chapter_5_btn_pressed):
-			chapter5_btn.pressed.connect(_on_chapter_5_btn_pressed)
+		t_show_buttons.tween_property(chapter5_btn, "modulate:a", 1.0, 1.0)
+		if not chapter5_btn.pressed.is_connected(_on_chapter_5_btn_pressed.bind(earned_grade)):
+			chapter5_btn.pressed.connect(_on_chapter_5_btn_pressed.bind(earned_grade))
+			
+	if main_menu_btn:
+		main_menu_btn.show()
+		main_menu_btn.modulate.a = 0.0
+		t_show_buttons.tween_property(main_menu_btn, "modulate:a", 1.0, 1.0)
+		if not main_menu_btn.pressed.is_connected(_on_main_menu_pressed.bind(earned_grade)):
+			main_menu_btn.pressed.connect(_on_main_menu_pressed.bind(earned_grade))
 
 
-# --- SEQUENTIAL TITLE TRANSITION ---
-func _on_chapter_5_btn_pressed() -> void:
-	print("Proceeding to Chapter 5!")
+# --- CONTINUE BUTTON EVENT ---
+func _on_chapter_5_btn_pressed(final_grade: float) -> void:
+	if is_transitioning: return
+	is_transitioning = true
 	
-	# 1. Fade to Black
-	if TransitionManager.has_method("fade_to_black"):
-		await TransitionManager.fade_to_black()
+	if chapter5_btn: chapter5_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
 	
-	var title_label = TransitionManager.get_node_or_null("TitleLabel")
-	if title_label:
-		title_label.modulate.a = 0.0
-		title_label.show()
-		
-		# 2. Fade IN "CHAPTER 5" (1.0 duration)
-		title_label.text = "CHAPTER 5"
-		var t1 = create_tween()
-		t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
-		await t1.finished
-		
-		# Wait while player reads it
-		await get_tree().create_timer(2.0).timeout
-		
-		# 3. Fade OUT "CHAPTER 5" (1.0 duration)
-		var t2 = create_tween()
-		t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
-		await t2.finished
-		
-		# 4. Change text while invisible, then Fade IN "GRADUATION" (1.0 duration)
-		title_label.text = "GRADUATION"
-		var t3 = create_tween()
-		t3.tween_property(title_label, "modulate:a", 1.0, 1.0)
-		await t3.finished
-		
-		# Wait while player reads it
-		await get_tree().create_timer(2.0).timeout
-		
-		# 5. Fade OUT "GRADUATION" (1.0 duration)
-		var t4 = create_tween()
-		t4.tween_property(title_label, "modulate:a", 0.0, 1.0)
-		await t4.finished
-		title_label.hide()
-		
-		# 6. Final Wait before Scene Change
-		await get_tree().create_timer(1.0).timeout
+	if currency_hud: currency_hud.hide()
+	if stat_screen: stat_screen.hide()
 	
-	# 7. Change Scene
-	get_tree().change_scene_to_file("res://Scenes/Chapter 5/chapter_5_scene_1.tscn")
+	# Index 5 targets Chapter 4 completion row data targets inside SQLite
+	GameManager.current_chapter = 5
+	
+	var next_scene_path = "res://Scenes/Chapter 5/chapter_5_scene_1.tscn"
+	_execute_save_and_transition(next_scene_path, true, final_grade)
+
+
+# --- MAIN MENU BUTTON EVENT ---
+func _on_main_menu_pressed(final_grade: float) -> void:
+	if is_transitioning: return
+	is_transitioning = true
+	
+	if chapter5_btn: chapter5_btn.disabled = true
+	if main_menu_btn: main_menu_btn.disabled = true
+	
+	if currency_hud: currency_hud.hide()
+	if stat_screen: stat_screen.hide()
+	
+	GameManager.current_chapter = 5
+	
+	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
+	_execute_save_and_transition(main_menu_path, false, final_grade)
+
+
+# --- REUSABLE SYSTEM TRANSACTION HANDLER ---
+func _execute_save_and_transition(destination_path: String, run_chapter_card: bool, grade_scored: float) -> void:
+	# --- MASTER TRANSACTION FLUSH ---
+	# Writes physical commuter costs and document printing deductions cleanly to SQLite
+	GameManager.flush_buffer_to_database()
+	
+	if saving_screen:
+		saving_screen.process_mode = PROCESS_MODE_ALWAYS
+		saving_screen.show()
+		
+	# Pass her actual calculated performance metrics straight into the progress matrix
+	GameManager.complete_current_chapter(grade_scored)
+	print("[DATABASE] Chapter 4 Progression committed smoothly.")
+	
+	await get_tree().create_timer(3.0).timeout
+	
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1)
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	if saving_screen:
+		saving_screen.hide()
+		saving_screen.process_mode = PROCESS_MODE_DISABLED
+		
+	if run_chapter_card:
+		if TransitionManager.has_method("fade_to_black"):
+			await TransitionManager.fade_to_black()
+			
+		var title_label = TransitionManager.get_node_or_null("TitleLabel")
+		if title_label:
+			title_label.modulate.a = 0.0
+			title_label.show()
+			
+			title_label.text = "CHAPTER 5"
+			var t1 = create_tween()
+			t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t1.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			var t2 = create_tween()
+			t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t2.finished
+			
+			title_label.text = "GRADUATION"
+			var t3 = create_tween()
+			t3.tween_property(title_label, "modulate:a", 1.0, 1.0)
+			await t3.finished
+			
+			await get_tree().create_timer(2.0).timeout
+			
+			var t4 = create_tween()
+			t4.tween_property(title_label, "modulate:a", 0.0, 1.0)
+			await t4.finished
+			title_label.hide()
+			
+			await get_tree().create_timer(1.0).timeout
+			
+		get_tree().change_scene_to_file(destination_path)
+	else:
+		get_tree().change_scene_to_file(destination_path)

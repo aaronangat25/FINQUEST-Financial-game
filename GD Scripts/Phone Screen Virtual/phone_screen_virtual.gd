@@ -4,7 +4,6 @@ signal money_withdrawn(amount: int)
 # Signal to tell chapter_1 want to leave 
 signal back_clicked 
 
-var virtual_balance: int = 3000
 var is_input_active: bool = false 
 
 @onready var balance_label = $PhoneScreenVirtualControl/VirtualBankScreen/availbalancetextlabel/balancetextlabel
@@ -16,19 +15,22 @@ var is_input_active: bool = false
 @onready var back_button = $PhoneScreenVirtualControl/VirtualBankScreen/BackTextureButton/BackButton
 
 func _ready() -> void:
+	# INITIALIZE WITH LIVE DATABASE VALUE		
 	_update_balance_text()
 	withdraw_input.hide()
 	deposit_warning.hide()
 	
+	# Connect buttons dynamically
 	deposit_button.pressed.connect(_on_deposit_button_pressed)
 	withdraw_button.pressed.connect(_on_withdraw_button_pressed)
 	withdraw_input.text_submitted.connect(_on_withdraw_input_submitted)
-	
+	#back_button.pressed.connect(_on_back_button_pressed)
 
 func _update_balance_text() -> void:
-	balance_label.text = "P" + str(virtual_balance) + ".00"
+	# Reads value directly from your global GameManager script
+	balance_label.text = "P" + str(GameManager.bank_cash) + ".00"
 
-#  Emit the signal when clicked
+# Emit the signal when clicked
 func _on_back_button_pressed() -> void:
 	back_clicked.emit()
 
@@ -59,11 +61,17 @@ func _on_withdraw_button_pressed() -> void:
 func _on_withdraw_input_submitted(text: String) -> void:
 	var amount = int(text)
 	
-	if amount > 0 and amount <= virtual_balance:
-		virtual_balance -= amount
-		_update_balance_text()
+	# Checked against GameManager.bank_cash directly
+	if amount > 0 and amount <= GameManager.bank_cash:
 		
+		# Deduct from online bank account via our new architecture function
+		# Moves money out of bank account (-amount) and adds it to your sandbox pocket accumulator (+amount)
+		GameManager.stage_finance_change(-amount, amount, "Virtual Bank App Withdrawal")
+		
+		_update_balance_text()
 		_close_input_and_enable_buttons()
+		
+		# Triggers chapter_1 listener to visually update her pocket currency HUD layout views!
 		money_withdrawn.emit(amount)
 	else:
 		print("Invalid amount or not enough funds!")

@@ -4,7 +4,7 @@ const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const GRAY_SCREEN_SCENE = preload("res://Scenes/Gray Screen/gray_screen.tscn")
 const PHONE_SCREEN_SCENE = preload("res://Scenes/Phone Screen/phone_screen.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn") 
-const PHONE_SCREEN_VIRTUAL_SCENE = preload("res://Scenes/Phone Screen Virtual/phone_screen_virtual.tscn") # <-- UPDATE THIS PATH!
+const PHONE_SCREEN_VIRTUAL_SCENE = preload("res://Scenes/Phone Screen Virtual/phone_screen_virtual.tscn")
 
 const DORM_BG = preload("res://Assets/Backgrounds/Chapter 1/dorm/dormbg.png")
 const NEXT_SCENE = "res://Scenes/Chapter 1/chapter_1_scene_2.tscn"
@@ -26,10 +26,8 @@ const NEXT_SCENE = "res://Scenes/Chapter 1/chapter_1_scene_2.tscn"
 var currency_hud 
 var dialogue_box 
 
-# --- NEW: Variable to hold our instantiated big phone screen so we can hide it later ---
 var phone_screen_instance 
 var virtual_bank_instance
-
 var gray_screen_instance
 
 var BANK_DIALOGUE: Array = [
@@ -39,7 +37,6 @@ var BANK_DIALOGUE: Array = [
 	{"speaker": "", "text": "Every decision affects your balance, so spend it wisely."}
 ]
 
-# --- NEW: The Dorm Dialogue Array ---
 var DORM_DIALOGUE: Array = [
 	{"speaker": "Kylie", "text": "Uy, bagong salta? I’m Kylie! Welcome to the chaos of Manila life."},
 	{"speaker": "Kylie", "text": "First tip: Huwag kang gagastos agad ng hindi kailangan."},
@@ -49,12 +46,69 @@ var DORM_DIALOGUE: Array = [
 ]
 
 func _ready() -> void:
+	# =================================================================
+	# AUTOMATIC DEVELOPER SAFETY INJECTION FOR DIRECT TESTING (F5)
+	# =================================================================
+	# Check if a profile record row exists for Player ID 1 inside SQLite
+	DatabaseManager.db.query_with_bindings("SELECT COUNT(*) as total FROM player_stats WHERE player_id = ?;", [GameManager.player_id])
+	var row_exists = false
+	if DatabaseManager.db.query_result.size() > 0 and DatabaseManager.db.query_result[0]["total"] > 0:
+		row_exists = true
+		
+	if not row_exists:
+		print("[DEVELOPER SAFETY] No data entries found for testing. Injecting default profile rows for Player 1...")
+		# 1. Generate core player entry row inside players table
+		DatabaseManager.db.query("""
+			INSERT OR IGNORE INTO players (id, player_name, gender, job_path) 
+			VALUES (1, 'Jane Dev', 'Female', 'Cafe');
+		""")
+		# 2. Generate stats row record inside player_stats table
+		DatabaseManager.db.query("""
+			INSERT OR IGNORE INTO player_stats (player_id, bank_cash, on_hand_cash, current_chapter) 
+			VALUES (1, 3000, 0, 2);
+		""")
+		# 3. Generate sequential progress map list tracks
+		for chapter in range(1, 8):
+			var unlocked = 1 if chapter <= 2 else 0 # Unlocks Prologue (1) and Chapter 1 (2)
+			DatabaseManager.db.query_with_bindings("""
+				INSERT OR IGNORE INTO chapter_progress (player_id, chapter_number, is_unlocked, is_completed) 
+				VALUES (1, ?, ?, 0);
+			""", [chapter, unlocked])
+	# =================================================================
+
+	# Now pull the database records safely!
+	GameManager.load_player_stats()
+	
+	# =================================================================
+	# THE MASTER SANDBOX PROTECTION SYSTEM (ANTI-EXPLOIT WIPE)
+	# =================================================================
+	# FORCE THE MANAGER STATE INDICES TO CHAPTER 1 (INDEX 2) IMMEDIATELY!
+	# This guarantees that even on direct F5 testing bootups, the saving 
+	# system knows this is Chapter 1, preserving your earnings cleanly.
+	GameManager.current_chapter = 2
+	GameManager.on_hand_cash = 0
+	GameManager.bank_cash = 3000
+	GameManager.clear_temporary_buffer()
+	
+	print("[SANDBOX RESET] Chapter 1 Initialized. Bank Cash: ₱", GameManager.bank_cash, " | On-Hand Cash: ₱", GameManager.on_hand_cash, " | Active Chapter Tracker: ", GameManager.current_chapter)
+	
+	# Hard-update the database table stats row right now to mirror this clean state.
+	DatabaseManager.db.query_with_bindings("""
+		UPDATE player_stats
+		SET bank_cash = 3000, on_hand_cash = 0, current_chapter = 2
+		WHERE player_id = ?;
+	""", [GameManager.player_id])
+	# =================================================================
+	
 	get_viewport().size_changed.connect(_on_window_resized)
 	_on_window_resized()
 	phone_mini.phone_clicked.connect(_on_phone_clicked)
 	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
+	
+	# Ensure the visual text counter displays our clean 0 pocket balance instantly
+	currency_hud.add_money(GameManager.on_hand_cash)
 	
 	dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(dialogue_box)
@@ -93,9 +147,9 @@ func _on_phone_clicked() -> void:
 	
 	# Create invisible shield to block clicks
 	var click_shield = ColorRect.new()
-	click_shield.color = Color(0, 0, 0, 0) 
-	click_shield.set_anchors_preset(Control.PRESET_FULL_RECT) 
-	click_shield.mouse_filter = Control.MOUSE_FILTER_STOP 
+	click_shield.color = Color(0, 0, 0, 0)
+	click_shield.set_anchors_preset(Control.PRESET_FULL_RECT)
+	click_shield.mouse_filter = Control.MOUSE_FILTER_STOP
 	
 	# Add shield to the instance variable
 	phone_screen_instance.add_child(click_shield)
@@ -109,28 +163,18 @@ func _on_phone_clicked() -> void:
 	# Force bank button to unlock and accept clicks
 	phone_screen_instance.unlock_app()
 
-
 func _on_bank_app_clicked() -> void:
-	# Hide the main phone screen
 	if phone_screen_instance:
 		phone_screen_instance.visible = false
 		
-	# Instantiate the virtual bank screen
 	virtual_bank_instance = PHONE_SCREEN_VIRTUAL_SCENE.instantiate()
 	add_child(virtual_bank_instance)
 	
-	# Listen for the withdrawal signal
 	virtual_bank_instance.money_withdrawn.connect(_on_money_withdrawn)
-	
-	# for the back button signal 
 	virtual_bank_instance.back_clicked.connect(_on_virtual_bank_back_clicked)
 
-
-# Function that adds the money to HUD
 func _on_money_withdrawn(amount: int) -> void:
-	# calls the add_money function that already exists inside currency_hud.gd
 	currency_hud.add_money(amount)
-
 
 func _on_window_resized():
 	var screen_size = get_viewport_rect().size
@@ -140,9 +184,7 @@ func _on_window_resized():
 		animated_bg.scale = screen_size / frame_size
 		animated_bg.position = screen_size / 2.0
 
-#  Function to handle the back button click
 func _on_virtual_bank_back_clicked() -> void:
-	# Instantly destroy the phone UI, gray screen, and hide Jane.
 	if virtual_bank_instance:
 		virtual_bank_instance.queue_free()
 	if phone_screen_instance:
@@ -150,87 +192,64 @@ func _on_virtual_bank_back_clicked() -> void:
 	if gray_screen_instance:
 		gray_screen_instance.queue_free()
 		
-	jane.hide() 
+	jane.hide()
 	
-	# Wait 1.0 second. 
-	# During this time, only the bus background and the Currency HUD are visible
 	await get_tree().create_timer(1.0).timeout
-	
-	# Start the transition by fading to black
 	await TransitionManager.fade_to_black()
 		
-	# The screen is black Switch the background to the Dorm in secret
 	var dorm_background = TextureRect.new()
 	dorm_background.texture = DORM_BG
 	dorm_background.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dorm_background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	
 	add_child(dorm_background)
-	move_child(dorm_background, 0) 
+	move_child(dorm_background, 0)
 	
-	# Hide the old bus arrival background
 	animated_bg.hide()
 	
-	#  Wait 0.5 seconds while black for dramatic cinematic effect
 	await get_tree().create_timer(1.5).timeout
-	
-	# Fade out the black screen to reveal the Dorm!
 	await TransitionManager.fade_from_black()
 	
-	# Wait exactly 1.0 second after the dorm appears (CHANGED)
 	await get_tree().create_timer(1.0).timeout
-	
-	# Tell Kylie to fade in (uses the default "idle" animation)
 	kylie.appear()
 	
-	# Wait 2.0 seconds while she is fully visible on screen (CHANGED)
 	await get_tree().create_timer(2.0).timeout
-	
-	# Tell Kylie to fade out smoothly
 	kylie.exit(true)
 	
-	# Wait 0.5 seconds to ensure Big Kylie is completely invisible before moving on
 	await get_tree().create_timer(0.5).timeout
 	
-	
-	# Start the dialogue box fade-in FIRST (0.5 means it takes half a second)
 	dialogue_box.start_dialogue(DORM_DIALOGUE, 0.5)
-	
-	# Wait exactly 0.5 seconds for the dialogue box to finish appearing
 	await get_tree().create_timer(0.5).timeout
 	
-	#  Now that the box is there, trigger the characters to fade in!
 	jane_dialogue.appear()
 	kylie_dialogue.appear()
 	
-	# Wait for the player to click through all the text
 	await dialogue_box.dialogue_finished
 	
-	# Instantly trigger the character fade-out!
 	jane_dialogue.exit(true)
 	kylie_dialogue.exit(true)
 	
-	# Wait 1.0 second after the characters fade out
 	await get_tree().create_timer(1.0).timeout
 	
-	# FADE IN TOGETHER
 	choose_control.appear()
 	jane_big_2.appear()
 
 func _on_choice_made(selected_choice: String) -> void:
-	
-	# Save it to Global
 	Global.job_choice = selected_choice
 	
-	# Fade the choices menu out
+	if selected_choice == "A" or selected_choice == "Cafe":
+		GameManager.log_choice("chap1_job_path", "A")
+	elif selected_choice == "B" or selected_choice == "Clerk":
+		GameManager.log_choice("chap1_job_path", "B")
+	elif selected_choice == "C" or selected_choice == "Cashier":
+		GameManager.log_choice("chap1_job_path", "C")
+	else:
+		GameManager.log_choice("chap1_job_path", selected_choice)
+
 	choose_control.exit()
 	
-	# Force Jane to fade out using a direct tween
 	var tween = create_tween()
 	tween.tween_property(jane_big_2, "modulate:a", 0.0, 0.5)
 	
-	# Wait exactly 0.5 seconds for both fade animations to finish
 	await get_tree().create_timer(0.5).timeout
-	
-	# The screen is clean, Trigger the transition to Scene 2
 	TransitionManager.transition_to(NEXT_SCENE)

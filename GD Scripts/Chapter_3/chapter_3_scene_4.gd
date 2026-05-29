@@ -24,9 +24,14 @@ var is_phone_clickable: bool = false
 var is_app_interacting: bool = false
 
 func _ready() -> void:
+	# --- MASTER DATABASE SYNCHRONIZATION ---
+	if currency_hud == null:
+		currency_hud = CURRENCY_HUD_SCENE.instantiate()
+		add_child(currency_hud)
 	
-	currency_hud = CURRENCY_HUD_SCENE.instantiate()
-	add_child(currency_hud)
+	# Force display layout sync immediately so the HUD renders the current running total
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	# 2. Hide elements initially
 	if phone_mini: phone_mini.hide() 
@@ -166,7 +171,10 @@ func _on_contacts_pressed() -> void:
 	active_phone_screen_4_1 = PHONE_SCREEN_4_1_SCENE.instantiate()
 	add_child(active_phone_screen_4_1)
 	
-	# --- FIX: Target the node that actually holds the script and signal! ---
+	# --- FIXED CHOICE LOGGING ---
+	# Records that Jane read her mom's practical advice text log
+	GameManager.log_choice("chap3_read_family_advice", "Read")
+	
 	var phone_control_node = active_phone_screen_4_1.get_node_or_null("PhoneScreenControl")
 	
 	if phone_control_node:
@@ -193,21 +201,17 @@ func _on_sis_pressed() -> void:
 		if warning_panel and not warning_panel.visible:
 			warning_panel.show()
 			
-			# --- DISABLE ALL MOUSE INTERACTION (Kills the hover effect) ---
 			if contacts_btn: contacts_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			if contacts_tex_btn: contacts_tex_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			if sis_btn: sis_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			if sis_tex_btn: sis_tex_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			
-			# Wait 3 seconds
 			await get_tree().create_timer(3.0).timeout
 			
-			# Hide the panel
 			if is_instance_valid(warning_panel):
 				warning_panel.hide()
 				
-			# --- RESTORE MOUSE INTERACTION (Brings back hover and clicks) ---
-			if is_instance_valid(active_phone_screen_4): # Just to be safe!
+			if is_instance_valid(active_phone_screen_4): 
 				if contacts_btn: contacts_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 				if contacts_tex_btn: contacts_tex_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 				if sis_btn: sis_btn.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -218,19 +222,15 @@ func _on_sis_pressed() -> void:
 
 # --- CLOSING SEQUENCE ---
 func _on_chat_finished() -> void:
-	# 1. Instantly destroy phone, gray background, and hide Big Jane
 	if active_phone_screen_4_1: active_phone_screen_4_1.queue_free()
 	if active_gray_screen: active_gray_screen.queue_free()
 	
-	# --- FIX: INSTANT HIDE (No tween, same millisecond as the phone) ---
 	if jane_big:
 		jane_big.hide()
 		jane_big.modulate.a = 0.0
 	
-	# Give mobile a small 0.5s pause to breathe before the dialogue box pops up
 	await get_tree().create_timer(0.5).timeout
 	
-	# 2. Spawn Dialogue Box
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true 
@@ -243,14 +243,12 @@ func _on_chat_finished() -> void:
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6)
 		await tween_in.finished
 		
-	# Fade in thinking Jane
 	if jane_thinking: 
 		jane_thinking.show()
 		if jane_thinking.has_method("appear"):
 			jane_thinking.appear("idle", false)
 	await get_tree().create_timer(0.6).timeout
 	
-	# 3. Final Dialogue
 	var final_convo = [
 		{"speaker": "Jane", "text": "Tama si Mom… kailangan magiing practical."}
 	]
@@ -259,7 +257,6 @@ func _on_chat_finished() -> void:
 	active_dialogue_box.start_dialogue(final_convo)
 	await active_dialogue_box.dialogue_finished
 	
-	# 4. Exit Animations
 	if jane_thinking: jane_thinking.exit(true)
 	await get_tree().create_timer(0.6).timeout
 			
@@ -269,13 +266,11 @@ func _on_chat_finished() -> void:
 		await tween_box_out.finished 
 	active_dialogue_box.queue_free()
 	
-	# 5. Wait 2 seconds, fade to black
 	await get_tree().create_timer(2.0).timeout
 	await TransitionManager.fade_to_black()
 	
 	print("Chapter 3 Scene 4 complete! Ready for Scene 5.")
 	
-	# Transition to Scene 5
 	var next_scene_path = "res://Scenes/Chapter 3/chapter_3_scene_5.tscn"
 	ResourceLoader.load_threaded_request(next_scene_path)
 	var load_status = ResourceLoader.load_threaded_get_status(next_scene_path)

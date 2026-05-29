@@ -4,13 +4,13 @@ extends Control
 const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 const PHONE_SCREEN_2_SCENE = preload("res://Scenes/Phone Screen/phone_screen_2.tscn") 
-# --- NEW: Added Phone Screen 3 Preload ---
 const PHONE_SCREEN_3_SCENE = preload("res://Scenes/Phone Screen/phone_screen_3.tscn") 
 const GRAY_SCREEN_SCENE = preload("res://Scenes/Gray Screen/gray_screen.tscn")
 const PHONE_LOCK_SCREEN_3_SCENE = preload("res://Scenes/Phone/phone_lock_screen_3.tscn") 
 const CLASSROOM_BG_TEXTURE = preload("res://Assets/Backgrounds/Chapter_2/classroom/classroom_bg.png") 
 
 # --- NODE REFERENCES ---
+@onready var saving_screen = $SavingScreen # Make sure to instantiate this in your scene tree!
 @onready var background = $dormbg 
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var jane_big = $JaneBigAnchor/jane2d
@@ -36,14 +36,14 @@ const CLASSROOM_BG_TEXTURE = preload("res://Assets/Backgrounds/Chapter_2/classro
 var currency_hud
 var active_dialogue_box 
 var active_phone_screen_2
-var active_phone_screen_3 # <-- NEW: Reference for screen 3
+var active_phone_screen_3 
 var active_gray_screen
 var active_lock_screen_3
 var active_money_ui
 var active_padlock_btn 
 var active_choice_shield 
 
-# --- NEW: TRACKING CHOICES FOR GRADES ---
+# --- TRACKING CHOICES FOR GRADES ---
 var study_choice: String = ""
 var travel_choice: String = ""
 
@@ -55,11 +55,21 @@ var is_waiting_to_dismiss_money: bool = false
 var is_phone_clickable_phase_3: bool = false 
 
 func _ready() -> void:
+	# 1. Pulls her exact hard-saved wallet values (Bank: 2100, Pocket: 500) from SQLite rows
+	GameManager.load_player_stats()
+	
+	# 2. Synchronize your Global tracking variable with the true database state
+	Global.player_money = GameManager.on_hand_cash
+	
+	# 3. Instantiate the HUD 
+	# (Your updated script automatically reads GameManager.on_hand_cash during initialization!)
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
+	# --- FIXED: REMOVED THE DUPLICATE currency_hud.add_money() CALL FROM HERE ---
+	# This stops the HUD from adding the cash twice and stacking 500 + 500!
+	
 	if phone_mini: phone_mini.hide() 
-		
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_big: jane_big.modulate.a = 0.0
 	if feature_control: feature_control.modulate.a = 0.0
@@ -92,7 +102,6 @@ func _ready() -> void:
 		exam_starts_control.modulate.a = 0.0
 		exam_starts_control.hide()
 	
-	# --- FIX: Give mobile devices a split-second to breathe before animating! ---
 	await get_tree().create_timer(0.2).timeout
 	
 	if TransitionManager.color_rect.visible:
@@ -199,7 +208,6 @@ func _input(event: InputEvent) -> void:
 				var phone_ui = phone_mini.get_child(0)
 				if phone_ui is Control and phone_ui.get_global_rect().has_point(event.position):
 					is_phone_clickable_phase_3 = false
-					# --- FIX: Send them to the Grade Reveal Phone Screen! ---
 					_open_phone_screen_3()
 
 func _open_phone_screen_2() -> void:
@@ -271,9 +279,7 @@ func _open_lock_screen_3() -> void:
 	await get_tree().create_timer(3.0).timeout
 	_show_money_ui() 
 
-# --- MONEY UI FLOW ---
 func _show_money_ui() -> void:
-	# --- FIX: Load the heavy 80-frame scene ONLY when we actually need it! ---
 	var loaded_money_scene = load("res://Scenes/Money UI/money_ui.tscn")
 	active_money_ui = loaded_money_scene.instantiate()
 	add_child(active_money_ui)
@@ -294,13 +300,20 @@ func _show_money_ui() -> void:
 		job_salary = 2040
 		job_display_name = "Cashier"
 		
-	var total_received = base_allowance + job_salary
+	# --- FIXED UNUSED VARIABLE WARNING ---
+	# Passed components cleanly into the memory buffer method statement block directly
 	
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
-	if currency_hud and currency_hud.has_method("add_money"):
-		currency_hud.add_money(total_received)
+	# --- FIXED: ALLOWANCE AND SALARY ALL GO TO ON-HAND POCKET CASH ---
+	# Changing the first parameter to 0 and adding base_allowance to the second parameter
+	# forces the entire ₱3,000 + job earnings straight into her on-hand pocket variables!
+	GameManager.stage_finance_change(0, base_allowance + job_salary, "Weekly Allowance & Part-Time Salary Payoff")
+	
+	# Force display layout sync immediately
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 		
 	await get_tree().create_timer(2.0).timeout
 	is_waiting_to_dismiss_money = true
@@ -322,7 +335,6 @@ func _on_padlock_3_pressed() -> void:
 	
 	_play_post_money_sequence()
 
-# --- POST MONEY SEQUENCE ---
 func _play_post_money_sequence() -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -377,7 +389,6 @@ func _play_post_money_sequence() -> void:
 	
 	_play_kylie_conversation()
 
-# --- KYLIE CONVERSATION ---
 func _play_kylie_conversation() -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -432,7 +443,6 @@ func _play_kylie_conversation() -> void:
 	
 	_play_study_choice_sequence()
 
-# --- STUDY CHOICE SEQUENCE ---
 func _play_study_choice_sequence() -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -492,13 +502,18 @@ func _process_study_choice(choice: String) -> void:
 	if study_cafe_btn: study_cafe_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if study_lounge_btn: study_lounge_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# --- NEW: SAVE THE STUDY CHOICE (A or B) ---
 	if choice == "Cafe":
 		study_choice = "A"
-		if currency_hud and currency_hud.has_method("add_money"):
-			currency_hud.add_money(-150) 
+		GameManager.stage_finance_change(0, -150, "Purchased coffee at study cafe")
+		GameManager.log_choice("chap2_study_location", "A")
 	elif choice == "Lounge":
 		study_choice = "B"
+		GameManager.log_choice("chap2_study_location", "B")
+	
+	# --- FIXED HUD REFRESH PLACEMENT ---
+	# Forces the HUD to immediately grab the updated values from backend RAM
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	if choose_control_5:
 		var tween = create_tween()
@@ -525,8 +540,6 @@ func _process_study_choice(choice: String) -> void:
 	
 	_play_morning_sequence()
 
-
-# --- MORNING SEQUENCE ---
 func _play_morning_sequence() -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -575,7 +588,6 @@ func _play_morning_sequence() -> void:
 	
 	_play_travel_choice_sequence()
 
-# --- TRAVEL CHOICE SEQUENCE ---
 func _play_travel_choice_sequence() -> void:
 	if jane_big_2:
 		jane_big_2.appear()
@@ -603,13 +615,18 @@ func _process_travel_choice(choice: String) -> void:
 	if ride_tricycle_btn: ride_tricycle_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if walk_btn: walk_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# --- NEW: SAVE THE TRAVEL CHOICE (A or B) ---
 	if choice == "Tricycle":
 		travel_choice = "A"
-		if currency_hud and currency_hud.has_method("add_money"):
-			currency_hud.add_money(-30) 
+		GameManager.stage_finance_change(0, -30, "Paid fare for tricycle ride to campus")
+		GameManager.log_choice("chap2_travel_method", "A")
 	elif choice == "Walk":
 		travel_choice = "B"
+		GameManager.log_choice("chap2_travel_method", "B")
+			
+	# --- FIXED HUD REFRESH PLACEMENT ---
+	# Forces the HUD to immediately grab the updated values from backend RAM
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 			
 	if choose_control_6:
 		var tween = create_tween()
@@ -635,8 +652,6 @@ func _process_travel_choice(choice: String) -> void:
 	await get_tree().create_timer(1.0).timeout
 	_play_exam_sequence()
 
-
-# --- EXAM STARTS SEQUENCE ---
 func _play_exam_sequence() -> void:
 	if exam_starts_control:
 		exam_starts_control.show()
@@ -737,8 +752,6 @@ func _play_exam_sequence() -> void:
 		
 	is_phone_clickable_phase_3 = true
 
-
-# --- NEW: GRADES REVEAL SEQUENCE ---
 func _open_phone_screen_3() -> void:
 	if phone_mini: phone_mini.hide()
 	
@@ -748,34 +761,25 @@ func _open_phone_screen_3() -> void:
 	active_phone_screen_3 = PHONE_SCREEN_3_SCENE.instantiate()
 	add_child(active_phone_screen_3)
 	
-	# --- FIX: Use find_child() to hunt down the nodes anywhere in the scene! ---
 	var sis_grade = active_phone_screen_3.find_child("SISgrade", true, false)
 	var sis_text = active_phone_screen_3.find_child("SISgradetext", true, false)
 	var back_tex_btn = active_phone_screen_3.find_child("BackTextureButton", true, false)
 	var back_btn = active_phone_screen_3.find_child("BackButton", true, false)
 	
-	# 1. Connect BOTH buttons so the click is guaranteed to fire
 	if back_tex_btn != null:
-		print("SUCCESS: Found BackTextureButton using find_child!")
 		if not back_tex_btn.pressed.is_connected(_on_phone_3_back_pressed):
 			back_tex_btn.pressed.connect(_on_phone_3_back_pressed)
 		back_tex_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	else:
-		print("ERROR: Still cannot find BackTextureButton!")
 
 	if back_btn != null:
-		print("SUCCESS: Found BackButton using find_child!")
 		if not back_btn.pressed.is_connected(_on_phone_3_back_pressed):
 			back_btn.pressed.connect(_on_phone_3_back_pressed)
 		back_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# Hide the grade initially
 	if sis_grade: sis_grade.hide()
 	
-	# Wait 3 seconds with the blank screen
 	await get_tree().create_timer(3.0).timeout
 	
-	# Calculate the final grade based on their A/B choices!
 	if sis_text:
 		if study_choice == "A" and travel_choice == "A":
 			sis_text.text = "1.0"
@@ -784,42 +788,67 @@ func _open_phone_screen_3() -> void:
 		else:
 			sis_text.text = "1.25"
 			
-	# Instantly pop the grade on the screen
 	if sis_grade: sis_grade.show()
 	
-	# Wait 3 MORE seconds before letting them click the back button
 	await get_tree().create_timer(3.0).timeout
 	
-	print("TIMER FINISHED: The 6 seconds are up. Buttons are now clickable!")
-	
-	# Make the buttons clickable now that the 6 seconds are over!
 	if back_tex_btn: back_tex_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 	if back_btn: back_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 
-
+# =================================================================
+# MASTER HANDOFF FIX FOR CHAPTER 2 END (STRICT PERSISTENCE)
+# =================================================================
 func _on_phone_3_back_pressed() -> void:
 	print("YES! The _on_phone_3_back_pressed signal fired perfectly!")
 	
-	# Instantly ignore all further clicks so they don't double-click and crash
 	if active_phone_screen_3:
 		var back_tex_btn = active_phone_screen_3.find_child("BackTextureButton", true, false)
 		var back_btn = active_phone_screen_3.find_child("BackButton", true, false)
-		
 		if back_tex_btn: back_tex_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if back_btn: back_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		
-	# Hide Phone and Jane Big instantly
 	if active_phone_screen_3: active_phone_screen_3.queue_free()
 	if active_gray_screen: active_gray_screen.queue_free()
 	if jane_big: jane_big.hide()
 	
-	# Wait exactly 3 seconds while looking at the classroom...
 	await get_tree().create_timer(3.0).timeout
 	
-	# Fade to black!
-	await TransitionManager.fade_to_black()
+	if currency_hud:
+		currency_hud.hide()
+		
+	# Force tracking variables safely to Chapter 2 (Row 3 inside chapter_progress table)
+	GameManager.current_chapter = 3
+	print("[SYSTEM] Running database save sequence for Chapter 2.")
 	
-	# --- NEW: CHAPTER 3 TITLE ANIMATION ---
+	# Extract calculated exam score card mapping metrics to use as her progression grade row data
+	var end_grade = 1.25
+	if study_choice == "A" and travel_choice == "A":
+		end_grade = 1.0
+	elif study_choice == "B" and travel_choice == "B":
+		end_grade = 1.50
+	
+	# --- MASTER FLUSH ADDITION ---
+	# We commit choices and accumulated budget change summaries all at once here!
+	GameManager.flush_buffer_to_database()
+	
+	# Wake up save overlay graphic and present it on screen for 2 seconds
+	saving_screen.process_mode = PROCESS_MODE_ALWAYS
+	saving_screen.show()
+	
+	# Pass calculated scores into progression rows and advance tracker safely to Chapter 3
+	GameManager.complete_current_chapter(end_grade)
+	await get_tree().create_timer(2.0).timeout
+	
+	# 2. INSTANT BLACKOUT OVERLAY MASK
+	var local_black_screen = ColorRect.new()
+	local_black_screen.color = Color(0, 0, 0, 1) 
+	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(local_black_screen)
+	
+	saving_screen.hide()
+	saving_screen.process_mode = PROCESS_MODE_DISABLED
+	
+	# 3. TRIGGER CINEMATIC CHAPTER CARD THROUGH TRANSITION SYSTEM
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
 		title_label.text = "CHAPTER 3"
@@ -837,8 +866,7 @@ func _on_phone_3_back_pressed() -> void:
 		await t2.finished
 		title_label.hide()
 		
-	# --- NEW: MOBILE-SAFE BACKGROUND LOADING TO CHAPTER 3 SCENE 1 ---
-	# (Double check this file path perfectly matches your folder structure!)
+	# 4. MOBILE-SAFE BACKGROUND THREAD LOADING FOR NEXT LEVEL
 	var next_scene_path = "res://Scenes/Chapter 3/chapter_3_scene_1.tscn"
 	
 	ResourceLoader.load_threaded_request(next_scene_path)
