@@ -17,7 +17,7 @@ var financial_wisdom_points : int = 0
 var grades : float = 0.0
 
 # GAME PROGRESSION
-var current_chapter : int = 1         # 1 = Prologue, 2 = Chapter 1, 3 = Chapter 2, etc.
+var current_chapter : int = 1          # 1 = Prologue, 2 = Chapter 1, 3 = Chapter 2, etc.
 var current_scene : String = ""
 
 # GAME TOTALS
@@ -226,8 +226,6 @@ func flush_buffer_to_database() -> void:
 	print("[DATABASE SAVE] Chapter flush sequence complete.")
 
 # Clears memory caches if the player finishes or exits early mid-game
-# Clears memory caches if the player finishes or exits early mid-game
-# Clears memory caches if the player finishes or exits early mid-game
 func clear_temporary_buffer() -> void:
 	print("[SYSTEM BUFFER] Clearing staging caches and forcing sandbox validation...")
 	buffered_choices.clear()
@@ -258,3 +256,16 @@ func reset_game_data():
 	current_scene = ""
 	total_income = 0
 	total_expenses = 0
+
+# =========================================
+# FETCH ACTIVE GRADE HISTORY FOR SIS APP
+# =========================================
+func get_grade_history() -> Array:
+	DatabaseManager.db.query_with_bindings("""
+		SELECT chapter_number, completion_grade 
+		FROM chapter_progress 
+		WHERE player_id = ? AND completion_grade > 0.0 
+		ORDER BY chapter_number ASC;
+	""", [player_id])
+	
+	return DatabaseManager.db.query_result

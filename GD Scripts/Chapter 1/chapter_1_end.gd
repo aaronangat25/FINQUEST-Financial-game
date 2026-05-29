@@ -163,9 +163,7 @@ func _on_padlock_pressed() -> void:
 		
 	print("[SYSTEM] Running database save sequence for Chapter 1.")
 	
-	# --- MASTER ORDER OF EXECUTION RESTRUCTURE ---
-	# 1. Flush the choices and balances FIRST while current_chapter is 
-	# still correctly recognized as 2 (Chapter 1) inside memory.
+	# 1. Flush the choices and balances FIRST
 	GameManager.flush_buffer_to_database()
 	
 	# 2. Wake up save overlay graphic
@@ -177,12 +175,12 @@ func _on_padlock_pressed() -> void:
 	await get_tree().create_timer(2.0).timeout
 	
 	# =================================================================
-	# STEP 2: INSTANT BLACKOUT OVERLAY (NO FADE ANIMATION GLIMPSE)
+	# STEP 2: GLOBAL BLACKOUT TRANSITION (MAINTAINED OVER SCENE LOADING)
 	# =================================================================
-	var local_black_screen = ColorRect.new()
-	local_black_screen.color = Color(0, 0, 0, 1) 
-	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(local_black_screen)
+	# We force the global visual manager overlay to drop down. This guarantees
+	# that the screen stays black even when this scene is destroyed!
+	if TransitionManager.has_method("fade_to_black"):
+		await TransitionManager.fade_to_black()
 	
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
@@ -217,4 +215,5 @@ func _on_padlock_pressed() -> void:
 		
 		title_label.hide()
 	
+	# Transition seamlessly with the black curtain held high by global nodes
 	get_tree().change_scene_to_file("res://Scenes/Chapter 2/chapter_2_scene_1.tscn")

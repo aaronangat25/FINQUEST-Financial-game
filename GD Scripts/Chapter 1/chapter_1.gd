@@ -173,8 +173,9 @@ func _on_bank_app_clicked() -> void:
 	virtual_bank_instance.money_withdrawn.connect(_on_money_withdrawn)
 	virtual_bank_instance.back_clicked.connect(_on_virtual_bank_back_clicked)
 
-func _on_money_withdrawn(amount: int) -> void:
-	currency_hud.add_money(amount)
+func _on_money_withdrawn(_amount: int) -> void:
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 
 func _on_window_resized():
 	var screen_size = get_viewport_rect().size
