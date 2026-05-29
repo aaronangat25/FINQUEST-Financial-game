@@ -7,13 +7,12 @@ signal result_clicked
 const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
 const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn")
 
-# --- NODE REFERENCES MATCHING YOUR SCENE TREE EXACTLY ---
+# --- NODE REFERENCES ---
 @onready var saving_screen = $SavingScreen
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var stats_screen = $StatsScreen
 @onready var stats_panel = $StatsScreen/Panel 
 
-# FIXED: Node paths corrected to point directly to children of StatsScreen
 @onready var next_button = $StatsScreen/Chapter4_btn 
 @onready var main_menu_button = $StatsScreen/MainMenu_btn
 
@@ -36,6 +35,10 @@ func _ready() -> void:
 	if currency_hud.has_method("show"):
 		currency_hud.show()
 	
+	# Sync visual display layers instantly
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+	
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	
 	if stats_screen: 
@@ -48,7 +51,7 @@ func _ready() -> void:
 		
 	if main_menu_button:
 		main_menu_button.hide()
-		main_menu_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		main_menu_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	
 	await get_tree().process_frame
 	
@@ -61,7 +64,6 @@ func _ready() -> void:
 # --- INPUT DETECTION FOR CLICKS ---
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		# FIX: Only allow the click if 5 seconds have passed!
 		if waiting_for_click and can_click_result:
 			waiting_for_click = false
 			can_click_result = false
@@ -114,31 +116,29 @@ func _play_intro_sequence() -> void:
 func _show_evaluation_stats() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# Grab the exact expenses tracked perfectly by Global script
-	var total_expenses = Global.total_expenses
+	# --- FIXED HARDCODED LEAK ---
+	# Read her true accumulated expenses out of our safe RAM staging registers instead of Global!
+	var true_expenses = abs(GameManager.buffered_on_hand_change)
 	
 	var jane_reaction_text = "" 
 	
 	if total_label:
-		# Show the exact Total Expenses
-		total_label.text = "P" + str(total_expenses)
+		total_label.text = "P" + str(true_expenses)
 		
 	if feedback_label:
-		# RESULT LOGIC
-		if total_expenses <= 350: 
-			# Excellent Budgeting (P185 - P350)
+		# COMBINED INFLATION CARD TARGET BOUNDARIES
+		# Meal (0 to 90) + Groceries (100 to 250)
+		if true_expenses <= 150: 
 			feedback_label.text = "RESULT: EXCELLENT BUDGETING"
 			feedback_label.add_theme_color_override("font_color", Color("a5d68d")) 
 			jane_reaction_text = "Buti na lang nag-adjust ako kahit may inflation."
 			
-		elif total_expenses <= 520: 
-			# Good Budgeting (P351 - P520)
+		elif true_expenses <= 250: 
 			feedback_label.text = "RESULT: GOOD BUDGETING"
 			feedback_label.add_theme_color_override("font_color", Color("78dfb7ff")) 
 			jane_reaction_text = "Okay naman... pero pwede ko pa pagbutihin."
 			
 		else: 
-			# Needs Improvement (P521+)
 			feedback_label.text = "RESULT: NEEDS IMPROVEMENT"
 			feedback_label.add_theme_color_override("font_color", Color("d95763")) 
 			jane_reaction_text = "Ang bilis maubos ng pera ko... kailangan kong mag-budget better next time."
@@ -240,11 +240,9 @@ func _on_next_pressed() -> void:
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# FIXED: Set tracker explicitly to 4 (Chapter 3's row entry in SQLite)
-	# This ensures Row 4 is marked COMPLETED, and Row 5 (Chapter 4) gets UNLOCKED!
+	# Force tracker safely to Chapter 3 (Row 4 inside SQLite chapter_progress table)
 	GameManager.current_chapter = 4
 	
-	# Trigger saving overlay (runs the 3-second timer internally)
 	var next_scene_path = "res://Scenes/Chapter 4/chapter_4_scene_1.tscn" 
 	_execute_save_and_blackout(next_scene_path, true)
 
@@ -262,32 +260,32 @@ func _on_main_menu_pressed() -> void:
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# FIXED: Set tracker explicitly to 4 (Chapter 3's row entry in SQLite)
-	# This ensures Row 4 is marked COMPLETED, and Row 5 (Chapter 4) gets UNLOCKED!
+	# Force tracker safely to Chapter 3 (Row 4 inside SQLite chapter_progress table)
 	GameManager.current_chapter = 4
 	
-	# Trigger saving overlay and point destination path back home
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
 	_execute_save_and_blackout(main_screen_path, false)
 
 
 # --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
 func _execute_save_and_blackout(destination_path: String, play_cinematic_card: bool) -> void:
+	# --- MASTER FLUSH ADDITION ---
+	# Safely commits Chapter 3 choice sets and budget log arrays right before shifting scenes!
+	GameManager.flush_buffer_to_database()
+	
 	# 1. Fire up the saving overlay asset node
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS
 	saving_screen.show()
 	GameManager.complete_current_chapter(100.0)
 	
-	# Mirror the 3-second timer delay perfectly to match our overlay settings change
 	await get_tree().create_timer(3.0).timeout
 	
-	# 2. Drop the local solid black background cover block to stop graphics frame flickering
+	# 2. Drop the local solid black background cover block
 	var local_black_screen = ColorRect.new()
 	local_black_screen.color = Color(0, 0, 0, 1)
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(local_black_screen)
 	
-	# Securely deactivate save overlay asset layer behind the new black mask
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
 	
@@ -310,7 +308,6 @@ func _execute_save_and_blackout(destination_path: String, play_cinematic_card: b
 			await t2.finished
 			title_label.hide()
 			
-		# Handle threaded asynchronous loading sequence for next level assets
 		ResourceLoader.load_threaded_request(destination_path)
 		var load_status = ResourceLoader.load_threaded_get_status(destination_path)
 		
@@ -322,5 +319,4 @@ func _execute_save_and_blackout(destination_path: String, play_cinematic_card: b
 			var new_scene = ResourceLoader.load_threaded_get(destination_path)
 			get_tree().change_scene_to_packed(new_scene)
 	else:
-		# If heading back to main menu, shift instantly through engine core tree roots
 		get_tree().change_scene_to_file(destination_path)

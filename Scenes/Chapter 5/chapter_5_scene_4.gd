@@ -27,17 +27,14 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 var currency_hud
 var active_dialogue_box
 
-# Localized tracking state variable
 var career_choice: String = ""
 var is_transitioning: bool = false
 
 func _ready() -> void:
-	# 1. Instantiate Core Currency Hud Element
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
 	
-	# 2. Strict Runtime Layout Visibility Defaults Reset
 	if jane_graduation_anchor: jane_graduation_anchor.hide()
 	if jane_graduation_sprite:
 		jane_graduation_sprite.hide()
@@ -49,12 +46,10 @@ func _ready() -> void:
 	if choice_appears_banner: choice_appears_banner.hide()
 	if choices_container: choices_container.hide()
 	
-	# Keep stats panel matrix safe and invisible on launch
 	if stats_screen:
 		stats_screen.hide()
 		stats_screen.modulate.a = 0.0
 		
-	# Hide both navigation buttons on startup so they appear later together
 	if ending_btn:
 		ending_btn.hide()
 		ending_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -64,6 +59,9 @@ func _ready() -> void:
 			
 	await get_tree().process_frame
 	
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+		
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.fade_from_black()
 		
@@ -74,7 +72,6 @@ func _ready() -> void:
 func _play_intro_monologue() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# Fade In Dialogue Box Container Frame FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -85,7 +82,6 @@ func _play_intro_monologue() -> void:
 		box_visual.modulate.a = 0.0
 		await create_tween().tween_property(box_visual, "modulate:a", 1.0, 0.5).finished
 		
-	# Fade In Jane Graduation Cap Sprite SECOND
 	if jane_graduation_anchor: jane_graduation_anchor.show()
 	if jane_graduation_sprite:
 		jane_graduation_sprite.show()
@@ -93,12 +89,10 @@ func _play_intro_monologue() -> void:
 			jane_graduation_sprite.appear("idle", false)
 		await create_tween().tween_property(jane_graduation_sprite, "modulate:a", 1.0, 0.5).finished
 	
-	# Execute text typewriter block sequence
 	active_dialogue_box.is_fading = false
 	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": "Graduate na ako… pero ano na ang next step?"}])
 	await active_dialogue_box.dialogue_finished
 	
-	# Clear out old overlay panels smoothly before displaying choice pathways
 	var t_clear = create_tween().set_parallel(true)
 	if box_visual: t_clear.tween_property(box_visual, "modulate:a", 0.0, 0.4)
 	if jane_graduation_sprite: t_clear.tween_property(jane_graduation_sprite, "modulate:a", 0.0, 0.4)
@@ -107,7 +101,6 @@ func _play_intro_monologue() -> void:
 	if jane_graduation_sprite: jane_graduation_sprite.hide()
 	if jane_graduation_anchor: jane_graduation_anchor.hide()
 	active_dialogue_box.queue_free()
-	
 	_show_graduation_choices()
 
 
@@ -124,7 +117,6 @@ func _show_graduation_choices() -> void:
 		t_menu.tween_property(choose_control, "modulate:a", 1.0, 0.5)
 		await t_menu.finished
 		
-	# Connect Button Hooks Bulletproofly
 	if apply_corporate_btn and not apply_corporate_btn.pressed.is_connected(_on_corporate_selected):
 		apply_corporate_btn.pressed.connect(_on_corporate_selected)
 		
@@ -139,36 +131,42 @@ func _show_graduation_choices() -> void:
 func _on_corporate_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Corporate"
+	
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_career_pathway", "Corporate")
 	_show_stats_summary_screen()
 
 func _on_business_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Business"
+	
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_career_pathway", "Business")
 	_show_stats_summary_screen()
 
 func _on_stop_first_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Stop"
+	
+	# --- REMOVED THE GLOBAL LINE ---
+	GameManager.log_choice("chap5_career_pathway", "Stop")
 	_show_stats_summary_screen()
 
 
 # --- STEP 4: DISPLAY STATS SCREEN OVERLAY DIRECTLY ---
 func _show_stats_summary_screen() -> void:
-	# 1. Fade out choice menu selection block cleanly
 	if choose_control:
 		var t_out = create_tween()
 		t_out.tween_property(choose_control, "modulate:a", 0.0, 0.4)
 		await t_out.finished
 		choose_control.hide()
 
-	# 2. Bring up the StatsScreen overlay panel smoothly
 	if stats_screen:
 		stats_screen.show()
 		var t_panel = create_tween()
 		t_panel.tween_property(stats_screen, "modulate:a", 1.0, 0.5)
 		await t_panel.finished
 		
-	# 3. Fade in Ending_btn and MainMenu_btn together on the layout
 	var t_show_buttons = create_tween().set_parallel(true)
 	
 	if ending_btn:
@@ -199,9 +197,7 @@ func _on_final_chapter_exit_pressed() -> void:
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# Explicitly target Row 6 (Chapter 5) so it marks it completed and unlocks Row 7 (Ending)
 	GameManager.current_chapter = 6
-	
 	var next_scene_path = "res://Scenes/Ending/ending.tscn"
 	_execute_save_and_blackout(next_scene_path, true)
 
@@ -217,16 +213,17 @@ func _on_main_menu_pressed() -> void:
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# Explicitly target Row 6 (Chapter 5) so it marks it completed and unlocks Row 7 (Ending)
 	GameManager.current_chapter = 6
-	
 	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
 	_execute_save_and_blackout(main_menu_path, false)
 
 
 # --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
 func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bool) -> void:
-	# 1. Fire up the saving overlay asset node
+	# --- MASTER SAVE TRANSACTION FLUSH ---
+	# Writes clothing rental/purchases and final path tracking logs down to SQLite permanently!
+	GameManager.flush_buffer_to_database()
+	
 	if saving_screen:
 		saving_screen.process_mode = PROCESS_MODE_ALWAYS
 		saving_screen.show()
@@ -234,10 +231,8 @@ func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bo
 	GameManager.complete_current_chapter(100.0)
 	print("[DATABASE] Chapter 5 Progression committed smoothly.")
 	
-	# 3-second wait delay animation timing
 	await get_tree().create_timer(3.0).timeout
 	
-	# 2. Instant local background blackout mask canvas layout override block
 	var local_black_screen = ColorRect.new()
 	local_black_screen.color = Color(0, 0, 0, 1)
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -247,7 +242,6 @@ func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bo
 		saving_screen.hide()
 		saving_screen.process_mode = PROCESS_MODE_DISABLED
 	
-	# 3. Handle specific level banner tweens if continuing forward
 	if run_cinematic_card:
 		if TransitionManager.has_method("fade_to_black"):
 			await TransitionManager.fade_to_black()

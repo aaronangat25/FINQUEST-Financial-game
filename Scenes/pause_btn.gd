@@ -84,11 +84,16 @@ func _on_resume_pressed():
 # QUIT TO MAIN MENU ROUTING
 # =========================================
 func _on_main_menu_pressed():
-	print("[SYSTEM] Quitting to Main Menu.")
+	print("[SYSTEM] Quitting to Main Menu. Processing sandbox clean sweep...")
 	
-	# CRITICAL FIX: Always unpause the engine BEFORE changing scenes!
-	# If you leave it paused, your Main Menu will freeze up completely.
+	# 1. Unpause the engine FIRST so code can process out-of-scene logic cleanup frames safely
 	get_tree().paused = false
 	
-	# Direct path back to your landing scene
+	# 2. Wipe all choice selection memory tracking arrays and hard-reset the runtime variables
+	GameManager.clear_temporary_buffer()
+	
+	# 3. Synchronize the local manager explicitly with your baseline SQLite records
+	GameManager.load_player_stats()
+	
+	# 4. Direct path back to your landing scene
 	get_tree().change_scene_to_file("res://Scenes/Main Screen/main_screen.tscn")

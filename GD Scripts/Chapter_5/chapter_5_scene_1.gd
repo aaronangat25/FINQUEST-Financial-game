@@ -24,6 +24,10 @@ var active_lock_screen
 var is_phone_clickable: bool = false
 
 func _ready() -> void:
+	# --- MASTER DATABASE SYNCHRONIZATION ---
+	GameManager.load_player_stats()
+	Global.player_money = GameManager.on_hand_cash
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
@@ -38,6 +42,10 @@ func _ready() -> void:
 			
 	await get_tree().process_frame
 	
+	# Force display layout sync immediately so HUD accurately parses previous chapter state
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+	
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.fade_from_black()
 		
@@ -48,7 +56,6 @@ func _ready() -> void:
 func _play_intro_sequence() -> void:
 	await get_tree().create_timer(1.0).timeout
 	
-	# Rule applied: Dialogue Box FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -61,7 +68,6 @@ func _play_intro_sequence() -> void:
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
 		await t_box_in.finished
 		
-	# Rule applied: Jane Thinking SECOND
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 1.0
@@ -77,7 +83,6 @@ func _play_intro_sequence() -> void:
 	active_dialogue_box.start_dialogue(intro_convo)
 	await active_dialogue_box.dialogue_finished
 	
-	# Fade out character FIRST before opening the mini phone pipeline
 	if jane_thinking: jane_thinking.exit(true)
 	await get_tree().create_timer(0.5).timeout
 	
@@ -87,7 +92,6 @@ func _play_intro_sequence() -> void:
 		await t_box_out.finished
 	active_dialogue_box.queue_free()
 	
-	# --- MODIFIED: Skipped the system notification popup block entirely ---
 	_play_phone_sequence()
 
 
@@ -241,46 +245,34 @@ func _play_kylie_conversation() -> void:
 		if kylie.has_method("appear"): kylie.appear("idle", false)
 		await create_tween().tween_property(kylie, "modulate:a", 1.0, 0.4).finished
 
-	# Force this true from the START so the dialogue box NEVER auto-closes itself
 	active_dialogue_box.is_fading = true
 	active_dialogue_box.start_dialogue([{"speaker": "Kylie", "text": "Normal lang ‘yan. After graduation, real life na talaga."}])
 	
-	# Wait for the text to finish typing out on screen completely
 	if active_dialogue_box.has_signal("text_finished"):
 		await active_dialogue_box.text_finished
 	else:
-		await get_tree().create_timer(1.5).timeout # Safe fallback gauge
+		await get_tree().create_timer(1.5).timeout 
 		
-	# --- MANUALLY WAIT FOR PLAYER CLICK TO ADVANCE ---
-	# This holds the state perfectly. Nothing will disappear or blink.
 	var input_clicked: bool = false
 	while not input_clicked:
 		if Input.is_action_just_pressed("ui_accept") or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			input_clicked = true
 		await get_tree().process_frame
 
-	# =====================================================================
-	# --- SEQUENTIAL TIMING ENGINE CRITICAL TRACKS ---
-	# =====================================================================
-	
-	# Step 1: Enforce the explicit 1-second delay requested. Both text and sprite stay 100% visible.
 	await get_tree().create_timer(1.0).timeout
 
-	# Step 2: Fade Kylie out FIRST while the dialogue text box remains fully on screen
 	if kylie:
 		var t_kylie_out = create_tween()
 		t_kylie_out.tween_property(kylie, "modulate:a", 0.0, 0.4)
 		await t_kylie_out.finished
 		kylie.hide()
 
-	# Step 3: Fade out the Dialogue Box SECOND after Kylie is completely gone
 	var box_visual = active_dialogue_box.get_node_or_null("MarginContainer/texturerectContainer")
 	if box_visual:
 		var t_box_out = create_tween()
 		t_box_out.tween_property(box_visual, "modulate:a", 0.0, 0.5)
 		await t_box_out.finished
 	
-	# Complete clean up of step assets from active memory tree
 	if jane_big_anchor: jane_big_anchor.hide()
 	active_dialogue_box.queue_free()
 

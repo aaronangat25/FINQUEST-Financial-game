@@ -71,9 +71,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -31.625
+offset_left = -34.0
 offset_top = -34.0
-offset_right = 31.625
+offset_right = 35.625
 offset_bottom = 25.25
 grow_horizontal = 2
 grow_vertical = 2
@@ -216,5 +216,7 @@ theme_override_font_sizes/font_size = 6
 text = "main menu"
 
 [node name="pause_btn" parent="." instance=ExtResource("6_olcjx")]
+visible = false
 
 [node name="SavingScreen" parent="." instance=ExtResource("7_rhq4h")]
+visible = false

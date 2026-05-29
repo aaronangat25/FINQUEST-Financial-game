@@ -5,29 +5,30 @@ extends CanvasLayer
 var current_money: int = 0 
 
 func _ready():
-	# Force the HUD to stay on the bottom layer
 	if self is CanvasLayer:
 		self.layer = 1
 	
-	# When the HUD spawns immediately grab the saved money from the Global bank
-	current_money = Global.player_money
-	update_ui()
+	# Initial synchronization with the active memory runtime variable
+	refresh_display()
 
 func add_money(amount: int):
-	# Update the current money
-	current_money += amount
+	# Update active tracking state in memory buffers
+	GameManager.on_hand_cash += amount
 	
-	# Save the new amount back to the Global bank
-	Global.player_money = current_money
-	
-	# If the amount is negative (meaning Jane spent money), add it to expenses!
+	# Log expenses safely if checking for visual metrics
 	if amount < 0:
-		Global.total_expenses += abs(amount) 
+		GameManager.total_expenses += abs(amount)
 		
-	# Update the UI
+	# Synchronize display numbers immediately
+	refresh_display()
+
+# --- THE REACTIVE SYNCHRONIZATION FIX ---
+# This function forces the visual label to pull the absolute latest state
+# straight from the Game Manager singleton, regardless of who modified it!
+func refresh_display():
+	current_money = GameManager.on_hand_cash
 	update_ui()
 
 func update_ui():
-	money_label.text = "P" + str(current_money)
-	
-	
+	if money_label:
+		money_label.text = "P" + str(current_money)

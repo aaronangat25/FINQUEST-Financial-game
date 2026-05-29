@@ -92,7 +92,7 @@ func _ready():
 	rideatrain_btn1.pressed.connect(_on_rideatrain_home_pressed)
 	walktohome_btn.pressed.connect(_on_walktohome_pressed)
 	
-	chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
+	#chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
 		
 	var breakfast_sequence = [
@@ -380,6 +380,9 @@ func _on_chapter1_btn_pressed():
 	stats_screen.hide()
 	currency_hud.hide() 
 	
+	# --- FIXED: Force the sandbox cache to clean balances BEFORE saving progress!
+	GameManager.flush_buffer_to_database()
+	
 	saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
 
 # =========================================
@@ -393,6 +396,9 @@ func _on_main_menu_btn_pressed():
 	main_menu_btn.disabled = true 
 	stats_screen.hide()
 	currency_hud.hide()
+	
+	# --- FIXED: Wipes tutorial cash records safely on menu drop exit
+	GameManager.flush_buffer_to_database()
 	
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
 	saving_screen.trigger_save_sequence(main_screen_path)

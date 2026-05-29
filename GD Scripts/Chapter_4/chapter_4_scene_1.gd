@@ -27,9 +27,18 @@ var is_phone_clickable: bool = false
 var phone_state: int = 0
 
 func _ready() -> void:
+	# --- MASTER DATABASE SYNCHRONIZATION ---
+	# Load baseline stats into running memory and align global variables
+	GameManager.load_player_stats()
+	Global.player_money = GameManager.on_hand_cash
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
-	currency_hud.show()
+	
+	# Force the HUD to render her actual carried pocket balance immediately
+	await get_tree().process_frame
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_big: jane_big.hide()
@@ -84,7 +93,6 @@ func _run_title_sequence() -> void:
 func _play_intro_sequence() -> void:
 	await get_tree().create_timer(1.0).timeout
 	
-	# Rule applied: Dialogue Box FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -97,7 +105,6 @@ func _play_intro_sequence() -> void:
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
 		await t_box_in.finished
 		
-	# Rule applied: Jane SECOND
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 1.0
@@ -206,8 +213,6 @@ func _open_phone_screen_4() -> void:
 	active_phone_screen = PHONE_SCREEN_4_SCENE.instantiate()
 	add_child(active_phone_screen)
 	
-	# --- BULLETPROOF CONTACTS CONNECTION ---
-	# Grabs both the inner and outer buttons so no clicks are missed!
 	var contacts_btn = active_phone_screen.find_child("contactsbutton", true, false)
 	var contacts_tex_btn = active_phone_screen.find_child("ContactsTextureButton", true, false)
 	
@@ -216,7 +221,6 @@ func _open_phone_screen_4() -> void:
 	if contacts_tex_btn and not contacts_tex_btn.pressed.is_connected(_on_contacts_pressed):
 		contacts_tex_btn.pressed.connect(_on_contacts_pressed)
 		
-	# --- BULLETPROOF SIS CONNECTION ---
 	var sis_btn = active_phone_screen.find_child("SISbutton", true, false)
 	var sis_tex_btn = active_phone_screen.find_child("SISbuttexturebutton", true, false)
 	
@@ -238,6 +242,9 @@ func _on_contacts_pressed() -> void:
 	active_phone_screen_5_1.visible = true
 	if active_phone_screen_5_1.has_method("show"):
 		active_phone_screen_5_1.show()
+	
+	# --- SAFE RAM CHOICE STAGING ---
+	GameManager.log_choice("chap4_view_group_chat", "Viewed")
 	
 	var back_btn = active_phone_screen_5_1.find_child("BackButton", true, false)
 	if not back_btn:
@@ -301,15 +308,12 @@ func _on_phone_5_1_back_pressed() -> void:
 # Final Dialogue and Choices
 
 func _play_final_jane_dialogue() -> void:
-	
-	# STEP 1: Fade out Big Jane smoothly
 	if jane_big and jane_big.visible:
 		var t_jane_out = create_tween()
 		t_jane_out.tween_property(jane_big, "modulate:a", 0.0, 1.0)
 		await t_jane_out.finished
 		jane_big.hide()
 
-	# STEP 2: Fade IN Dialogue Box FIRST (1.0 Rule)
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -320,9 +324,8 @@ func _play_final_jane_dialogue() -> void:
 		box_visual.modulate.a = 0.0
 		var t_box_in = create_tween()
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
-		await t_box_in.finished # WAIT for box to finish
+		await t_box_in.finished
 		
-	# STEP 3: Fade IN Thinking Jane SECOND (1.0 Rule)
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 0.0
@@ -331,9 +334,8 @@ func _play_final_jane_dialogue() -> void:
 			
 		var t_jane_in = create_tween()
 		t_jane_in.tween_property(jane_thinking, "modulate:a", 1.0, 1.0)
-		await t_jane_in.finished # WAIT for Jane to finish
+		await t_jane_in.finished
 		
-	# STEP 4: Start text
 	var final_convo = [
 		{"speaker": "Jane", "text": "Ang dami ko pang gastos… tapos kailangan din ng oras at effort."},
 		{"speaker": "Jane", "text": "Paano ko pagsasabayin ‘to? Time, energy… at pera?"}
@@ -343,12 +345,10 @@ func _play_final_jane_dialogue() -> void:
 	active_dialogue_box.start_dialogue(final_convo)
 	await active_dialogue_box.dialogue_finished
 	
-	# STEP 5: Fade out Jane FIRST
 	if jane_thinking: 
 		jane_thinking.exit(true)
-		await get_tree().create_timer(1.0).timeout # Let exit anim play
+		await get_tree().create_timer(1.0).timeout
 		
-	# STEP 6: Fade out Dialogue Box SECOND
 	if box_visual:
 		var t_box_out = create_tween()
 		t_box_out.tween_property(box_visual, "modulate:a", 0.0, 1.0)
@@ -356,7 +356,6 @@ func _play_final_jane_dialogue() -> void:
 		
 	active_dialogue_box.queue_free()
 	
-	# STEP 7: FADE IN CHOOSE CONTROL 9
 	if choose_control:
 		choose_control.modulate.a = 0.0
 		choose_control.show()
@@ -386,29 +385,21 @@ func _on_choice_b_pressed() -> void:
 	_handle_choice_reaction("B", "Tipid nga… pero ang damiing interruptions.")
 
 func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
-	# 1. Fade out ChooseControl9 (1.0 duration)
 	if choose_control:
 		var t_choice_out = create_tween()
 		t_choice_out.tween_property(choose_control, "modulate:a", 0.0, 1.0)
 		await t_choice_out.finished
 		choose_control.hide()
 		
-	# 2. CURRENCY MECHANIC
+	# --- SAFE RAM STAGING REDIRECTION ---
+	GameManager.log_choice("chap4_meeting_preference", choice_id)
 	if choice_id == "A":
-		# -120 for Face-to-Face
-		if currency_hud:
-			
-			if currency_hud.has_method("add_money"): 
-				currency_hud.add_money(-120)
-			
-			else:
-				print("WARNING: Could not find the method! Check the function name in currency_hud.gd")
-				
-	elif choice_id == "B":
-		# 0 for OLC Meeting (No deduction)
-		pass
+		GameManager.stage_finance_change(0, -120, "Commuter travel fare for physical group thesis session")
 
-	# 3. Fade IN Dialogue Box FIRST (1.0 Rule)
+	# Pull fresh metrics into the HUD display layer instantly
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true
@@ -419,29 +410,25 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 		box_visual.modulate.a = 0.0
 		var t_box_in = create_tween()
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
-		await t_box_in.finished # WAIT for box
+		await t_box_in.finished
 		
-	# 4. Fade IN Thinking Jane SECOND (1.0 Rule)
 	if jane_thinking:
 		jane_thinking.show()
 		jane_thinking.modulate.a = 0.0
 		if jane_thinking.has_method("appear"): jane_thinking.appear("idle", false)
 		var t_jane_in = create_tween()
 		t_jane_in.tween_property(jane_thinking, "modulate:a", 1.0, 1.0)
-		await t_jane_in.finished # WAIT for Jane
+		await t_jane_in.finished
 	
-	# 5. Play Reaction Text
 	active_dialogue_box.is_fading = false
 	var reaction_convo = [{"speaker": "Jane", "text": choice_text}]
 	active_dialogue_box.start_dialogue(reaction_convo)
 	await active_dialogue_box.dialogue_finished
 	
-	# 6. Fade OUT Jane FIRST
 	if jane_thinking: 
 		jane_thinking.exit(true)
-		await get_tree().create_timer(1.0).timeout # Let exit play
+		await get_tree().create_timer(1.0).timeout
 		
-	# 7. Fade OUT Dialogue Box SECOND
 	if box_visual:
 		var t_box_out = create_tween()
 		t_box_out.tween_property(box_visual, "modulate:a", 0.0, 1.0)
@@ -449,16 +436,11 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 		
 	active_dialogue_box.queue_free()
 	
-	# Scene transition logic
-	
-	# Wait 2 seconds
 	await get_tree().create_timer(2.0).timeout
 	
-	# Fade to Black
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
 		
-	# Show "At a Printing Shop" Title
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
 		title_label.text = "AT A\nPRINTING\nSHOP"
@@ -478,7 +460,6 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 		
 	print("Chapter 4 Scene 1 Complete! Transitioning to Scene 2...")
 	
-	# Change Scene to Scene 2
 	var next_scene_path = "res://Scenes/Chapter 4/chapter_4_scene_2.tscn"
 	ResourceLoader.load_threaded_request(next_scene_path)
 	var load_status = ResourceLoader.load_threaded_get_status(next_scene_path)

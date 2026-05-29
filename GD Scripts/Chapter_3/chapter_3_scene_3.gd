@@ -121,7 +121,6 @@ func _play_clerk_sequence() -> void:
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6)
 		await tween_in.finished
 		
-	# --- FIX: Replaced dialogue Jane with thinking Jane ---
 	if jane_thinking: jane_thinking.appear("idle", false)
 	if jen_dialogue: jen_dialogue.appear("idle", false)
 	await get_tree().create_timer(0.6).timeout
@@ -168,16 +167,24 @@ func _play_choice_sequence() -> void:
 		tween_choice.tween_property(choose_control_8, "modulate:a", 1.0, 0.5)
 
 func _on_grocery_choice_pressed(choice: String) -> void:
-	# Disable buttons immediately
 	if branded_btn: branded_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if generic_btn: generic_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if essentials_btn: essentials_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# --- INFLATION DEDUCTIONS ---
-	if currency_hud and currency_hud.has_method("add_money"):
-		if choice == "A": currency_hud.add_money(-250) # Branded
-		elif choice == "B": currency_hud.add_money(-150) # Generic
-		elif choice == "C": currency_hud.add_money(-100) # Essentials
+	# --- SAFE RAM STAGING REDIRECTION ---
+	# Pass choice tracking and financial adjustments into the memory staging buffers
+	GameManager.log_choice("chap3_grocery_choice", choice)
+	
+	if choice == "A": 
+		GameManager.stage_finance_change(0, -250, "Purchased branded grocery items")
+	elif choice == "B": 
+		GameManager.stage_finance_change(0, -150, "Purchased generic grocery items")
+	elif choice == "C": 
+		GameManager.stage_finance_change(0, -100, "Purchased strictly essential groceries")
+	
+	# Refresh UI visually using our memory synchronization method
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	# Fade out UI
 	var tween_out = create_tween().set_parallel(true)
