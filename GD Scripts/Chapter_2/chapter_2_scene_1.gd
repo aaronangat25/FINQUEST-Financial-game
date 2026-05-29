@@ -42,6 +42,7 @@ var active_lock_screen_3
 var active_money_ui
 var active_padlock_btn 
 var active_choice_shield 
+var pause_button 
 
 # --- TRACKING CHOICES FOR GRADES ---
 var study_choice: String = ""
@@ -55,19 +56,24 @@ var is_waiting_to_dismiss_money: bool = false
 var is_phone_clickable_phase_3: bool = false 
 
 func _ready() -> void:
-	# 1. Pulls her exact hard-saved wallet values (Bank: 2100, Pocket: 500) from SQLite rows
+	# 1. Pulls her exact hard-saved wallet values from SQLite rows
 	GameManager.load_player_stats()
 	
 	# 2. Synchronize your Global tracking variable with the true database state
 	Global.player_money = GameManager.on_hand_cash
 	
 	# 3. Instantiate the HUD 
-	# (Your updated script automatically reads GameManager.on_hand_cash during initialization!)
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	# --- FIXED: REMOVED THE DUPLICATE currency_hud.add_money() CALL FROM HERE ---
-	# This stops the HUD from adding the cash twice and stacking 500 + 500!
+	# --- THE PAUSE BUTTON TRANSITION FIX ---
+	pause_button = get_node_or_null("PauseButton")
+	if not pause_button:
+		pause_button = find_child("PauseButton", true, false)
+		
+	if pause_button:
+		pause_button.hide() # Kill pause button visibility immediately on frame zero
+	# ----------------------------------------
 	
 	if phone_mini: phone_mini.hide() 
 	if jane_thinking: jane_thinking.modulate.a = 0.0
@@ -102,10 +108,24 @@ func _ready() -> void:
 		exam_starts_control.modulate.a = 0.0
 		exam_starts_control.hide()
 	
-	await get_tree().create_timer(0.2).timeout
+	# --- BULLETPROOF TRANSITION HOOK OVERRIDE ---
+	# If entering from Chapter Menu, the screen layout mask might be invisible.
+	# We force it visible and fully opaque black right now to create a safe zone mask!
+	if TransitionManager.color_rect:
+		TransitionManager.color_rect.show()
+		TransitionManager.color_rect.visible = true
+		TransitionManager.color_rect.modulate.a = 1.0
 	
-	if TransitionManager.color_rect.visible:
+	await get_tree().create_timer(0.5).timeout
+	
+	# TransitionManager now fades down safely from our forced black screen state
+	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
+		
+	# Reveal pause button smoothly after black curtain is completely out of the viewport bounds
+	if pause_button:
+		pause_button.show()
+	# ----------------------------------------------
 		
 	_play_intro_sequence()
 
@@ -300,18 +320,11 @@ func _show_money_ui() -> void:
 		job_salary = 2040
 		job_display_name = "Cashier"
 		
-	# --- FIXED UNUSED VARIABLE WARNING ---
-	# Passed components cleanly into the memory buffer method statement block directly
-	
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
-	# --- FIXED: ALLOWANCE AND SALARY ALL GO TO ON-HAND POCKET CASH ---
-	# Changing the first parameter to 0 and adding base_allowance to the second parameter
-	# forces the entire ₱3,000 + job earnings straight into her on-hand pocket variables!
 	GameManager.stage_finance_change(0, base_allowance + job_salary, "Weekly Allowance & Part-Time Salary Payoff")
 	
-	# Force display layout sync immediately
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 		
@@ -510,8 +523,6 @@ func _process_study_choice(choice: String) -> void:
 		study_choice = "B"
 		GameManager.log_choice("chap2_study_location", "B")
 	
-	# --- FIXED HUD REFRESH PLACEMENT ---
-	# Forces the HUD to immediately grab the updated values from backend RAM
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 	
@@ -623,8 +634,6 @@ func _process_travel_choice(choice: String) -> void:
 		travel_choice = "B"
 		GameManager.log_choice("chap2_travel_method", "B")
 			
-	# --- FIXED HUD REFRESH PLACEMENT ---
-	# Forces the HUD to immediately grab the updated values from backend RAM
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 			
@@ -649,6 +658,10 @@ func _process_travel_choice(choice: String) -> void:
 		background.add_theme_stylebox_override("panel", new_stylebox)
 		
 	await TransitionManager.fade_from_black()
+	
+	if pause_button:
+		pause_button.show()
+	
 	await get_tree().create_timer(1.0).timeout
 	_play_exam_sequence()
 
@@ -661,6 +674,7 @@ func _play_exam_sequence() -> void:
 		
 	await get_tree().create_timer(3.0).timeout
 	
+	if pause_button: pause_button.hide()
 	await TransitionManager.fade_to_black()
 	await get_tree().create_timer(3.0).timeout
 	
@@ -668,6 +682,7 @@ func _play_exam_sequence() -> void:
 		exam_starts_control.hide()
 		
 	await TransitionManager.fade_from_black()
+	if pause_button: pause_button.show() 
 	await get_tree().create_timer(1.0).timeout
 	
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
@@ -815,31 +830,26 @@ func _on_phone_3_back_pressed() -> void:
 	
 	if currency_hud:
 		currency_hud.hide()
+	
+	if pause_button: pause_button.hide() 
 		
-	# Force tracking variables safely to Chapter 2 (Row 3 inside chapter_progress table)
 	GameManager.current_chapter = 3
 	print("[SYSTEM] Running database save sequence for Chapter 2.")
 	
-	# Extract calculated exam score card mapping metrics to use as her progression grade row data
 	var end_grade = 1.25
 	if study_choice == "A" and travel_choice == "A":
 		end_grade = 1.0
 	elif study_choice == "B" and travel_choice == "B":
 		end_grade = 1.50
 	
-	# --- MASTER FLUSH ADDITION ---
-	# We commit choices and accumulated budget change summaries all at once here!
 	GameManager.flush_buffer_to_database()
 	
-	# Wake up save overlay graphic and present it on screen for 2 seconds
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS
 	saving_screen.show()
 	
-	# Pass calculated scores into progression rows and advance tracker safely to Chapter 3
 	GameManager.complete_current_chapter(end_grade)
 	await get_tree().create_timer(2.0).timeout
 	
-	# 2. INSTANT BLACKOUT OVERLAY MASK
 	var local_black_screen = ColorRect.new()
 	local_black_screen.color = Color(0, 0, 0, 1) 
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -848,7 +858,6 @@ func _on_phone_3_back_pressed() -> void:
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
 	
-	# 3. TRIGGER CINEMATIC CHAPTER CARD THROUGH TRANSITION SYSTEM
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
 		title_label.text = "CHAPTER 3"
@@ -866,7 +875,6 @@ func _on_phone_3_back_pressed() -> void:
 		await t2.finished
 		title_label.hide()
 		
-	# 4. MOBILE-SAFE BACKGROUND THREAD LOADING FOR NEXT LEVEL
 	var next_scene_path = "res://Scenes/Chapter 3/chapter_3_scene_1.tscn"
 	
 	ResourceLoader.load_threaded_request(next_scene_path)

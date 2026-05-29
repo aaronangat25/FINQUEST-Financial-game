@@ -87,6 +87,7 @@ func create_tables():
 	# --- MASTER UNIQUE CONSTRAINT FIX ---
 	# UNIQUE(player_id, chapter_number) ON CONFLICT IGNORE forces SQLite to block
 	# duplicate chapter entries completely when direct scene testing (F5)!
+	# Added DEFAULT 0.0 to completion_grade to safely support the functional SIS app tracking.
 	db.query("""
 	CREATE TABLE IF NOT EXISTS chapter_progress (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -94,7 +95,7 @@ func create_tables():
 		chapter_number INTEGER NOT NULL,
 		is_unlocked INTEGER DEFAULT 0,
 		is_completed INTEGER DEFAULT 0,
-		completion_grade REAL,
+		completion_grade REAL DEFAULT 0.0,
 		completed_at DATETIME,
 		FOREIGN KEY (player_id) REFERENCES players(id),
 		UNIQUE(player_id, chapter_number) ON CONFLICT IGNORE
@@ -320,9 +321,10 @@ func create_default_chapter_progress(player_id : int):
 			player_id,
 			chapter_number,
 			is_unlocked,
-			is_completed
+			is_completed,
+			completion_grade
 		)
-		VALUES (?, ?, ?, ?);
+		VALUES (?, ?, ?, ?, 0.0);
 		""", [
 			player_id,
 			chapter,
@@ -471,12 +473,12 @@ func save_player_choice(player_id : int, chapter_number : int, scene_key : Strin
 
 func complete_chapter(player_id : int, chapter_number : int, grade : float):
 	# 1. Marks current chapter (e.g., Prologue = 1) as completed
-	# CHANGED: Keeps using a strict UPDATE command so we never generate duplicate tracking rows!
+	# CHANGED: Added casting constraint logic to match your architecture safely.
 	db.query_with_bindings("""
 	UPDATE chapter_progress
 	SET is_completed = 1, completion_grade = ?, completed_at = CURRENT_TIMESTAMP
 	WHERE player_id = ? AND chapter_number = ?;
-	""", [grade, player_id, chapter_number])
+	""", [float(grade), player_id, chapter_number])
 
 	# 2. Instantly unlocks the NEXT sequential record row (e.g., Chapter 1 = 2)
 	db.query_with_bindings("""
