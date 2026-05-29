@@ -5,9 +5,6 @@ const NEXT_SCENE = "res://Scenes/Chapter Selection/chapter_selection.tscn"
 @onready var play_btn = $main_menu_bg/menu_button_container/playbtn
 
 func _ready():
-<<<<<<< Updated upstream
-	AudioManager.play_menu_music() # Starts menu music looping instantly
-=======
 	# --- AUDIO INITIALIZATION ---
 	# Starts menu background music looping instantly on game startup
 	AudioManager.play_menu_music()
@@ -15,9 +12,7 @@ func _ready():
 	# --- GLOBAL TRANSITION FALLBACK SAFETY ---
 	if TransitionManager.has_method("fade_from_black"):
 		TransitionManager.fade_from_black()
->>>>>>> Stashed changes
 	
-	# Your existing fade-in tween code below...
 	# 1. Spawn a black screen that starts completely opaque 
 	var fade_rect = ColorRect.new()
 	fade_rect.color = Color(0, 0, 0, 1) 
