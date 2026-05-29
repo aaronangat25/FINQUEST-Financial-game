@@ -65,7 +65,6 @@ func _play_canteen_sequence() -> void:
 	if kylie_dialogue: kylie_dialogue.appear("idle", false)
 	await get_tree().create_timer(0.6).timeout
 	
-	# --- FIX: Changed the speaker name back to "Jane" ---
 	var canteen_convo = [
 		{"speaker": "Kylie", "text": "Jane, napansin mo ba? Dati P50 lang ‘tong lunch ko, ngayon P70 na."},
 		{"speaker": "Jane", "text": "Oo nga eh. Kahit pamasahe tumaas din."},
@@ -92,11 +91,9 @@ func _play_canteen_sequence() -> void:
 	
 	_play_choice_sequence()
 
-# --- FIX: Use the 'in' keyword to bypass any hidden spaces! ---
 func _on_dialogue_line_started(line_data: Dictionary) -> void:
 	var text = line_data.get("text", "")
 	
-	# This checks if this specific phrase is ANYWHERE inside the text
 	if "Mukhang kailangan kong magtipiid" in text:
 		if jane_dialogue: 
 			jane_dialogue.hide()
@@ -118,7 +115,6 @@ func _play_choice_sequence() -> void:
 	
 	if choose_control_7:
 		choose_control_7.show()
-		# Ensure both container and response (panel) are visible
 		if choose_response_7: choose_response_7.show()
 		if choices_container_7: choices_container_7.show()
 		
@@ -126,15 +122,24 @@ func _play_choice_sequence() -> void:
 		tween_choice.tween_property(choose_control_7, "modulate:a", 1.0, 0.5)
 
 func _on_meal_choice_pressed(choice: String) -> void:
-	# Disable buttons
 	fullmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	budgetmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	skipmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# --- APPLY MONEY DEDUCTION (Inflation Prices) ---
-	if currency_hud and currency_hud.has_method("add_money"):
-		if choice == "A": currency_hud.add_money(-90) # Full Meal
-		elif choice == "B": currency_hud.add_money(-50) # Budget Meal
+	# --- SAFE RAM STAGING REDIRECTION ---
+	# Log narrative choice value and apply pocket cash reduction directly to the memory buffers
+	GameManager.log_choice("chap3_meal_choice", choice)
+	
+	if choice == "A": 
+		GameManager.stage_finance_change(0, -90, "Purchased full meal at campus canteen")
+	elif choice == "B": 
+		GameManager.stage_finance_change(0, -50, "Purchased budget meal at campus canteen")
+	elif choice == "C":
+		GameManager.log_choice("chap3_meal_choice", "C") # Skip Meal (P0 cost)
+	
+	# Force the currency HUD to pull the latest running tracker state safely
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	# Fade out
 	var tween_out = create_tween().set_parallel(true)

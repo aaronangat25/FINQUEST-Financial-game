@@ -20,16 +20,21 @@ var active_lock_screen_4
 var is_phone_clickable: bool = false
 
 func _ready() -> void:
-	# 1. Setup Currency HUD
+	# --- MASTER DATABASE SYNCHRONIZATION ---
+	# Pulls her running wallet data into RAM variables right as Chapter 3 boots up
+	GameManager.load_player_stats()
+	Global.player_money = GameManager.on_hand_cash
+	
+	# Setup Currency HUD
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	# 2. Hide elements initially
+	# Hide elements initially
 	if phone_mini: phone_mini.hide() 
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_big: jane_big.modulate.a = 0.0
 	
-	# 3. Mobile Performance Breathing Timer
+	# Mobile Performance Breathing Timer
 	await get_tree().create_timer(1.5).timeout
 	
 	if TransitionManager.color_rect.visible:
@@ -112,8 +117,6 @@ func _play_phone_sequence() -> void:
 	if phone_mini:
 		phone_mini.show()
 		
-		# --- FIX: Removed the manual tweens! Since this is a fresh scene, 
-		# the built-in appear() will play perfectly without blinking. ---
 		if phone_mini.has_method("appear"):
 			phone_mini.appear()
 		
@@ -204,7 +207,6 @@ func _play_post_phone_sequence() -> void:
 			
 	await get_tree().create_timer(0.6).timeout
 	
-	# --- FIX: Updated Dialogue exact spelling ---
 	var inflation_convo = [
 		{"speaker": "Jane", "text": "Inflation? Kaya pala parang mas mahal lahat ngayon…"},
 		{"speaker": "Jane", "text": "Kailangan ko na talagang magiing mas maiingat sa gastos."}

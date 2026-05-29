@@ -67,7 +67,8 @@ func create_tables():
 	db.query("""
 	CREATE TABLE IF NOT EXISTS player_stats (
 		player_id INTEGER PRIMARY KEY,
-		bank_cash INTEGER DEFAULT 3000,
+		bank_cash INTEGER DEFAULT 0, -- CHANGED FROM 3000 TO 0
+		on_hand_cash INTEGER DEFAULT 0,
 		financial_wisdom_points INTEGER DEFAULT 0,
 		grades REAL DEFAULT 0,
 		current_chapter INTEGER DEFAULT 1,
@@ -83,6 +84,9 @@ func create_tables():
 	# =========================================
 	# CHAPTER PROGRESS
 	# =========================================
+	# --- MASTER UNIQUE CONSTRAINT FIX ---
+	# UNIQUE(player_id, chapter_number) ON CONFLICT IGNORE forces SQLite to block
+	# duplicate chapter entries completely when direct scene testing (F5)!
 	db.query("""
 	CREATE TABLE IF NOT EXISTS chapter_progress (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,7 +96,8 @@ func create_tables():
 		is_completed INTEGER DEFAULT 0,
 		completion_grade REAL,
 		completed_at DATETIME,
-		FOREIGN KEY (player_id) REFERENCES players(id)
+		FOREIGN KEY (player_id) REFERENCES players(id),
+		UNIQUE(player_id, chapter_number) ON CONFLICT IGNORE
 	);
 	""")
 
@@ -466,6 +471,7 @@ func save_player_choice(player_id : int, chapter_number : int, scene_key : Strin
 
 func complete_chapter(player_id : int, chapter_number : int, grade : float):
 	# 1. Marks current chapter (e.g., Prologue = 1) as completed
+	# CHANGED: Keeps using a strict UPDATE command so we never generate duplicate tracking rows!
 	db.query_with_bindings("""
 	UPDATE chapter_progress
 	SET is_completed = 1, completion_grade = ?, completed_at = CURRENT_TIMESTAMP

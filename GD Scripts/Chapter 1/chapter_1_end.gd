@@ -161,30 +161,32 @@ func _on_padlock_pressed() -> void:
 	if currency_hud:
 		currency_hud.hide()
 		
-	GameManager.current_chapter = 2
 	print("[SYSTEM] Running database save sequence for Chapter 1.")
 	
-	# Wake up save overlay and show it for 2 seconds
+	# --- MASTER ORDER OF EXECUTION RESTRUCTURE ---
+	# 1. Flush the choices and balances FIRST while current_chapter is 
+	# still correctly recognized as 2 (Chapter 1) inside memory.
+	GameManager.flush_buffer_to_database()
+	
+	# 2. Wake up save overlay graphic
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS
 	saving_screen.show()
-	GameManager.complete_current_chapter(100.0)
+	
+	# 3. Mark Chapter 1 as complete, unlock Chapter 2 row, and advance tracker to 3
+	GameManager.complete_current_chapter(100.0) 
 	await get_tree().create_timer(2.0).timeout
 	
 	# =================================================================
 	# STEP 2: INSTANT BLACKOUT OVERLAY (NO FADE ANIMATION GLIMPSE)
 	# =================================================================
-	# We create an instant solid black background canvas block to replace the save graphic 
-	# without requesting an animated transition from TransitionManager.
 	var local_black_screen = ColorRect.new()
-	local_black_screen.color = Color(0, 0, 0, 1) # Full solid black alpha instantly
+	local_black_screen.color = Color(0, 0, 0, 1) 
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(local_black_screen)
 	
-	# Clean up and hide the saving overlay asset node behind the new dark background mask
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
 	
-	# Fetch TitleLabel straight from the transition system singleton container 
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
 		title_label.text = "CHAPTER 2"
@@ -215,5 +217,4 @@ func _on_padlock_pressed() -> void:
 		
 		title_label.hide()
 	
-	# Change scenes seamlessly directly inside engine tree core
 	get_tree().change_scene_to_file("res://Scenes/Chapter 2/chapter_2_scene_1.tscn")

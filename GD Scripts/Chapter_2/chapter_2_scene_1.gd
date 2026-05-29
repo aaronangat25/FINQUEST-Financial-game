@@ -55,11 +55,21 @@ var is_waiting_to_dismiss_money: bool = false
 var is_phone_clickable_phase_3: bool = false 
 
 func _ready() -> void:
+	# 1. Pulls her exact hard-saved wallet values (Bank: 2100, Pocket: 500) from SQLite rows
+	GameManager.load_player_stats()
+	
+	# 2. Synchronize your Global tracking variable with the true database state
+	Global.player_money = GameManager.on_hand_cash
+	
+	# 3. Instantiate the HUD 
+	# (Your updated script automatically reads GameManager.on_hand_cash during initialization!)
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
+	# --- FIXED: REMOVED THE DUPLICATE currency_hud.add_money() CALL FROM HERE ---
+	# This stops the HUD from adding the cash twice and stacking 500 + 500!
+	
 	if phone_mini: phone_mini.hide() 
-		
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_big: jane_big.modulate.a = 0.0
 	if feature_control: feature_control.modulate.a = 0.0
@@ -290,13 +300,20 @@ func _show_money_ui() -> void:
 		job_salary = 2040
 		job_display_name = "Cashier"
 		
-	var total_received = base_allowance + job_salary
+	# --- FIXED UNUSED VARIABLE WARNING ---
+	# Passed components cleanly into the memory buffer method statement block directly
 	
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
-	if currency_hud and currency_hud.has_method("add_money"):
-		currency_hud.add_money(total_received)
+	# --- FIXED: ALLOWANCE AND SALARY ALL GO TO ON-HAND POCKET CASH ---
+	# Changing the first parameter to 0 and adding base_allowance to the second parameter
+	# forces the entire ₱3,000 + job earnings straight into her on-hand pocket variables!
+	GameManager.stage_finance_change(0, base_allowance + job_salary, "Weekly Allowance & Part-Time Salary Payoff")
+	
+	# Force display layout sync immediately
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 		
 	await get_tree().create_timer(2.0).timeout
 	is_waiting_to_dismiss_money = true
@@ -487,10 +504,16 @@ func _process_study_choice(choice: String) -> void:
 	
 	if choice == "Cafe":
 		study_choice = "A"
-		if currency_hud and currency_hud.has_method("add_money"):
-			currency_hud.add_money(-150) 
+		GameManager.stage_finance_change(0, -150, "Purchased coffee at study cafe")
+		GameManager.log_choice("chap2_study_location", "A")
 	elif choice == "Lounge":
 		study_choice = "B"
+		GameManager.log_choice("chap2_study_location", "B")
+	
+	# --- FIXED HUD REFRESH PLACEMENT ---
+	# Forces the HUD to immediately grab the updated values from backend RAM
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	if choose_control_5:
 		var tween = create_tween()
@@ -594,10 +617,16 @@ func _process_travel_choice(choice: String) -> void:
 	
 	if choice == "Tricycle":
 		travel_choice = "A"
-		if currency_hud and currency_hud.has_method("add_money"):
-			currency_hud.add_money(-30) 
+		GameManager.stage_finance_change(0, -30, "Paid fare for tricycle ride to campus")
+		GameManager.log_choice("chap2_travel_method", "A")
 	elif choice == "Walk":
 		travel_choice = "B"
+		GameManager.log_choice("chap2_travel_method", "B")
+			
+	# --- FIXED HUD REFRESH PLACEMENT ---
+	# Forces the HUD to immediately grab the updated values from backend RAM
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 			
 	if choose_control_6:
 		var tween = create_tween()
@@ -767,7 +796,7 @@ func _open_phone_screen_3() -> void:
 	if back_btn: back_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 
 # =================================================================
-# STEP 3: REORDERED AND BULLETPROOF TIMING HANDOFF FOR CHAPTER 2 END
+# MASTER HANDOFF FIX FOR CHAPTER 2 END (STRICT PERSISTENCE)
 # =================================================================
 func _on_phone_3_back_pressed() -> void:
 	print("YES! The _on_phone_3_back_pressed signal fired perfectly!")
@@ -784,27 +813,38 @@ func _on_phone_3_back_pressed() -> void:
 	
 	await get_tree().create_timer(3.0).timeout
 	
-	# 1. TRIGGER THE SAVING SCREEN OVERLAY FIRST
 	if currency_hud:
 		currency_hud.hide()
 		
-	# Force tracker explicitly to Chapter 2 (Row 3 in SQLite chapter_progress table)
+	# Force tracking variables safely to Chapter 2 (Row 3 inside chapter_progress table)
 	GameManager.current_chapter = 3
 	print("[SYSTEM] Running database save sequence for Chapter 2.")
 	
-	# Wake up save overlay and show it for 2 seconds
+	# Extract calculated exam score card mapping metrics to use as her progression grade row data
+	var end_grade = 1.25
+	if study_choice == "A" and travel_choice == "A":
+		end_grade = 1.0
+	elif study_choice == "B" and travel_choice == "B":
+		end_grade = 1.50
+	
+	# --- MASTER FLUSH ADDITION ---
+	# We commit choices and accumulated budget change summaries all at once here!
+	GameManager.flush_buffer_to_database()
+	
+	# Wake up save overlay graphic and present it on screen for 2 seconds
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS
 	saving_screen.show()
-	GameManager.complete_current_chapter(100.0)
+	
+	# Pass calculated scores into progression rows and advance tracker safely to Chapter 3
+	GameManager.complete_current_chapter(end_grade)
 	await get_tree().create_timer(2.0).timeout
 	
 	# 2. INSTANT BLACKOUT OVERLAY MASK
 	var local_black_screen = ColorRect.new()
-	local_black_screen.color = Color(0, 0, 0, 1) # Full solid black instantly
+	local_black_screen.color = Color(0, 0, 0, 1) 
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(local_black_screen)
 	
-	# Clean up and hide the saving overlay asset node behind the dark background mask
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
 	

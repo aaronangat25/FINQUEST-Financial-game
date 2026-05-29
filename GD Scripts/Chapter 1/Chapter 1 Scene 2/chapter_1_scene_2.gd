@@ -123,7 +123,6 @@ func _on_padlock_pressed() -> void:
 	add_child(active_dialogue_box)
 	
 	# --- THE SPAM-CLICK FIX ---
-	# We use the variable YOU built into dialogue_box.gd to lock the mouse!
 	active_dialogue_box.is_fading = true
 	# --------------------------
 	
@@ -154,7 +153,6 @@ func _on_padlock_pressed() -> void:
 	]
 	
 	# --- THE SPAM-CLICK FIX PART 2 ---
-	# Now that Kylie is here, we unlock the mouse so the player can read!
 	active_dialogue_box.is_fading = false
 	
 	active_dialogue_box.start_dialogue(scene_2_dialogue)
@@ -182,47 +180,62 @@ func _on_padlock_pressed() -> void:
 func _on_karinderya_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
+	
+	# RECORD NARRATIVE CHOICE TO SQLITE
+	GameManager.log_choice("chap1_breakfast_spending", "A")
+	
 	execute_food_transition(KARINDERYA_BG, 60)
 
 func _on_fastfood_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
+	
+	# RECORD NARRATIVE CHOICE TO SQLITE
+	GameManager.log_choice("chap1_breakfast_spending", "B")
+	
 	execute_food_transition(FASTFOOD_BG, 120)
 
 func _on_resto_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
+	
+	# RECORD NARRATIVE CHOICE TO SQLITE
+	GameManager.log_choice("chap1_breakfast_spending", "C")
+	
 	execute_food_transition(RESTO_BG, 200)
 
 # --- THE TRANSITION LOGIC ---
 func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
-	# 1. Deduct the specific cost
+	# 1. Deduct the specific cost visually
 	currency_hud.add_money(-cost)
 	
-	# 2. Fade out the choices UI
+	# 2. Add cash transition data directly into memory buffer tracker rows
+	GameManager.stage_finance_change(0, -cost, "Chapter 1 Sandbox Breakfast Spending")
+	
+	# 3. Fade out the choices UI
 	var tween = create_tween()
 	tween.tween_property(choose_control_2, "modulate:a", 0.0, 0.5)
 	
-	# 3. Fade the screen to black
+	# 4. Fade the screen to black
 	await TransitionManager.fade_to_black()
 	
 	choose_control_2.hide() 
 	
-	# 4. Swap the background image while the screen is pitch black
+	# 5. Swap the background image while the screen is pitch black
 	if active_background:
 		active_background.texture = new_bg
 		
 	await get_tree().create_timer(1.0).timeout
 	
-	# 5. Fade from black to reveal the new eating location!
+	# 6. Fade from black to reveal the new eating location!
 	await TransitionManager.fade_from_black()
 	
 	# --- THE HUD COVER-UP FIX ---
 	
-	# 6. Show the food background for exactly 3 seconds
+	# 7. Show the food background for exactly 3 seconds
 	await get_tree().create_timer(3.0).timeout
 	
-	# 7. Create a CanvasLayer to force the black screen over the HUD
+	# 8. Create a CanvasLayer to force the black screen over the HUD
 	var time_skip_layer = CanvasLayer.new()
 	time_skip_layer.layer = 128 # Covers the Currency HUD!
 	
@@ -233,11 +246,10 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 	time_skip_layer.add_child(time_skip_black)
 	add_child(time_skip_layer)
 	
-	# 8. Fade to black over EXACTLY 2 seconds
+	# 9. Fade to black over EXACTLY 2 seconds
 	var slow_fade_in = create_tween()
 	slow_fade_in.tween_property(time_skip_black, "color:a", 1.0, 2.0).set_trans(Tween.TRANS_SINE)
 	await slow_fade_in.finished
-	
 	
 	if Global.chapter_1_cafe_choice == "A":
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_barista.tscn")
@@ -245,7 +257,6 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_storeclerk.tscn")
 	elif Global.chapter_1_cafe_choice == "C":
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_cashier.tscn")
-		#pass # Transition to C later
 
 
 # --- RESPONSIVE WINDOW SCALING ---

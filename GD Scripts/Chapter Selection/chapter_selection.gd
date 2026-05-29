@@ -194,10 +194,10 @@ func _on_play_btn_pressed():
 		3:
 			TransitionManager.transition_to("res://Scenes/Chapter 2/chapter_2_scene_1.tscn", "CHAPTER 2")
 		4:
-			TransitionManager.transition_to("res://Scenes/Chapter 3/chapter_3_scene_5.tscn", "CHAPTER 3")
+			TransitionManager.transition_to("res://Scenes/Chapter 3/chapter_3_scene_1.tscn", "CHAPTER 3")
 		5:
 			TransitionManager.transition_to("res://Scenes/Chapter 4/chapter_4_scene_1.tscn", "CHAPTER 4")
 		6:
-			TransitionManager.transition_to("res://Scenes/Chapter 5/chapter_5.tscn", "CHAPTER 5")
+			TransitionManager.transition_to("res://Scenes/Chapter 5/chapter_5_scene_1.tscn", "CHAPTER 5")
 		7:
 			TransitionManager.transition_to("res://Scenes/Ending/ending.tscn", "ENDING")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ddi5y0onesp1u"]
+[gd_scene load_steps=10 format=3 uid="uid://ddi5y0onesp1u"]
 
 [ext_resource type="Texture2D" uid="uid://bs5da4lpd5p64" path="res://Assets/Backgrounds/Chapter_5/dormbg.png" id="1_enq5g"]
 [ext_resource type="Script" uid="uid://cp3oy3vae4ns7" path="res://Scenes/Chapter 5/chapter_5_scene_3.gd" id="1_y1fgo"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="3_1gwqa"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="4_ic283"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="5_sntpc"]
+[ext_resource type="PackedScene" uid="uid://8qhlywmd4o2r" path="res://Scenes/Loading Screen/SavingScreen.tscn" id="7_1gwqa"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o4jk1"]
 texture = ExtResource("1_enq5g")
@@ -209,3 +210,5 @@ theme_override_fonts/font = ExtResource("4_ic283")
 theme_override_font_sizes/font_size = 4
 text = "C. Borrow Outfit + Small Celebration
 (-P500, +Savings)"
+
+[node name="SavingScreen" parent="." instance=ExtResource("7_1gwqa")]

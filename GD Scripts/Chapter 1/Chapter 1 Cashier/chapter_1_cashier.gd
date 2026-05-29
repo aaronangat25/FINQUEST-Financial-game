@@ -56,9 +56,19 @@ func _ready() -> void:
 	choose_control_4.hide()
 	
 	# Connect the buttons (Only 50C gets the 120 reward!)
-	btn_30a.pressed.connect(func(): _on_cashier_choice_made(0))
-	btn_40b.pressed.connect(func(): _on_cashier_choice_made(0))
-	btn_50c.pressed.connect(func(): _on_cashier_choice_made(120))
+	# FIXED: Appended GameManager database log hooks to match structural selections
+	btn_30a.pressed.connect(func(): 
+		GameManager.log_choice("chap1_cashier_change", "A")
+		_on_cashier_choice_made(0)
+	)
+	btn_40b.pressed.connect(func(): 
+		GameManager.log_choice("chap1_cashier_change", "B")
+		_on_cashier_choice_made(0)
+	)
+	btn_50c.pressed.connect(func(): 
+		GameManager.log_choice("chap1_cashier_change", "C")
+		_on_cashier_choice_made(120)
+	)
 	
 	# Disable buttons initially
 	_set_choice_buttons_disabled(true)
@@ -212,15 +222,12 @@ func _on_tutorial_back_pressed() -> void:
 
 # --- FIX: GLOBAL CLICK DETECTION (BYPASSES ALL UI BLOCKING) ---
 func _input(event: InputEvent) -> void:
-	# If we are waiting for a receipt click, ANY left click will trigger the signal!
 	if is_waiting_for_receipt and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		receipt_clicked.emit()
 
 
 # --- HELPER: TOGGLE BUTTON STATES ---
 func _set_choice_buttons_disabled(is_disabled: bool) -> void:
-	# MOUSE_FILTER_IGNORE means clicks pass right through without triggering the button
-	# MOUSE_FILTER_STOP is the normal state that catches clicks
 	var filter = Control.MOUSE_FILTER_IGNORE if is_disabled else Control.MOUSE_FILTER_STOP
 	
 	btn_30a.mouse_filter = filter
@@ -229,11 +236,13 @@ func _set_choice_buttons_disabled(is_disabled: bool) -> void:
 
 # --- HANDLING THE CASHIER CHOICE ---
 func _on_cashier_choice_made(reward: int) -> void:
-	# Disable buttons immediately to prevent double-clicking!
 	_set_choice_buttons_disabled(true) 
 	
 	if reward > 0:
 		currency_hud.add_money(reward)
+		
+	# FIXED: Stage the sandbox pocket money increase directly inside your memory tracking buffers
+	GameManager.stage_finance_change(0, reward, "Chapter 1 Cashier Part-Time Training Reward")
 	
 	# Fade out Choices and Jane together
 	var tween_fade = create_tween()
