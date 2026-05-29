@@ -1,0 +1,176 @@
+[gd_scene load_steps=15 format=3 uid="uid://dd7ksw47mmu7n"]
+
+[ext_resource type="Script" uid="uid://dqqa2draq53ec" path="res://GD Scripts/Phone Screen/phone_screen_6_1.gd" id="1_b56gt"]
+[ext_resource type="Texture2D" uid="uid://cjg7vbywtdh8y" path="res://Assets/Phone/phone blank screen.png" id="1_et4v5"]
+[ext_resource type="Texture2D" uid="uid://cbba8kbe0bhlv" path="res://Assets/Phone/phone stuff.png" id="2_b56gt"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="3_5ep5r"]
+[ext_resource type="Texture2D" uid="uid://lspypdhsegmd" path="res://Assets/Backgrounds/Chapter_2/classroom/sis app icon.png" id="4_xgxix"]
+[ext_resource type="Texture2D" uid="uid://crg3emmh02ldf" path="res://Assets/Phone/back button.png" id="5_yq0c2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_siv6o"]
+texture = ExtResource("1_et4v5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kc2oc"]
+texture = ExtResource("2_b56gt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q48tu"]
+texture = ExtResource("4_xgxix")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yydwf"]
+texture = ExtResource("5_yq0c2")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qyu72"]
+texture = ExtResource("5_yq0c2")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_awk4y"]
+texture = ExtResource("5_yq0c2")
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5hy46"]
+texture = ExtResource("5_yq0c2")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v5vx5"]
+
+[node name="phone_screen_6_1" type="CanvasLayer"]
+
+[node name="PhoneScreenControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b56gt")
+
+[node name="PhoneScreen" type="Panel" parent="PhoneScreenControl"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -80.0
+offset_right = 45.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_siv6o")
+
+[node name="PhoneStuff" type="Panel" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.683
+anchor_top = 0.259
+anchor_right = 0.683
+anchor_bottom = 0.259
+offset_left = -9.470001
+offset_top = -9.440002
+offset_right = 9.529999
+offset_bottom = 9.559998
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_kc2oc")
+
+[node name="timetextlabel" type="Label" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.317
+anchor_top = 0.25
+anchor_right = 0.317
+anchor_bottom = 0.25
+offset_left = -5.5300007
+offset_top = -3.0
+offset_right = 5.4699993
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_5ep5r")
+theme_override_font_sizes/font_size = 4
+text = "2:15"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.522
+anchor_top = 0.656
+anchor_right = 0.522
+anchor_bottom = 0.656
+offset_left = -23.98
+offset_top = -3.9600067
+offset_right = 24.02
+offset_bottom = 24.039993
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PhoneScreenControl/PhoneScreen/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 2
+
+[node name="MomIcon" type="Panel" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.517
+anchor_top = 0.33400002
+anchor_right = 0.517
+anchor_bottom = 0.33400002
+offset_left = -9.530003
+offset_top = -9.440002
+offset_right = 9.469997
+offset_bottom = 9.559998
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_q48tu")
+
+[node name="SIStext" type="Label" parent="PhoneScreenControl/PhoneScreen/MomIcon"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.176
+anchor_right = 0.5
+anchor_bottom = 1.176
+offset_left = -8.0
+offset_top = -5.9920006
+offset_right = 8.0
+offset_bottom = 0.00799942
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_5ep5r")
+theme_override_font_sizes/font_size = 4
+text = "MOM"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="BackTextureButton" type="TextureButton" parent="PhoneScreenControl/PhoneScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.22200002
+anchor_top = 0.76900005
+anchor_right = 0.328
+anchor_bottom = 0.822
+offset_left = 0.01999855
+offset_top = -0.040000916
+offset_right = 3.4799995
+offset_bottom = 3.4799957
+grow_vertical = 0
+scale = Vector2(0.7349311, 0.7165263)
+
+[node name="BackButton" type="Button" parent="PhoneScreenControl/PhoneScreen/BackTextureButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_yydwf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_qyu72")
+theme_override_styles/hover = SubResource("StyleBoxTexture_awk4y")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_5hy46")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v5vx5")
