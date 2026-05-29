@@ -6,6 +6,9 @@ const NEXT_SCENE = "res://Scenes/Chapter Selection/chapter_selection.tscn"
 @onready var play_btn = $main_menu_bg/menu_button_container/playbtn
 
 func _ready():
+	if TransitionManager.has_method("fade_from_black"):
+		TransitionManager.fade_from_black()
+	
 	# 1. Spawn a black screen that starts completely opaque 
 	var fade_rect = ColorRect.new()
 	fade_rect.color = Color(0, 0, 0, 1) 

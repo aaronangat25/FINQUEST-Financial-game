@@ -40,7 +40,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 5
 
-[node name="playbtn" type="Button" parent="menu_button_container"]
+[node name="restartbtn" type="Button" parent="menu_button_container"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_0soxu")
@@ -50,7 +50,7 @@ theme_override_fonts/font = ExtResource("2_41eep")
 theme_override_font_sizes/font_size = 10
 text = "Restart"
 
-[node name="optionbtn" type="Button" parent="menu_button_container"]
+[node name="mainmenubtn" type="Button" parent="menu_button_container"]
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("1_0soxu")

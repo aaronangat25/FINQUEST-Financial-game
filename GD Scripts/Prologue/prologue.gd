@@ -59,15 +59,36 @@ const CHAPTER_1_SCENE = "res://Scenes/Chapter 1/chapter_1.tscn"
 func _ready():
 	input_locked = true # Lock inputs during the opening animation!
 	
-	stats_screen.hide()
-	stats_screen.modulate.a = 0.0
+	# --- THE CRITICAL ANTI-BLINK FIX ---
+	# Forcefully hide everything on frame initialization so they don't blink on reload
+	if is_instance_valid(stats_screen):
+		stats_screen.hide()
+		stats_screen.modulate.a = 0.0
 	
-	choices_container.hide()
-	choices_container2.hide()
-	choices_container2.modulate.a = 0.0 
+	if is_instance_valid(choices_container):
+		choices_container.hide()
+		choices_container.modulate.a = 0.0
+		
+	if is_instance_valid(choices_container2):
+		choices_container2.hide()
+		choices_container2.modulate.a = 0.0 
 	
-	choices_container3.hide()
-	choices_container3.modulate.a = 0.0
+	if is_instance_valid(choices_container3):
+		choices_container3.hide()
+		choices_container3.modulate.a = 0.0
+	# -------------------------------------
+	
+	# Handle clean title fade out if TransitionManager has title labels active
+	var title_label = TransitionManager.get_node_or_null("TitleLabel")
+	if title_label and title_label.visible:
+		var t_title = create_tween()
+		t_title.tween_property(title_label, "modulate:a", 0.0, 1.0)
+		await t_title.finished
+		title_label.hide()
+		
+	# Cleanly clear away the curtain layer smoothly
+	if TransitionManager.has_method("fade_from_black"):
+		await TransitionManager.fade_from_black()
 	
 	dialogue_box.line_started.connect(_on_line_started)
 	dialogue_box.line_finished.connect(_on_line_finished) 
@@ -89,7 +110,7 @@ func _ready():
 		{"speaker": "Jane", "text": "Opo! I'm excited... and kinda nervous."},
 		{"speaker": "Dad", "text": "You'll do great, anak. Eto ang weekly allowance mo: P500.", "show_dad": true, "hide_mom": true, "add_money": 500},
 		{"speaker": "Mom", "text": "Remember, that has to cover your lunch, transportation, and any school needs until Friday.", "show_mom": true, "hide_dad": true},
-		{"speaker": "Jane", "text": "Opo mom! I’ll spend it wiisely."},
+		{"speaker": "Jane", "text": "Opo mom! I’ll spend it wisely."},
 		{"speaker": "Mom", "text": "Lagi mo sinasabi yan."},
 		{"speaker": "Dad", "text": "Just make smart choices, okay? Every peso counts.", "show_dad": true, "hide_mom": true}
 	]
@@ -114,15 +135,14 @@ func _on_line_started(line_data):
 		dad.appear("idle", true)
 	if line_data.has("hide_dad") and line_data["hide_dad"] == true:
 		dad.exit() 
-		
+
 func _on_line_finished(line_data):
 	if line_data.has("add_money"):
 		currency_hud.add_money(line_data["add_money"])
 
-# 4. RUNS WHEN THE DIALOGUE BOX CLOSES
 func _on_dialogue_finished():
-	if input_locked: return # Double-signal protection!
-	input_locked = true     # Lock while UI animates in/out
+	if input_locked: return 
+	input_locked = true     
 	
 	if current_scene == "breakfast":
 		jane.exit(true)
@@ -146,7 +166,7 @@ func _on_dialogue_finished():
 		tween.tween_property(choices_container2, "modulate:a", 1.0, 0.5)
 		
 		await tween.finished
-		input_locked = false # Let player click choices
+		input_locked = false 
 		
 	elif current_scene == "after_lunch":
 		jane.exit(true) 
@@ -154,10 +174,10 @@ func _on_dialogue_finished():
 		
 		if lunch_choice == "bread":
 			rideatrain_btn1.show() 
-			walktohome_btn.hide()  
+			walktohome_btn.hide()   
 		elif lunch_choice == "siomai":
 			rideatrain_btn1.show() 
-			walktohome_btn.show()  
+			walktohome_btn.show()   
 			
 		jane_big.modulate.a = 0.0 
 		jane_big.show()           
@@ -168,7 +188,7 @@ func _on_dialogue_finished():
 		tween.tween_property(choices_container3, "modulate:a", 1.0, 0.5)
 		
 		await tween.finished
-		input_locked = false # Let player click choices
+		input_locked = false 
 		
 	elif current_scene == "evening":
 		jane.exit(true)
@@ -188,7 +208,7 @@ func transition_to_outside():
 		{"speaker": "Jane", "text": "Okay, first decision of the day...", "show_jane": true}
 	]
 	dialogue_box.start_dialogue(outside_sequence, 1.0)
-	input_locked = false # Let player read
+	input_locked = false 
 
 func show_choice_buttons():
 	await get_tree().create_timer(0.5).timeout
@@ -199,9 +219,7 @@ func show_choice_buttons():
 	jane_big.appear()
 	
 	await tween.finished
-	input_locked = false # Now safe to click buttons
-
-# --- BUTTON CLICK FUNCTIONS ---
+	input_locked = false 
 
 func _on_rideatrain_pressed():
 	if input_locked: return
@@ -221,9 +239,6 @@ func _on_walkschool_pressed():
 	if input_locked: return
 	input_locked = true
 	execute_choice_transition(WALK_BG)
-
-
-# --- THE CINEMATIC CHOICE TRANSITION ---
 
 func execute_choice_transition(new_bg):
 	choices_container.hide()
@@ -256,7 +271,6 @@ func execute_choice_transition(new_bg):
 		{"speaker": "Jane", "text": "Hmm... should I go for the full meal or save a bit?"}
 	]
 	
-# --- THE FIX: Force the dialogue box to become visible again! ---
 	dialogue_box.show()
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(canteen_sequence, 0.5)
@@ -288,16 +302,12 @@ func show_after_lunch_dialogue():
 		{"speaker": "Jane", "text": "OKAY, TAPOS NA AKONG KUMAIN! ANONG WAY KAYA AKO UUWI?", "show_jane": true}
 	]
 	
-	# THE MAGIC DELAY: Absorbs spam-clicks into empty space!
 	await get_tree().create_timer(0.5).timeout
 	
-# --- THE FIX: Force the dialogue box to become visible again! ---
 	dialogue_box.show() 
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(sequence)
 	input_locked = false
-	
-# --- GOING HOME FUNCTIONS ---
 
 func _on_rideatrain_home_pressed():
 	if input_locked: return
@@ -337,7 +347,6 @@ func execute_going_home_transition(transit_bg):
 		{"speaker": "Jane", "text": evening_text, "show_jane": true}
 	]
 	
-# --- THE FIX: Force the dialogue box to become visible again! ---
 	dialogue_box.show()
 	dialogue_box.get_node("MarginContainer/texturerectContainer").modulate.a = 1.0
 	dialogue_box.start_dialogue(evening_sequence, 0.5)
@@ -360,7 +369,7 @@ func show_stats_screen():
 	tween.tween_property(stats_screen, "modulate:a", 1.0, 1.0)
 	
 	await tween.finished
-	input_locked = false # Let them proceed
+	input_locked = false 
 
 func _on_chapter1_btn_pressed():
 	if input_locked: return
