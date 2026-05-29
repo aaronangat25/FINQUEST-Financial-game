@@ -109,8 +109,6 @@ func _ready() -> void:
 		exam_starts_control.hide()
 	
 	# --- BULLETPROOF TRANSITION HOOK OVERRIDE ---
-	# If entering from Chapter Menu, the screen layout mask might be invisible.
-	# We force it visible and fully opaque black right now to create a safe zone mask!
 	if TransitionManager.color_rect:
 		TransitionManager.color_rect.show()
 		TransitionManager.color_rect.visible = true
@@ -816,6 +814,12 @@ func _open_phone_screen_3() -> void:
 func _on_phone_3_back_pressed() -> void:
 	print("YES! The _on_phone_3_back_pressed signal fired perfectly!")
 	
+	# --- EXPLICIT PAUSE BUTTON TRANSITION MASK ---
+	# Force hide the pause button here before any async timers or transitions start executing
+	if pause_button: 
+		pause_button.hide()
+		pause_button.process_mode = PROCESS_MODE_DISABLED
+	
 	if active_phone_screen_3:
 		var back_tex_btn = active_phone_screen_3.find_child("BackTextureButton", true, false)
 		var back_btn = active_phone_screen_3.find_child("BackButton", true, false)
@@ -826,12 +830,10 @@ func _on_phone_3_back_pressed() -> void:
 	if active_gray_screen: active_gray_screen.queue_free()
 	if jane_big: jane_big.hide()
 	
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(1.0).timeout
 	
 	if currency_hud:
 		currency_hud.hide()
-	
-	if pause_button: pause_button.hide() 
 		
 	GameManager.current_chapter = 3
 	print("[SYSTEM] Running database save sequence for Chapter 2.")
@@ -848,12 +850,17 @@ func _on_phone_3_back_pressed() -> void:
 	saving_screen.show()
 	
 	GameManager.complete_current_chapter(end_grade)
-	await get_tree().create_timer(2.0).timeout
 	
+	# --- LOCAL INSTANT BLACKOUT MASK OVERRIDE ---
+	# Spawn a full-screen black canvas block right now to shield the viewport background 
+	# during the 2-second calculation delay loop.
 	var local_black_screen = ColorRect.new()
 	local_black_screen.color = Color(0, 0, 0, 1) 
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	local_black_screen.z_index = 200 # Enforce rendering overlay priority
 	add_child(local_black_screen)
+	
+	await get_tree().create_timer(2.0).timeout
 	
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
