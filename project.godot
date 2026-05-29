@@ -13,6 +13,7 @@ config_version=5
 config/name="Finquest-v2"
 run/main_scene="uid://b8iijuwlaxvhc"
 config/features=PackedStringArray("4.5", "GL Compatibility")
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]
