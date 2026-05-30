@@ -19,6 +19,11 @@ var active_phone_screen_6_1
 var is_phone_clickable: bool = false
 
 func _ready() -> void:
+	# --- THE PERFECT TRACK FIX ---
+	# Immediately boots up your specialized somber loop track for the bad ending state!
+	if AudioManager.has_method("play_bad_ending_music"):
+		AudioManager.play_bad_ending_music()
+
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_big: jane_big.hide(); jane_big.modulate.a = 0.0
 	if phone_mini: 
@@ -134,6 +139,8 @@ func _reveal_phone_and_jane() -> void:
 		
 	await get_tree().create_timer(0.5).timeout
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger the smartphone text pop alert sound cleanly
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
@@ -187,6 +194,9 @@ func _on_sis_pressed() -> void:
 		if contacts_tex: contacts_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if sis_btn: sis_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if sis_tex: sis_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		
+		# Trigger your systematic login lockout error buzzer chime sound effect
+		AudioManager.play_sfx("ERROR")
 		
 		warning_panel.show(); warning_panel.modulate.a = 0.0
 		if warning_label: warning_label.show()

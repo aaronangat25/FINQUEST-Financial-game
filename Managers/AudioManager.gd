@@ -6,6 +6,10 @@ const GENERAL_MUSIC = "res://Assets/Audio/Music/GENERAL MUSIC.mp3"
 const COFFEE_SHOP_MUSIC = "res://Assets/Audio/Music/COFFEE SHOP POSSBLE 3.mp3"
 const CONVENIENCE_STORE_MUSIC = "res://Assets/Audio/Music/Convenience Store and supermarket.mp3"
 
+# --- NEW TRACK INTEGRATION ---
+# Dedicated heavy atmosphere soundtrack for dark path evaluations
+const BAD_ENDING_MUSIC = "res://Assets/Audio/Music/For bad endings.mp3"
+
 # --- SOUND EFFECT PATHS (SFX Inventory) ---
 const SFX_MAP = {
 	"CLICK": "res://Assets/Audio/SFX/Menu Selection Click.wav",
@@ -105,9 +109,6 @@ func play_track(track_path: String, fade_duration: float = 1.0, force_restart: b
 # =================================================================
 # AMBIENCE SOUND EFFECTS CONTROLLER (FADE UP / FADE OUT)
 # =================================================================
-# =================================================================
-# AMBIENCE SOUND EFFECTS CONTROLLER (FADE UP / FADE OUT)
-# =================================================================
 func play_ambience(sfx_key: String, fade_duration: float = 0.5, start_from_sec: float = 0.0) -> void:
 	if not SFX_MAP.has(sfx_key):
 		return
@@ -157,6 +158,10 @@ func play_coffee_shop_music() -> void:
 
 func play_convenience_store_music() -> void:
 	play_track(CONVENIENCE_STORE_MUSIC, 1.0, false)
+
+func play_bad_ending_music() -> void:
+	# Cross-fades seamlessly over into your brand new tragic theme layout map
+	play_track(BAD_ENDING_MUSIC, 1.0, false)
 
 # =================================================================
 # FIXED SCHOOL BELL CUT MECHANICS

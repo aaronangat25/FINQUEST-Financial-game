@@ -269,3 +269,40 @@ func get_grade_history() -> Array:
 	""", [player_id])
 	
 	return DatabaseManager.db.query_result
+
+# =================================================================
+# PRODUCTION GRADE RESTART RESYNCHRONIZATION INJECTOR
+# =================================================================
+func execute_production_factory_reset() -> void:
+	print("[GAME MANAGER] Wiping internal active RAM variable cache matrices...")
+	
+	# 1. Reset baseline account configuration stats immediately inside running memory
+	bank_cash = 3000
+	on_hand_cash = 0
+	financial_wisdom_points = 0
+	grades = 0.0
+	current_chapter = 1
+	current_scene = ""
+	total_income = 0
+	total_expenses = 0
+	
+	# 2. Hard-clear any choices or transaction values currently sitting in the level buffers
+	buffered_choices.clear()
+	buffered_bank_change = 0
+	buffered_on_hand_change = 0
+	current_chapter_description = ""
+	
+	# 3. Synchronize your active player stats columns directly down to the SQLite file
+	DatabaseManager.db.query_with_bindings("""
+		UPDATE player_stats
+		SET bank_cash = 3000, 
+		    on_hand_cash = 0, 
+		    financial_wisdom_points = 0, 
+		    grades = 0.0, 
+		    current_chapter = 1,
+		    total_income = 0,
+		    total_expenses = 0
+		WHERE player_id = ?;
+	""", [player_id])
+	
+	print("[GAME MANAGER] SQLite player_stats row accounts safely restored to baseline tutorial settings.")
