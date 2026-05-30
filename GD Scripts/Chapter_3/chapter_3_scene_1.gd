@@ -20,6 +20,10 @@ var active_lock_screen_4
 var is_phone_clickable: bool = false
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	# Ensures the main ambient exploration music runs steadily
+	AudioManager.play_chapter_music()
+
 	# --- MASTER DATABASE SYNCHRONIZATION ---
 	# Pulls her running wallet data into RAM variables right as Chapter 3 boots up
 	GameManager.load_player_stats()
@@ -123,6 +127,8 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger the smartphone text alert notification sound ring
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
@@ -199,7 +205,7 @@ func _play_post_phone_sequence() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_thinking:

@@ -35,42 +35,42 @@ var active_dialogue_box
 var active_gray_screen
 var active_tutorial
 
-# --- FIX: NEW VARIABLE FOR BULLETPROOF CLICKS ---
 var is_waiting_for_receipt: bool = false
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	AudioManager.play_convenience_store_music()
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	# Force characters to be invisible
 	kylie.modulate.a = 0.0
 	bea_dialogue.modulate.a = 0.0
 	student_dialogue.modulate.a = 0.0
 	if jane_big: jane_big.modulate.a = 0.0 
 	
-	# Hide UI overlays at the start
 	receipt_control.modulate.a = 0.0
 	receipt_control.hide()
 	
 	choose_control_4.modulate.a = 0.0
 	choose_control_4.hide()
 	
-	# Connect the buttons (Only 50C gets the 120 reward!)
-	# FIXED: Appended GameManager database log hooks to match structural selections
+	# Connected math accuracy button checks with audio tracking validation engines
 	btn_30a.pressed.connect(func(): 
 		GameManager.log_choice("chap1_cashier_change", "A")
+		AudioManager.play_sfx("ERROR") # Incorrect transaction math fallback alert
 		_on_cashier_choice_made(0)
 	)
 	btn_40b.pressed.connect(func(): 
 		GameManager.log_choice("chap1_cashier_change", "B")
+		AudioManager.play_sfx("ERROR") # Incorrect transaction math fallback alert
 		_on_cashier_choice_made(0)
 	)
 	btn_50c.pressed.connect(func(): 
 		GameManager.log_choice("chap1_cashier_change", "C")
-		_on_cashier_choice_made(120)
+		_on_cashier_choice_made(120) # Correct choice awards the cash reward
 	)
 	
-	# Disable buttons initially
 	_set_choice_buttons_disabled(true)
 	
 	if TransitionManager.color_rect.visible:
@@ -120,7 +120,6 @@ func _play_cashier_sequence() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(cashier_conversation)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	bea_dialogue.exit(false) 
@@ -140,13 +139,14 @@ func _play_cashier_sequence() -> void:
 	if back_btn:
 		back_btn.pressed.connect(_on_tutorial_back_pressed)
 
-
-# --- TRIGGERED WHEN THE PLAYER CLICKS THE BACK BUTTON ---
 func _on_tutorial_back_pressed() -> void:
 	if active_gray_screen: active_gray_screen.queue_free()
 	if active_tutorial: active_tutorial.queue_free()
 	
 	await get_tree().create_timer(0.5).timeout
+	
+	# Doorbell interaction prompt as customer approaches register line layout
+	AudioManager.play_sfx("DOORBELL")
 	
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -176,10 +176,8 @@ func _on_tutorial_back_pressed() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(final_conversation)
-	
 	await active_dialogue_box.dialogue_finished
 	
-	# Instantly hide student and dialogue box
 	student_dialogue.exit(false) 
 	active_dialogue_box.queue_free() 
 	
@@ -190,13 +188,8 @@ func _on_tutorial_back_pressed() -> void:
 	tween_receipt_in.tween_property(receipt_control, "modulate:a", 1.0, 0.5)
 	await tween_receipt_in.finished
 	
-	# Tell Godot we are now waiting for ANY screen click
 	is_waiting_for_receipt = true 
-	
-	# Wait for the player to click anywhere
 	await receipt_clicked 
-	
-	# Stop listening for clicks
 	is_waiting_for_receipt = false 
 	
 	var tween_receipt_out = create_tween()
@@ -206,45 +199,40 @@ func _on_tutorial_back_pressed() -> void:
 	
 	# --- PHASE 2: CHOICES & JANE SEQUENCE ---
 	choose_control_4.show()
-	_set_choice_buttons_disabled(true) # Disable choice buttons during fade
+	_set_choice_buttons_disabled(true)
 	
 	var tween_choice = create_tween()
 	tween_choice.tween_property(choose_control_4, "modulate:a", 1.0, 0.5)
 	
 	if jane_big:
-		jane_big.appear() # Jane fades in alongside the choices!
+		jane_big.appear()
 		
 	await tween_choice.finished
-	
-	# Re-enable the choice buttons now that fading is done!
 	_set_choice_buttons_disabled(false)
 
-
-# --- FIX: GLOBAL CLICK DETECTION (BYPASSES ALL UI BLOCKING) ---
 func _input(event: InputEvent) -> void:
 	if is_waiting_for_receipt and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# --- INTERACTION AUDIO FEEDBACK ---
+		# Fires off your downloaded laser-flash barcode item beep confirmation!
+		AudioManager.play_sfx("SCANNER")
 		receipt_clicked.emit()
 
-
-# --- HELPER: TOGGLE BUTTON STATES ---
 func _set_choice_buttons_disabled(is_disabled: bool) -> void:
 	var filter = Control.MOUSE_FILTER_IGNORE if is_disabled else Control.MOUSE_FILTER_STOP
-	
 	btn_30a.mouse_filter = filter
 	btn_40b.mouse_filter = filter
 	btn_50c.mouse_filter = filter
 
-# --- HANDLING THE CASHIER CHOICE ---
 func _on_cashier_choice_made(reward: int) -> void:
 	_set_choice_buttons_disabled(true) 
 	
 	if reward > 0:
+		# Trigger your transaction cash deposit confirmation chime sound effect ("Withdraw or money increase")
+		AudioManager.play_sfx("INCOME")
 		currency_hud.add_money(reward)
 		
-	# FIXED: Stage the sandbox pocket money increase directly inside your memory tracking buffers
 	GameManager.stage_finance_change(0, reward, "Chapter 1 Cashier Part-Time Training Reward")
 	
-	# Fade out Choices and Jane together
 	var tween_fade = create_tween()
 	tween_fade.tween_property(choose_control_4, "modulate:a", 0.0, 0.5)
 	
@@ -256,7 +244,6 @@ func _on_cashier_choice_made(reward: int) -> void:
 	choose_control_4.hide()
 	
 	await get_tree().create_timer(2.0).timeout
-	
 	_trigger_shift_end_transition()
 
 func _trigger_shift_end_transition() -> void:
@@ -278,10 +265,12 @@ func _trigger_shift_end_transition() -> void:
 		text_out.tween_property(title_label, "modulate:a", 0.0, 1.0)
 		await text_out.finished
 		title_label.hide()
-	
+		
+		# Restore your ambient background music theme tracks safely
+		AudioManager.play_chapter_music()
+		
 		get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1_end.tscn")
 
-# --- INSTANT CHARACTER SWAP ---
 func _on_dialogue_line_started(line_data: Dictionary) -> void:
 	var speaker = line_data.get("speaker", "")
 	

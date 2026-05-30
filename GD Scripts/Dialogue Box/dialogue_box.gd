@@ -121,6 +121,10 @@ func _input(event):
 		if is_fading or click_cooldown:
 			return 
 			
+		# --- DIALOGUE CLICK AUDIO TRIGGER ---
+		# Fires the crisp menu click sound effect for text navigation instantly
+		AudioManager.play_sfx("CLICK")
+			
 		if is_typing:
 			if active_tween:
 				active_tween.kill()

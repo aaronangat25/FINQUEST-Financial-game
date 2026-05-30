@@ -29,23 +29,19 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 var currency_hud 
 var active_background: TextureRect 
 
-# Variables to remember our dynamic overlays
 var active_gray_screen
 var active_phone_lock
 var active_dialogue_box
 
-# A lock to prevent spam-clicking the food choices
 var choices_locked: bool = true
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_on_window_resized)
 	_on_window_resized()
 	
-	# Hide choices instantly on startup
 	choose_control_2.hide()
 	choose_control_2.modulate.a = 0.0
 	
-	# Connect the new food buttons
 	karinderya_btn.pressed.connect(_on_karinderya_pressed)
 	fastfood_btn.pressed.connect(_on_fastfood_pressed)
 	resto_btn.pressed.connect(_on_resto_pressed)
@@ -71,7 +67,6 @@ func _play_sunrise_sequence() -> void:
 	await TransitionManager.fade_to_black()
 	sunrise_bg.hide()
 	
-	# Create the background and store it in our variable
 	active_background = TextureRect.new()
 	active_background.texture = DORM_BG
 	active_background.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -83,12 +78,17 @@ func _play_sunrise_sequence() -> void:
 	await get_tree().create_timer(0.5).timeout
 	await TransitionManager.fade_from_black()
 	
+	# Keep the ambient general chapter music running smoothly
+	AudioManager.play_chapter_music()
+	
 	jane.appear()
 	await get_tree().create_timer(1.0).timeout
 	
 	phone_mini.appear()
 	await get_tree().create_timer(1.0).timeout
 	
+	# Text notification alert one-shot
+	AudioManager.play_sfx("NOTIFICATION")
 	phone_mini.trigger_notification()
 
 func _on_phone_clicked() -> void:
@@ -108,7 +108,6 @@ func _on_phone_clicked() -> void:
 	else:
 		print("ERROR: Could not find padlock. Check the node path!")
 
-# --- THE STORY SEQUENCE ---
 func _on_padlock_pressed() -> void:
 	if active_gray_screen: active_gray_screen.queue_free()
 	if active_phone_lock: active_phone_lock.queue_free()
@@ -118,13 +117,10 @@ func _on_padlock_pressed() -> void:
 	
 	await get_tree().create_timer(0.5).timeout
 	
-	# 1. ADD DIALOGUE BOX FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	
-	# --- THE SPAM-CLICK FIX ---
 	active_dialogue_box.is_fading = true
-	# --------------------------
 	
 	var box_visual = active_dialogue_box.get_node("MarginContainer/texturerectContainer")
 	var text_label = active_dialogue_box.get_node("MarginContainer/texturerectContainer/TextLabel")
@@ -140,11 +136,9 @@ func _on_padlock_pressed() -> void:
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
 	
-	# 2. AFTER BOX IS VISIBLE, KYLIE FADES IN
 	kylie.appear()
 	await get_tree().create_timer(0.6).timeout
 	
-	# 3. START THE TEXT
 	var scene_2_dialogue = [
 		{
 			"speaker": "Kylie", 
@@ -152,28 +146,22 @@ func _on_padlock_pressed() -> void:
 		}
 	]
 	
-	# --- THE SPAM-CLICK FIX PART 2 ---
 	active_dialogue_box.is_fading = false
-	
 	active_dialogue_box.start_dialogue(scene_2_dialogue)
 	
-	# 4. Wait for the player to finish the conversation
 	await active_dialogue_box.dialogue_finished
 	
-	# 5. Kylie starts her exit immediately
 	kylie.exit(true)
 	await get_tree().create_timer(1.2).timeout
 	
-	# 6. Delete dialogue box
 	active_dialogue_box.queue_free()
 	
-	# --- SHOW THE CHOICES ---
 	choose_control_2.show()
 	var tween_choices = create_tween()
 	tween_choices.tween_property(choose_control_2, "modulate:a", 1.0, 0.5)
 	
 	await tween_choices.finished
-	choices_locked = false # Let the player click!
+	choices_locked = false
 
 # --- FOOD CHOICE HANDLERS ---
 
@@ -181,63 +169,47 @@ func _on_karinderya_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
 	
-	# RECORD NARRATIVE CHOICE TO SQLITE
 	GameManager.log_choice("chap1_breakfast_spending", "A")
-	
 	execute_food_transition(KARINDERYA_BG, 60)
 
 func _on_fastfood_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
 	
-	# RECORD NARRATIVE CHOICE TO SQLITE
 	GameManager.log_choice("chap1_breakfast_spending", "B")
-	
 	execute_food_transition(FASTFOOD_BG, 120)
 
 func _on_resto_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
 	
-	# RECORD NARRATIVE CHOICE TO SQLITE
 	GameManager.log_choice("chap1_breakfast_spending", "C")
-	
 	execute_food_transition(RESTO_BG, 200)
 
 # --- THE TRANSITION LOGIC ---
 func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
-	# 1. Deduct the specific cost visually
-	currency_hud.add_money(-cost)
+	# Trigger your cash deduction wallet sweep sound effect
+	AudioManager.play_sfx("DEDUCT")
 	
-	# 2. Add cash transition data directly into memory buffer tracker rows
+	currency_hud.add_money(-cost)
 	GameManager.stage_finance_change(0, -cost, "Chapter 1 Sandbox Breakfast Spending")
 	
-	# 3. Fade out the choices UI
 	var tween = create_tween()
 	tween.tween_property(choose_control_2, "modulate:a", 0.0, 0.5)
 	
-	# 4. Fade the screen to black
 	await TransitionManager.fade_to_black()
-	
 	choose_control_2.hide() 
 	
-	# 5. Swap the background image while the screen is pitch black
 	if active_background:
 		active_background.texture = new_bg
 		
 	await get_tree().create_timer(1.0).timeout
-	
-	# 6. Fade from black to reveal the new eating location!
 	await TransitionManager.fade_from_black()
 	
-	# --- THE HUD COVER-UP FIX ---
-	
-	# 7. Show the food background for exactly 3 seconds
 	await get_tree().create_timer(3.0).timeout
 	
-	# 8. Create a CanvasLayer to force the black screen over the HUD
 	var time_skip_layer = CanvasLayer.new()
-	time_skip_layer.layer = 128 # Covers the Currency HUD!
+	time_skip_layer.layer = 128 
 	
 	var time_skip_black = ColorRect.new()
 	time_skip_black.color = Color(0, 0, 0, 0) 
@@ -246,20 +218,22 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 	time_skip_layer.add_child(time_skip_black)
 	add_child(time_skip_layer)
 	
-	# 9. Fade to black over EXACTLY 2 seconds
 	var slow_fade_in = create_tween()
 	slow_fade_in.tween_property(time_skip_black, "color:a", 1.0, 2.0).set_trans(Tween.TRANS_SINE)
 	await slow_fade_in.finished
 	
+	# --- EXPLICIT CROSS-FADE BRANCH INTERFACE FOR MINI-GAMES ---
+	# Automatically cross-fades background music loops depending on player profile path!
 	if Global.chapter_1_cafe_choice == "A":
+		AudioManager.play_coffee_shop_music()
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_barista.tscn")
 	elif Global.chapter_1_cafe_choice == "B":
+		AudioManager.play_convenience_store_music()
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_storeclerk.tscn")
 	elif Global.chapter_1_cafe_choice == "C":
+		AudioManager.play_convenience_store_music()
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_cashier.tscn")
 
-
-# --- RESPONSIVE WINDOW SCALING ---
 func _on_window_resized():
 	var screen_size = get_viewport_rect().size
 	if sunrise_bg and sunrise_bg.sprite_frames:

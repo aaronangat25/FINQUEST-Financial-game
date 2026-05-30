@@ -24,7 +24,10 @@ var active_gray_screen
 var active_tutorial
 
 func _ready() -> void:
-	AudioManager.play_coffeeshop_music() # Seamlessly drops the general/menu music and changes to the coffee shop vibe
+	# --- AUDIO INITIALIZATION ---
+	# Seamlessly drops the general/menu music and changes to the coffee shop vibe
+	AudioManager.play_coffee_shop_music()
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
@@ -49,8 +52,6 @@ func _play_barista_sequence() -> void:
 	
 	await get_tree().create_timer(0.5).timeout
 	await TransitionManager.fade_from_black()
-	
-	# --- THE CHARACTER SEQUENCE ---
 	
 	await get_tree().create_timer(1.0).timeout
 	leo_table.exit(true)
@@ -86,15 +87,12 @@ func _play_barista_sequence() -> void:
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(cafe_conversation)
 	
-	# Wait for the player to click through the conversation
 	await active_dialogue_box.dialogue_finished
 	
 	leo_dialogue.exit(false)
-	
-	# Instantly remove dialogue box (no fade)
 	active_dialogue_box.queue_free()
 	
-	# SHOW THE TUTORIAL PHONE INSTANTLY
+	# --- OPEN PHONE INTERFACE TUTORIAL ---
 	active_gray_screen = GRAY_SCREEN_SCENE.instantiate()
 	add_child(active_gray_screen)
 	
@@ -111,15 +109,12 @@ func _play_barista_sequence() -> void:
 		print("ERROR: Could not find BackButton in tutorial screen!")
 
 
-# TRIGGERED WHEN THE PLAYER CLICKS THE BACK BUTTON
 func _on_tutorial_back_pressed() -> void:
-	# 1. Instantly remove the tutorial overlays
 	if active_gray_screen: active_gray_screen.queue_free()
 	if active_tutorial: active_tutorial.queue_free()
 	
 	await get_tree().create_timer(0.5).timeout
 	
-	# 2. DIALOGUE BOX FADES IN FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	
@@ -133,14 +128,11 @@ func _on_tutorial_back_pressed() -> void:
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
 		
-	# Tiny buffer to guarantee the box is fully drawn
 	await get_tree().create_timer(0.2).timeout
 	
-	# 3. THEN LEO FADES IN
-	leo_dialogue.appear("idle", false) # false = smooth tween
+	leo_dialogue.appear("idle", false) 
 	await get_tree().create_timer(0.6).timeout
 	
-	# 4. LEO SPEAKS
 	var final_conversation = [
 		{"speaker": "Leo", "text": "You learn fast. Come back if you want shifts."}
 	]
@@ -148,18 +140,15 @@ func _on_tutorial_back_pressed() -> void:
 	active_dialogue_box.start_dialogue(final_conversation)
 	await active_dialogue_box.dialogue_finished
 	
-	# 5. LEO FADES OUT FIRST
-	leo_dialogue.exit(true) # true = smooth tween
+	leo_dialogue.exit(true) 
 	await get_tree().create_timer(0.6).timeout
 	
-	# 6. THEN DIALOGUE BOX FADES OUT
 	if box_visual:
 		var tween_out = create_tween()
 		tween_out.tween_property(box_visual, "modulate:a", 0.0, 0.5).set_trans(Tween.TRANS_SINE)
 		await tween_out.finished
 	active_dialogue_box.queue_free()
 	
-	# 7. TRIGGER THE END SEQUENCE
 	_trigger_shift_end_transition()
 
 func _trigger_shift_end_transition() -> void:
@@ -182,10 +171,11 @@ func _trigger_shift_end_transition() -> void:
 		await text_out.finished
 		title_label.hide()
 	
-	# Transition directly to the Chapter 1 End scene!
+	# --- RESTORE GENERAL BACKGROUND EXPLORATION THEME ---
+	AudioManager.play_chapter_music()
+	
 	get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1_end.tscn")
 
-# INSTANT CHARACTER SWAP
 func _on_dialogue_line_started(line_data: Dictionary) -> void:
 	var speaker = line_data.get("speaker", "")
 	if speaker == "Kylie":

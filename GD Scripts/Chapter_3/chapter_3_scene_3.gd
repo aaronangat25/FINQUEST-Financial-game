@@ -22,6 +22,8 @@ var currency_hud
 var active_dialogue_box 
 
 func _ready() -> void:
+	
+	AudioManager.play_convenience_store_music()
 	# 1. Setup Currency HUD
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
@@ -102,6 +104,10 @@ func _play_background_transition() -> void:
 	await get_tree().create_timer(0.5).timeout
 	await TransitionManager.fade_from_black()
 	
+	# --- AUDIO LAYER INJECTION ---
+	# Play the convenience store entrance chime sound effect profile as Jane enters
+	AudioManager.play_sfx("DOORBELL")
+	
 	_play_clerk_sequence()
 
 
@@ -175,6 +181,9 @@ func _on_grocery_choice_pressed(choice: String) -> void:
 	# Pass choice tracking and financial adjustments into the memory staging buffers
 	GameManager.log_choice("chap3_grocery_choice", choice)
 	
+	# Trigger the transaction cash deduction sound feedback profile
+	AudioManager.play_sfx("DEDUCT")
+	
 	if choice == "A": 
 		GameManager.stage_finance_change(0, -250, "Purchased branded grocery items")
 	elif choice == "B": 
@@ -198,6 +207,7 @@ func _on_grocery_choice_pressed(choice: String) -> void:
 # --- PART 4: MOBILE SAFE TRANSITION ---
 func _transition_to_scene_4() -> void:
 	await TransitionManager.fade_to_black()
+	AudioManager.play_chapter_music()
 	
 	await get_tree().create_timer(1.0).timeout
 	

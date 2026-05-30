@@ -56,6 +56,10 @@ var is_waiting_to_dismiss_money: bool = false
 var is_phone_clickable_phase_3: bool = false 
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	# Automatically ensures the general exploration music tracks loops smoothly on setup
+	AudioManager.play_chapter_music()
+
 	# 1. Pulls her exact hard-saved wallet values from SQLite rows
 	GameManager.load_player_stats()
 	
@@ -116,11 +120,9 @@ func _ready() -> void:
 	
 	await get_tree().create_timer(0.5).timeout
 	
-	# TransitionManager now fades down safely from our forced black screen state
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
 		
-	# Reveal pause button smoothly after black curtain is completely out of the viewport bounds
 	if pause_button:
 		pause_button.show()
 	# ----------------------------------------------
@@ -146,7 +148,7 @@ func _play_intro_sequence() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_thinking:
@@ -160,7 +162,6 @@ func _play_intro_sequence() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(thinking_convo)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	if jane_thinking:
@@ -174,7 +175,6 @@ func _play_intro_sequence() -> void:
 		await tween_box_out.finished 
 		
 	active_dialogue_box.queue_free()
-	
 	_play_phone_sequence()
 
 func _play_phone_sequence() -> void:
@@ -196,6 +196,8 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger your incoming dialogue push notification alert sound effect ping
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
@@ -318,6 +320,9 @@ func _show_money_ui() -> void:
 		job_salary = 2040
 		job_display_name = "Cashier"
 		
+	# Trigger your confirmation deposit alert chime ("Withdraw or money increase")
+	
+		
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
@@ -363,7 +368,7 @@ func _play_post_money_sequence() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_thinking:
@@ -377,7 +382,6 @@ func _play_post_money_sequence() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(budget_convo)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	if jane_thinking:
@@ -417,7 +421,7 @@ func _play_kylie_conversation() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_dialogue:
@@ -435,7 +439,6 @@ func _play_kylie_conversation() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(kylie_convo)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	if jane_dialogue:
@@ -451,7 +454,6 @@ func _play_kylie_conversation() -> void:
 		await tween_box_out.finished 
 		
 	active_dialogue_box.queue_free()
-	
 	_play_study_choice_sequence()
 
 func _play_study_choice_sequence() -> void:
@@ -471,7 +473,7 @@ func _play_study_choice_sequence() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_thinking:
@@ -515,6 +517,8 @@ func _process_study_choice(choice: String) -> void:
 	
 	if choice == "Cafe":
 		study_choice = "A"
+		# Trigger your cash deduction wallet sweep sound effect
+		AudioManager.play_sfx("DEDUCT")
 		GameManager.stage_finance_change(0, -150, "Purchased coffee at study cafe")
 		GameManager.log_choice("chap2_study_location", "A")
 	elif choice == "Lounge":
@@ -566,7 +570,7 @@ func _play_morning_sequence() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_thinking:
@@ -580,7 +584,6 @@ func _play_morning_sequence() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(morning_convo)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	if jane_thinking:
@@ -594,7 +597,6 @@ func _play_morning_sequence() -> void:
 		await tween_box_out.finished 
 		
 	active_dialogue_box.queue_free()
-	
 	_play_travel_choice_sequence()
 
 func _play_travel_choice_sequence() -> void:
@@ -624,8 +626,11 @@ func _process_travel_choice(choice: String) -> void:
 	if ride_tricycle_btn: ride_tricycle_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if walk_btn: walk_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
+	var is_tricycle = false
 	if choice == "Tricycle":
+		is_tricycle = true
 		travel_choice = "A"
+		AudioManager.play_sfx("DEDUCT")
 		GameManager.stage_finance_change(0, -30, "Paid fare for tricycle ride to campus")
 		GameManager.log_choice("chap2_travel_method", "A")
 	elif choice == "Walk":
@@ -644,11 +649,17 @@ func _process_travel_choice(choice: String) -> void:
 		tween_jane.tween_property(jane_big_2, "modulate:a", 0.0, 0.5)
 		
 	await get_tree().create_timer(0.6).timeout
-	
 	await get_tree().create_timer(1.0).timeout
 	await TransitionManager.fade_to_black()
 	
+	# Cleanly play the loopable environment track channel if riding tricycle
+	if is_tricycle:
+		AudioManager.play_ambience("BUS", 0.5) # Reuses bus motor ambiance profile for travel text wrap
+	
 	await get_tree().create_timer(2.0).timeout
+	
+	# Smoothly fade out travel sounds before going inside the exam hall
+	AudioManager.fade_out_ambience(1.0)
 	
 	if background:
 		var new_stylebox = StyleBoxTexture.new()
@@ -656,6 +667,9 @@ func _process_travel_choice(choice: String) -> void:
 		background.add_theme_stylebox_override("panel", new_stylebox)
 		
 	await TransitionManager.fade_from_black()
+	
+	# Trigger your crisp high school bell sound effect on school arrival
+	AudioManager.play_sfx("BELL", 2.0)
 	
 	if pause_button:
 		pause_button.show()
@@ -699,7 +713,7 @@ func _play_exam_sequence() -> void:
 		var tween_in = create_tween()
 		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
 		await tween_in.finished
-		
+	
 	await get_tree().create_timer(0.2).timeout
 	
 	if jane_dialogue:
@@ -713,7 +727,6 @@ func _play_exam_sequence() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(post_exam_convo)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	if jane_dialogue:
@@ -727,7 +740,6 @@ func _play_exam_sequence() -> void:
 		await tween_box_out.finished 
 		
 	active_dialogue_box.queue_free()
-	
 	await get_tree().create_timer(0.5).timeout
 	
 	if jane_big:
@@ -750,7 +762,6 @@ func _play_exam_sequence() -> void:
 			phone_mini.get_child(0).modulate.a = 0.0
 			
 		phone_mini.show()
-		
 		if phone_mini.has_method("appear"):
 			phone_mini.appear()
 			
@@ -761,6 +772,8 @@ func _play_exam_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger your smartphone grade alert push notification chime sound effect
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable_phase_3 = true
@@ -802,7 +815,6 @@ func _open_phone_screen_3() -> void:
 			sis_text.text = "1.25"
 			
 	if sis_grade: sis_grade.show()
-	
 	await get_tree().create_timer(3.0).timeout
 	
 	if back_tex_btn: back_tex_btn.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -814,8 +826,6 @@ func _open_phone_screen_3() -> void:
 func _on_phone_3_back_pressed() -> void:
 	print("YES! The _on_phone_3_back_pressed signal fired perfectly!")
 	
-	# --- EXPLICIT PAUSE BUTTON TRANSITION MASK ---
-	# Force hide the pause button here before any async timers or transitions start executing
 	if pause_button: 
 		pause_button.hide()
 		pause_button.process_mode = PROCESS_MODE_DISABLED
@@ -851,13 +861,10 @@ func _on_phone_3_back_pressed() -> void:
 	
 	GameManager.complete_current_chapter(end_grade)
 	
-	# --- LOCAL INSTANT BLACKOUT MASK OVERRIDE ---
-	# Spawn a full-screen black canvas block right now to shield the viewport background 
-	# during the 2-second calculation delay loop.
 	var local_black_screen = ColorRect.new()
 	local_black_screen.color = Color(0, 0, 0, 1) 
 	local_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	local_black_screen.z_index = 200 # Enforce rendering overlay priority
+	local_black_screen.z_index = 200 
 	add_child(local_black_screen)
 	
 	await get_tree().create_timer(2.0).timeout
@@ -881,6 +888,10 @@ func _on_phone_3_back_pressed() -> void:
 		t2.tween_property(title_label, "modulate:a", 0.0, 1.0)
 		await t2.finished
 		title_label.hide()
+	
+	# --- EXPLICIT MUSIC RESET FOR TRANSITION ---
+	# Forces GENERAL MUSIC.mp3 to fade down and restart from 0.0 for Chapter 3
+	AudioManager.restart_general_music()
 		
 	var next_scene_path = "res://Scenes/Chapter 3/chapter_3_scene_1.tscn"
 	

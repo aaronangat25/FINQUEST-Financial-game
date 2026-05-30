@@ -31,10 +31,12 @@ var active_gray_screen
 var active_tutorial
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	AudioManager.play_convenience_store_music()
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	# Force characters to be invisible before the scene starts
 	jen_dialogue.modulate.a = 0.0
 	kylie.modulate.a = 0.0
 	student_dialogue.modulate.a = 0.0
@@ -43,17 +45,19 @@ func _ready() -> void:
 	choose_control_3.modulate.a = 0.0
 	choose_control_3.hide()
 	
-	# FIXED: Appended GameManager database log hooks to match structural selections
+	# Mapped choice logs with interaction SFX feedback
 	aisle_btn.pressed.connect(func(): 
 		GameManager.log_choice("chap1_clerk_assistance", "A")
 		_on_store_choice_made(100)
 	)
 	storage_btn.pressed.connect(func(): 
 		GameManager.log_choice("chap1_clerk_assistance", "B")
+		AudioManager.play_sfx("ERROR") # Play error chime for unhelpful routing selection
 		_on_store_choice_made(0)
 	)
 	cashier_btn.pressed.connect(func(): 
 		GameManager.log_choice("chap1_clerk_assistance", "C")
+		AudioManager.play_sfx("ERROR") # Play error chime for unhelpful routing selection
 		_on_store_choice_made(0)
 	)
 	
@@ -73,7 +77,6 @@ func _play_storeclerk_sequence() -> void:
 	await get_tree().create_timer(0.5).timeout
 	await TransitionManager.fade_from_black()
 	
-	# 1. DIALOGUE BOX FADES IN FIRST
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	
@@ -95,11 +98,9 @@ func _play_storeclerk_sequence() -> void:
 	
 	await get_tree().create_timer(0.2).timeout
 	
-	# 2. KYLIE FADES IN FIRST
 	kylie.appear("idle", false) 
 	await get_tree().create_timer(0.6).timeout
 	
-	# 3. START THE CONVERSATION
 	var clerk_conversation = [
 		{"speaker": "Kylie", "text": "Hello! My friend here wants to work here, she's a freshman."},
 		{"speaker": "Jen", "text": "Madali lang dito. mostly restocking and assisting customers."}
@@ -109,12 +110,10 @@ func _play_storeclerk_sequence() -> void:
 	active_dialogue_box.start_dialogue(clerk_conversation)
 	await active_dialogue_box.dialogue_finished
 	
-	# 4. INSTANTLY REMOVE CHARACTERS BEFORE TUTORIAL
 	jen_dialogue.exit(false) 
 	kylie.exit(false) 
 	active_dialogue_box.queue_free()
 	
-	# 5. SHOW THE TUTORIAL PHONE INSTANTLY
 	active_gray_screen = GRAY_SCREEN_SCENE.instantiate()
 	add_child(active_gray_screen)
 	
@@ -127,16 +126,16 @@ func _play_storeclerk_sequence() -> void:
 		
 	if back_btn:
 		back_btn.pressed.connect(_on_tutorial_back_pressed)
-	else:
-		print("ERROR: Could not find BackButton in tutorial screen!")
 
 
-# --- TRIGGERED WHEN THE PLAYER CLICKS THE BACK BUTTON ---
 func _on_tutorial_back_pressed() -> void:
 	if active_gray_screen: active_gray_screen.queue_free()
 	if active_tutorial: active_tutorial.queue_free()
 	
 	await get_tree().create_timer(0.5).timeout
+	
+	# Trigger the custom convenience store doorbell entry chime when the customer walks up
+	AudioManager.play_sfx("DOORBELL")
 	
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -166,7 +165,6 @@ func _on_tutorial_back_pressed() -> void:
 	
 	active_dialogue_box.is_fading = false 
 	active_dialogue_box.start_dialogue(final_conversation)
-	
 	await active_dialogue_box.dialogue_finished
 	
 	student_dialogue.exit(true) 
@@ -179,33 +177,29 @@ func _on_tutorial_back_pressed() -> void:
 		
 	active_dialogue_box.queue_free()
 	
-	# --- JANE AND CHOICES FADE IN TOGETHER ---
 	choose_control_3.show()
 	var tween_choice = create_tween()
 	tween_choice.tween_property(choose_control_3, "modulate:a", 1.0, 0.5)
 	jane_big.appear()
 
-# --- HANDLING THE STORE CHOICE ---
 func _on_store_choice_made(reward: int) -> void:
 	if reward > 0:
+		# Trigger your transaction deposit notification chime sound effect ("Withdraw or money increase")
+		AudioManager.play_sfx("INCOME")
 		currency_hud.add_money(reward)
 		
-	# FIXED: Stage the sandbox pocket money increase directly inside your memory tracking buffers
 	GameManager.stage_finance_change(0, reward, "Chapter 1 Clerk Part-Time Training Reward")
 	
-	# --- JANE AND CHOICES FADE OUT TOGETHER ---
 	var jane_tween = create_tween()
 	jane_tween.tween_property(jane_big, "modulate:a", 0.0, 0.5)
 	
 	var tween_fade = create_tween()
 	tween_fade.tween_property(choose_control_3, "modulate:a", 0.0, 0.5)
 	
-	# Wait for both tweens to finish
 	await tween_fade.finished
 	choose_control_3.hide()
 	
 	await get_tree().create_timer(2.0).timeout
-	
 	_trigger_shift_end_transition()
 
 func _trigger_shift_end_transition() -> void:
@@ -228,10 +222,11 @@ func _trigger_shift_end_transition() -> void:
 		await text_out.finished
 		title_label.hide()
 		
+		# Restore ambient exploration background music theme loops
+		AudioManager.play_chapter_music()
+		
 		get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1_end.tscn")
 
-
-# --- INSTANT CHARACTER SWAP ---
 func _on_dialogue_line_started(line_data: Dictionary) -> void:
 	var speaker = line_data.get("speaker", "")
 	

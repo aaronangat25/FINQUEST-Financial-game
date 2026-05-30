@@ -29,6 +29,9 @@ var can_click_result: bool = false # 5-second lock
 var is_transitioning: bool = false
 
 func _ready() -> void:
+	# Keep background ambient exploration tracks flowing into evaluations steadily
+	AudioManager.play_chapter_music()
+
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	
@@ -240,7 +243,7 @@ func _on_next_pressed() -> void:
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# Force tracker safely to Chapter 3 (Row 4 inside SQLite chapter_progress table)
+	# Force tracker safely to Chapter 4 (Row 5 inside SQLite chapter_progress table)
 	GameManager.current_chapter = 4
 	
 	var next_scene_path = "res://Scenes/Chapter 4/chapter_4_scene_1.tscn" 
@@ -260,7 +263,7 @@ func _on_main_menu_pressed() -> void:
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# Force tracker safely to Chapter 3 (Row 4 inside SQLite chapter_progress table)
+	# Force tracker safely to Chapter 4 (Row 5 inside SQLite chapter_progress table)
 	GameManager.current_chapter = 4
 	
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
@@ -291,6 +294,10 @@ func _execute_save_and_blackout(destination_path: String, play_cinematic_card: b
 	
 	# 3. Handle specific level banner tweens if continuing forward
 	if play_cinematic_card:
+		# --- AUDIO ENGINE CLEANSER ---
+		# Clear track locks and restart the default background score loop from zero for Chapter 4
+		AudioManager.restart_general_music()
+
 		var title_label = TransitionManager.get_node_or_null("TitleLabel")
 		if title_label:
 			title_label.text = "CHAPTER 4"
