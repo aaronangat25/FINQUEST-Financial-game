@@ -17,7 +17,8 @@ const SFX_MAP = {
 	"NOTIFICATION": "res://Assets/Audio/SFX/Phone Notification.mp3",
 	"TRAIN": "res://Assets/Audio/SFX/Train Station Sound Effect.mp3",
 	"INCOME": "res://Assets/Audio/SFX/Withdraw or money increase.mp3",
-	"BELL": "res://Assets/Audio/SFX/School bell sound effect .mp3"
+	"BELL": "res://Assets/Audio/SFX/School bell sound effect .mp3",
+	"PHONE_RING": "res://Assets/Audio/SFX/Ring call.mp3"
 }
 
 # --- RUNTIME VARIABLES ---
@@ -187,8 +188,10 @@ func play_bell_short() -> void:
 		print("[AUDIO] School bell hard-stopped at 4.0s mark successfully.")
 		
 # =================================================================
-# AUTOMATED ONE-SHOT SFX ENGINE
+# AUTOMATED ONE-SHOT SFX ENGINE & LOOP TRACKER
 # =================================================================
+var active_looping_sfx: Dictionary = {}
+
 func play_sfx(sfx_key: String, start_from_sec: float = 0.0) -> void:
 	if not SFX_MAP.has(sfx_key):
 		return
@@ -204,20 +207,47 @@ func play_sfx(sfx_key: String, start_from_sec: float = 0.0) -> void:
 		
 	sfx_player.stream = stream_resource
 	
+	# Handle specific looping rule conditioning for the ringtone
+	if sfx_key == "PHONE_RING":
+		if sfx_player.stream is AudioStreamMP3:
+			sfx_player.stream.loop = true
+		active_looping_sfx[sfx_key] = sfx_player
+	else:
+		# Only auto-free non-looping sounds when finished
+		sfx_player.finished.connect(sfx_player.queue_free)
+		
 	# Starts the audio stream at your exact requested timestamp!
 	sfx_player.play(start_from_sec)
-	
-	sfx_player.finished.connect(sfx_player.queue_free)
-	
-	# =================================================================
+
+
+# =================================================================
+# SPECIFIC SFX STOP TRIGGER
+# =================================================================
+func stop_sfx(sfx_key: String) -> void:
+	if active_looping_sfx.has(sfx_key):
+		var player = active_looping_sfx[sfx_key]
+		if is_instance_valid(player):
+			player.stop()
+			player.queue_free()
+		active_looping_sfx.erase(sfx_key)
+
+
+# =================================================================
 # FORCE STOP MUSIC FUNCTION
 # =================================================================
 func stop_all_music() -> void:
-	print("[AUDIO] Force stopping all background music streams.")
+	print("[AUDIO] Force stopping all background music and active ring loops.")
+	
+	# Safely clear the active phone ring loop if it's currently running
+	if active_looping_sfx.has("PHONE_RING"):
+		stop_sfx("PHONE_RING")
+		
+	# Clean up standard background player channels
 	if is_instance_valid(player_1):
 		player_1.stop()
 		player_1.volume_db = -60.0
 	if is_instance_valid(player_2):
 		player_2.stop()
 		player_2.volume_db = -60.0
+		
 	current_track_path = "" # Clear the path cache completely!

@@ -31,6 +31,9 @@ var career_choice: String = ""
 var is_transitioning: bool = false
 
 func _ready() -> void:
+	# Continuous ambient loops moving cleanly through final metrics
+	AudioManager.play_chapter_music()
+
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
@@ -132,7 +135,6 @@ func _on_corporate_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Corporate"
 	
-	# --- REMOVED THE GLOBAL LINE ---
 	GameManager.log_choice("chap5_career_pathway", "Corporate")
 	_show_stats_summary_screen()
 
@@ -140,7 +142,6 @@ func _on_business_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Business"
 	
-	# --- REMOVED THE GLOBAL LINE ---
 	GameManager.log_choice("chap5_career_pathway", "Business")
 	_show_stats_summary_screen()
 
@@ -148,7 +149,6 @@ func _on_stop_first_selected() -> void:
 	_lock_all_inputs()
 	career_choice = "Stop"
 	
-	# --- REMOVED THE GLOBAL LINE ---
 	GameManager.log_choice("chap5_career_pathway", "Stop")
 	_show_stats_summary_screen()
 
@@ -220,8 +220,6 @@ func _on_main_menu_pressed() -> void:
 
 # --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
 func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bool) -> void:
-	# --- MASTER SAVE TRANSACTION FLUSH ---
-	# Writes clothing rental/purchases and final path tracking logs down to SQLite permanently!
 	GameManager.flush_buffer_to_database()
 	
 	if saving_screen:
@@ -245,6 +243,10 @@ func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bo
 	if run_cinematic_card:
 		if TransitionManager.has_method("fade_to_black"):
 			await TransitionManager.fade_to_black()
+			
+		# --- AUDIO STREAM THEME RESET ---
+		# Clear existing track locks and restart the score head cleanly for the game's finale layout
+		AudioManager.restart_general_music()
 			
 		var title_label = TransitionManager.get_node_or_null("TitleLabel")
 		if title_label:

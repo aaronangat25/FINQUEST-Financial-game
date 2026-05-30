@@ -27,6 +27,9 @@ var active_dialogue_box
 var graduation_choice: String = ""
 
 func _ready() -> void:
+	# Keep baseline loops processing travel settings steadily
+	AudioManager.play_chapter_music()
+
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
@@ -121,7 +124,8 @@ func _on_choice_a_selected() -> void:
 	_disable_all_buttons()
 	graduation_choice = "A"
 	
-	# --- REMOVED THE GLOBAL LINE ---
+	# Trigger transaction sound profile for outfit purchase
+	AudioManager.play_sfx("DEDUCT")
 	GameManager.log_choice("chap5_graduation_outfit", "A")
 	GameManager.stage_finance_change(0, -2500, "Purchased a premium brand-new graduation dress outfit")
 	
@@ -134,7 +138,8 @@ func _on_choice_b_selected() -> void:
 	_disable_all_buttons()
 	graduation_choice = "B"
 	
-	# --- REMOVED THE GLOBAL LINE ---
+	# Trigger transaction sound profile for simple outfit purchase
+	AudioManager.play_sfx("DEDUCT")
 	GameManager.log_choice("chap5_graduation_outfit", "B")
 	GameManager.stage_finance_change(0, -1200, "Purchased a standard simple graduation outfit")
 	
@@ -147,7 +152,8 @@ func _on_choice_c_selected() -> void:
 	_disable_all_buttons()
 	graduation_choice = "C"
 	
-	# --- REMOVED THE GLOBAL LINE ---
+	# Trigger transaction sound profile for outfit rental dry-cleaning
+	AudioManager.play_sfx("DEDUCT")
 	GameManager.log_choice("chap5_graduation_outfit", "C")
 	GameManager.stage_finance_change(0, -500, "Paid rental and dry cleaning for a borrowed graduation outfit")
 	

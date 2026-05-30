@@ -8,7 +8,7 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking 
 @onready var jane_big_anchor = $JaneBigAnchor
 @onready var jane_big_sprite = $JaneBigAnchor/jane2d       
-@onready var phone_mini = $PhoneMini              
+@onready var phone_mini = $PhoneMini               
 @onready var phone_ringing = $PhoneRinging        
 @onready var mom_anchor = $MomAnchor
 @onready var mom_sprite = $MomAnchor/mom2d        
@@ -23,6 +23,9 @@ var active_dialogue_box
 var is_phone_waiting_for_click: bool = false
 
 func _ready() -> void:
+	# Continuous ambient exploration tracks flowing through call setups smoothly
+	AudioManager.play_chapter_music()
+
 	# 1. Persistent UI setup
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
@@ -86,6 +89,10 @@ func _play_ringing_intro() -> void:
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 0.5)
 		await t_box_in.finished
 	
+	# --- AUDIO LAYER INITIALIZATION ---
+	# Starts looping your custom MP3 ringtone asset right as the text wrapper triggers!
+	AudioManager.play_sfx("PHONE_RING")
+	
 	# Play dialogue text while phone is hidden
 	active_dialogue_box.is_fading = false
 	active_dialogue_box.start_dialogue([{"speaker": "", "text": "Someone is calling,\npick it up"}])
@@ -132,6 +139,10 @@ func _input(event: InputEvent) -> void:
 					
 					is_phone_waiting_for_click = false
 					if phone_mini: phone_mini.hide()
+					
+					# --- THE PERFECT AUDIO RESET STOP ---
+					# Safely breaks out of the loop tracker so it doesn't bleed into parent lines!
+					AudioManager.stop_sfx("PHONE_RING")
 					
 					# Make her disappear instantly when the call is answered
 					if jane_big_sprite: jane_big_sprite.hide()
