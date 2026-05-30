@@ -24,6 +24,10 @@ var active_lock_screen
 var is_phone_clickable: bool = false
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	# Ensures the main ambient exploration track flows steadily into Chapter 5's opening
+	AudioManager.play_chapter_music()
+
 	# --- MASTER DATABASE SYNCHRONIZATION ---
 	GameManager.load_player_stats()
 	Global.player_money = GameManager.on_hand_cash
@@ -124,6 +128,8 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.0).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger your push notification one-shot sound alert
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true

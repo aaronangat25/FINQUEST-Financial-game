@@ -9,10 +9,13 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var stat_screen = $StatsScreen
 
+
+
 # Using find_child grabs if deep inside Panels
 @onready var meeting_label = stat_screen.find_child("MeetingResultLabel", true, false)
 @onready var printing_label = stat_screen.find_child("PrintingLabel", true, false)
 @onready var feedback_label = stat_screen.find_child("FeedbackLabel", true, false)
+@onready var grade_label = stat_screen.find_child("GradeLabel", true, false)
 @onready var chapter5_btn = stat_screen.find_child("Chapter5_btn", true, false)
 @onready var main_menu_btn = stat_screen.find_child("MainMenu_btn", true, false)
 
@@ -21,6 +24,9 @@ var active_dialogue_box
 var is_transitioning: bool = false
 
 func _ready() -> void:
+	# Keep background music loops moving smoothly into final score assessment cards
+	AudioManager.play_chapter_music()
+
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	
@@ -41,7 +47,7 @@ func _ready() -> void:
 	await get_tree().create_timer(2.0).timeout
 	_play_intro_sequence()
 
-# STEP 1: INTRO DIALOGUE
+# User Interaction Section
 func _play_intro_sequence() -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -80,7 +86,7 @@ func _play_intro_sequence() -> void:
 	active_dialogue_box.queue_free()
 	_calculate_and_show_results()
 
-# STEP 2: LOGIC & STAT SCREEN
+# Calculations Area
 func _calculate_and_show_results() -> void:
 	var meeting = Global.choice_meeting 
 	var printing = Global.choice_printing 
@@ -100,9 +106,8 @@ func _calculate_and_show_results() -> void:
 		else: printing_label.text = "= No Data"
 
 	var color_green = Color("2ecc71") 
-	var color_red = Color("e74c3c")    
+	var color_red = Color("e74c3c")      
 	
-	# Determine her scoring thresholds and update database variables dynamically
 	var end_grade = 1.25
 	if meeting == "A" and printing == "A":
 		end_grade = 1.0
@@ -123,6 +128,9 @@ func _calculate_and_show_results() -> void:
 
 	if feedback_label:
 		feedback_label.text = final_feedback
+		
+	if grade_label:
+		grade_label.text = str(end_grade)
 
 	stat_screen.show()
 	stat_screen.modulate.a = 0.0
@@ -132,7 +140,7 @@ func _calculate_and_show_results() -> void:
 
 	_play_result_dialogue(jane_reaction, end_grade)
 
-# STEP 3: REACTION & BUTTON 
+# Scoring Evaluation Layout
 func _play_result_dialogue(reaction_text: String, earned_grade: float) -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -228,7 +236,6 @@ func _on_main_menu_pressed(final_grade: float) -> void:
 
 # --- REUSABLE SYSTEM TRANSACTION HANDLER ---
 func _execute_save_and_transition(destination_path: String, run_chapter_card: bool, grade_scored: float) -> void:
-	# --- MASTER TRANSACTION FLUSH ---
 	# Writes physical commuter costs and document printing deductions cleanly to SQLite
 	GameManager.flush_buffer_to_database()
 	
@@ -254,6 +261,10 @@ func _execute_save_and_transition(destination_path: String, run_chapter_card: bo
 	if run_chapter_card:
 		if TransitionManager.has_method("fade_to_black"):
 			await TransitionManager.fade_to_black()
+			
+		# --- AUDIO SYSTEM RESET TIMING ---
+		# Resets GENERAL MUSIC background tracking streams smoothly for Chapter 5 ("GRADUATION")
+		AudioManager.restart_general_music()
 			
 		var title_label = TransitionManager.get_node_or_null("TitleLabel")
 		if title_label:

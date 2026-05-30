@@ -27,8 +27,11 @@ var is_phone_clickable: bool = false
 var phone_state: int = 0
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	# Ensures the main exploration track plays smoothly on chapter startup
+	AudioManager.play_chapter_music()
+
 	# --- MASTER DATABASE SYNCHRONIZATION ---
-	# Load baseline stats into running memory and align global variables
 	GameManager.load_player_stats()
 	Global.player_money = GameManager.on_hand_cash
 	
@@ -153,6 +156,8 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger your crisp incoming chat alert notification chime sound effect
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
@@ -198,6 +203,8 @@ func _on_padlock_pressed() -> void:
 		
 	phone_mini.show()
 	if phone_mini.has_method("trigger_notification"):
+		# Trigger follow-up notification chime as home screen returns
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	phone_state = 1
@@ -269,6 +276,9 @@ func _on_sis_pressed() -> void:
 	if warning_panel:
 		if contacts_btn: contacts_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if sis_btn: sis_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		
+		# Trigger systemic login lockout error buzzer chime
+		AudioManager.play_sfx("ERROR")
 		
 		warning_panel.show()
 		warning_panel.visible = true
@@ -378,6 +388,8 @@ func _play_final_jane_dialogue() -> void:
 # CHOICE BRANCHES
 func _on_choice_a_pressed() -> void:
 	Global.choice_meeting = "A"
+	# Trigger your cash deduction wallet swipe sound effect for transit costs
+	AudioManager.play_sfx("DEDUCT")
 	_handle_choice_reaction("A", "Medyo magastos… pero ang bilis namin naka-progress")
 
 func _on_choice_b_pressed() -> void:

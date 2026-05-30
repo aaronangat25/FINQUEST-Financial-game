@@ -13,6 +13,9 @@ var currency_hud
 var active_dialogue_box
 
 func _ready() -> void:
+	# Keep background music loop channels executing cleanly into printing tasks
+	AudioManager.play_convenience_store_music()
+
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
 	
@@ -130,10 +133,14 @@ func _show_choices() -> void:
 
 func _on_choice_a_pressed() -> void:
 	Global.choice_printing = "A" 
+	# Trigger deduction sound effect for colored copy purchase
+	AudioManager.play_sfx("DEDUCT")
 	_handle_choice_reaction(200, "Maganda yung output… sana worth it.")
 
 func _on_choice_b_pressed() -> void:
 	Global.choice_printing = "B" 
+	# Trigger deduction sound effect for grayscale copy purchase
+	AudioManager.play_sfx("DEDUCT")
 	_handle_choice_reaction(120, "Okay na ‘to… basta malinaw.")
 	
 func _on_choice_c_pressed() -> void:
@@ -202,6 +209,8 @@ func _transition_to_scene_3() -> void:
 	
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
+		
+	AudioManager.play_chapter_music()
 		
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
