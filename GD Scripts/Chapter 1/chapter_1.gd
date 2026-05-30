@@ -46,10 +46,13 @@ var DORM_DIALOGUE: Array = [
 ]
 
 func _ready() -> void:
+	# --- AUDIO INITIALIZATION ---
+	# Bridges the chapter entrance over the bus arrival screen animation sequence
+	AudioManager.play_chapter_music()
+
 	# =================================================================
 	# AUTOMATIC DEVELOPER SAFETY INJECTION FOR DIRECT TESTING (F5)
 	# =================================================================
-	# Check if a profile record row exists for Player ID 1 inside SQLite
 	DatabaseManager.db.query_with_bindings("SELECT COUNT(*) as total FROM player_stats WHERE player_id = ?;", [GameManager.player_id])
 	var row_exists = false
 	if DatabaseManager.db.query_result.size() > 0 and DatabaseManager.db.query_result[0]["total"] > 0:
@@ -57,34 +60,27 @@ func _ready() -> void:
 		
 	if not row_exists:
 		print("[DEVELOPER SAFETY] No data entries found for testing. Injecting default profile rows for Player 1...")
-		# 1. Generate core player entry row inside players table
 		DatabaseManager.db.query("""
 			INSERT OR IGNORE INTO players (id, player_name, gender, job_path) 
 			VALUES (1, 'Jane Dev', 'Female', 'Cafe');
 		""")
-		# 2. Generate stats row record inside player_stats table
 		DatabaseManager.db.query("""
 			INSERT OR IGNORE INTO player_stats (player_id, bank_cash, on_hand_cash, current_chapter) 
 			VALUES (1, 3000, 0, 2);
 		""")
-		# 3. Generate sequential progress map list tracks
 		for chapter in range(1, 8):
-			var unlocked = 1 if chapter <= 2 else 0 # Unlocks Prologue (1) and Chapter 1 (2)
+			var unlocked = 1 if chapter <= 2 else 0
 			DatabaseManager.db.query_with_bindings("""
 				INSERT OR IGNORE INTO chapter_progress (player_id, chapter_number, is_unlocked, is_completed) 
 				VALUES (1, ?, ?, 0);
 			""", [chapter, unlocked])
 	# =================================================================
 
-	# Now pull the database records safely!
 	GameManager.load_player_stats()
 	
 	# =================================================================
 	# THE MASTER SANDBOX PROTECTION SYSTEM (ANTI-EXPLOIT WIPE)
 	# =================================================================
-	# FORCE THE MANAGER STATE INDICES TO CHAPTER 1 (INDEX 2) IMMEDIATELY!
-	# This guarantees that even on direct F5 testing bootups, the saving 
-	# system knows this is Chapter 1, preserving your earnings cleanly.
 	GameManager.current_chapter = 2
 	GameManager.on_hand_cash = 0
 	GameManager.bank_cash = 3000
@@ -92,7 +88,6 @@ func _ready() -> void:
 	
 	print("[SANDBOX RESET] Chapter 1 Initialized. Bank Cash: ₱", GameManager.bank_cash, " | On-Hand Cash: ₱", GameManager.on_hand_cash, " | Active Chapter Tracker: ", GameManager.current_chapter)
 	
-	# Hard-update the database table stats row right now to mirror this clean state.
 	DatabaseManager.db.query_with_bindings("""
 		UPDATE player_stats
 		SET bank_cash = 3000, on_hand_cash = 0, current_chapter = 2
@@ -107,7 +102,6 @@ func _ready() -> void:
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	# Ensure the visual text counter displays our clean 0 pocket balance instantly
 	currency_hud.add_money(GameManager.on_hand_cash)
 	
 	dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
@@ -128,6 +122,9 @@ func _ready() -> void:
 	await get_tree().create_timer(2.0).timeout
 	notification_pop.show_hint_and_blink()
 	await get_tree().create_timer(1.0).timeout
+	
+	# Trigger your smartphone text alert notification ping audio
+	AudioManager.play_sfx("NOTIFICATION")
 	phone_mini.trigger_notification()
 
 	choose_control.choice_made.connect(_on_choice_made)
@@ -142,16 +139,12 @@ func _on_phone_clicked() -> void:
 	phone_screen_instance = PHONE_SCREEN_SCENE.instantiate()
 	add_child(phone_screen_instance)
 	
-	# click on the bank app
 	phone_screen_instance.bank_app_clicked.connect(_on_bank_app_clicked)
 	
-	# Create invisible shield to block clicks
 	var click_shield = ColorRect.new()
 	click_shield.color = Color(0, 0, 0, 0)
 	click_shield.set_anchors_preset(Control.PRESET_FULL_RECT)
 	click_shield.mouse_filter = Control.MOUSE_FILTER_STOP
-	
-	# Add shield to the instance variable
 	phone_screen_instance.add_child(click_shield)
 	
 	await new_feature_control.play_feature_intro()
@@ -160,7 +153,6 @@ func _on_phone_clicked() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
 	click_shield.queue_free()
-	# Force bank button to unlock and accept clicks
 	phone_screen_instance.unlock_app()
 
 func _on_bank_app_clicked() -> void:
@@ -174,6 +166,8 @@ func _on_bank_app_clicked() -> void:
 	virtual_bank_instance.back_clicked.connect(_on_virtual_bank_back_clicked)
 
 func _on_money_withdrawn(_amount: int) -> void:
+	# Trigger the confirmation chime sound effect ("Withdraw or money increase")
+	AudioManager.play_sfx("INCOME")
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 
@@ -210,6 +204,10 @@ func _on_virtual_bank_back_clicked() -> void:
 	
 	await get_tree().create_timer(1.5).timeout
 	await TransitionManager.fade_from_black()
+	
+	# --- GENERAL BACKGROUND MUSIC TRANSITION ---
+	# Fades menu theme out and cross-fades general exploration music in inside the dorm
+	AudioManager.play_chapter_music()
 	
 	await get_tree().create_timer(1.0).timeout
 	kylie.appear()

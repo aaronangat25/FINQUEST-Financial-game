@@ -1,91 +1,223 @@
 extends Node
 
-# =========================================
-# FINQUEST AUDIO MANAGER
-# =========================================
+# --- AUDIO TRACK PATHS (BGM) ---
+const MAIN_MENU_MUSIC = "res://Assets/Audio/Music/FINQUEST MAIN MENU.mp3"
+const GENERAL_MUSIC = "res://Assets/Audio/Music/GENERAL MUSIC.mp3"
+const COFFEE_SHOP_MUSIC = "res://Assets/Audio/Music/COFFEE SHOP POSSBLE 3.mp3"
+const CONVENIENCE_STORE_MUSIC = "res://Assets/Audio/Music/Convenience Store and supermarket.mp3"
 
-# FILE PATHS
-var click_sfx_path : String = "res://Assets/Audio/SFX/Menu Selection Click.wav"
-var menu_music_path : String = "res://Assets/Audio/Music/FINQUEST MAIN MENU.mp3"
-var general_music_path : String = "res://Assets/Audio/Music/GENERAL MUSIC.mp3"
-var coffeeshop_music_path : String = "res://Assets/Audio/Music/COFFEE SHOP POSSBLE 3.mp3"
+# --- SOUND EFFECT PATHS (SFX Inventory) ---
+const SFX_MAP = {
+	"CLICK": "res://Assets/Audio/SFX/Menu Selection Click.wav",
+	"SCANNER": "res://Assets/Audio/SFX/Barcode Scanner.mp3",
+	"BUS": "res://Assets/Audio/SFX/Bus atmosphere.mp3",
+	"DOORBELL": "res://Assets/Audio/SFX/Convinieence store doorbell.mp3",
+	"ERROR": "res://Assets/Audio/SFX/error.ogg",
+	"DEDUCT": "res://Assets/Audio/SFX/Money deduct.mp3",
+	"NOTIFICATION": "res://Assets/Audio/SFX/Phone Notification.mp3",
+	"TRAIN": "res://Assets/Audio/SFX/Train Station Sound Effect.mp3",
+	"INCOME": "res://Assets/Audio/SFX/Withdraw or money increase.mp3",
+	"BELL": "res://Assets/Audio/SFX/School bell sound effect .mp3"
+}
 
-# AUDIO PLAYERS
-var bgm_player : AudioStreamPlayer
+# --- RUNTIME VARIABLES ---
+var player_1 : AudioStreamPlayer
+var player_2 : AudioStreamPlayer
+var current_player : AudioStreamPlayer
 var current_track_path : String = ""
 
+# Dedicated channel for loopable environment details (Bus, Train, etc.)
+var ambience_player : AudioStreamPlayer
+var active_ambience_tween : Tween
+
 func _ready() -> void:
-	# Initialize background music player channel
-	bgm_player = AudioStreamPlayer.new()
-	add_child(bgm_player)
-	bgm_player.bus = "Master"
+	process_mode = PROCESS_MODE_ALWAYS
 	
-	print("[AUDIO] Global input click and multi-scene music engine active.")
+	# Initialize music players
+	player_1 = AudioStreamPlayer.new()
+	player_2 = AudioStreamPlayer.new()
+	add_child(player_1)
+	add_child(player_2)
+	player_1.bus = "Master"
+	player_2.bus = "Master"
+	current_player = player_1
 
-# =========================================
-# CAPTURE MOUSE CLICKS GLOBALLY
-# =========================================
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			play_click_sfx()
+	# Initialize ambience channel
+	ambience_player = AudioStreamPlayer.new()
+	ambience_player.bus = "Master"
+	add_child(ambience_player)
 
-# =========================================
-# PLAY ONE-SHOT CLICK SFX
-# =========================================
-func play_click_sfx():
+	# Global interaction hooks
+	get_tree().node_added.connect(_on_scene_node_added)
+	_hook_existing_buttons(get_tree().root)
+
+# =================================================================
+# GLOBAL AUTOMATED INTERACTION LISTENER
+# =================================================================
+func _on_scene_node_added(node: Node) -> void:
+	if node is Button or node is TextureButton:
+		_connect_button_click(node)
+
+func _hook_existing_buttons(root_node: Node) -> void:
+	if root_node is Button or root_node is TextureButton:
+		_connect_button_click(root_node)
+	for child in root_node.get_children():
+		_hook_existing_buttons(child)
+
+func _connect_button_click(button_node: Node) -> void:
+	if not button_node.pressed.is_connected(_play_automatic_click):
+		button_node.pressed.connect(_play_automatic_click)
+
+func _play_automatic_click() -> void:
+	play_sfx("CLICK")
+
+# =================================================================
+# CENTRALISED CROSS-FADE MECHANICS (BGM)
+# =================================================================
+func play_track(track_path: String, fade_duration: float = 1.0, force_restart: bool = false) -> void:
+	if current_track_path == track_path and not force_restart:
+		return
+		
+	current_track_path = track_path
+	
+	var old_player = current_player
+	var new_player = player_2 if current_player == player_1 else player_1
+	current_player = new_player
+	
+	var stream_resource = load(track_path)
+	if not stream_resource:
+		print("[AUDIO ERROR] Failed to load audio stream file at: ", track_path)
+		return
+		
+	new_player.stream = stream_resource
+	new_player.volume_db = -60.0
+	new_player.play()
+	
+	var fade_tween = create_tween().set_parallel(true)
+	
+	if old_player.playing:
+		fade_tween.tween_property(old_player, "volume_db", -60.0, fade_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		fade_tween.chain().tween_callback(old_player.stop)
+	
+	fade_tween.tween_property(new_player, "volume_db", 0.0, fade_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+# =================================================================
+# AMBIENCE SOUND EFFECTS CONTROLLER (FADE UP / FADE OUT)
+# =================================================================
+# =================================================================
+# AMBIENCE SOUND EFFECTS CONTROLLER (FADE UP / FADE OUT)
+# =================================================================
+func play_ambience(sfx_key: String, fade_duration: float = 0.5, start_from_sec: float = 0.0) -> void:
+	if not SFX_MAP.has(sfx_key):
+		return
+		
+	if active_ambience_tween:
+		active_ambience_tween.kill()
+		
+	var stream_resource = load(SFX_MAP[sfx_key])
+	if not stream_resource:
+		return
+		
+	ambience_player.stream = stream_resource
+	ambience_player.volume_db = -60.0
+	
+	# --- THE JUMP LOGIC ---
+	# Starts the audio stream tracking at your exact requested timestamp!
+	ambience_player.play(start_from_sec)
+	
+	active_ambience_tween = create_tween()
+	active_ambience_tween.tween_property(ambience_player, "volume_db", 0.0, fade_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	
+func fade_out_ambience(fade_duration: float = 1.0) -> void:
+	if not ambience_player.playing:
+		return
+		
+	if active_ambience_tween:
+		active_ambience_tween.kill()
+		
+	active_ambience_tween = create_tween()
+	active_ambience_tween.tween_property(ambience_player, "volume_db", -60.0, fade_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	active_ambience_tween.chain().tween_callback(ambience_player.stop)
+
+# =================================================================
+# GLOBAL MUSIC HELPERS
+# =================================================================
+func play_menu_music() -> void:
+	play_track(MAIN_MENU_MUSIC, 1.2, false)
+
+func play_chapter_music() -> void:
+	play_track(GENERAL_MUSIC, 1.5, false)
+
+func restart_general_music() -> void:
+	play_track(GENERAL_MUSIC, 1.0, true)
+
+func play_coffee_shop_music() -> void:
+	play_track(COFFEE_SHOP_MUSIC, 1.0, false)
+
+func play_convenience_store_music() -> void:
+	play_track(CONVENIENCE_STORE_MUSIC, 1.0, false)
+
+# =================================================================
+# FIXED SCHOOL BELL CUT MECHANICS
+# =================================================================
+func play_bell_short() -> void:
+	# Instantiate a temporary player dynamically
+	var bell_player = AudioStreamPlayer.new()
+	bell_player.bus = "Master"
+	add_child(bell_player)
+	
+	var stream_resource = load(SFX_MAP["BELL"])
+	if not stream_resource:
+		bell_player.queue_free()
+		return
+		
+	bell_player.stream = stream_resource
+	
+	# Jump straight to the 2-second mark of the audio track
+	bell_player.play(2.0)
+	print("[AUDIO] School bell started at 2.0s timestamp.")
+	
+	# Wait for exactly 2.0 seconds of gameplay time
+	await get_tree().create_timer(2.0).timeout
+	
+	# Verify the node still exists, then cleanly stop and delete it
+	if is_instance_valid(bell_player):
+		bell_player.stop()
+		bell_player.queue_free()
+		print("[AUDIO] School bell hard-stopped at 4.0s mark successfully.")
+		
+# =================================================================
+# AUTOMATED ONE-SHOT SFX ENGINE
+# =================================================================
+func play_sfx(sfx_key: String, start_from_sec: float = 0.0) -> void:
+	if not SFX_MAP.has(sfx_key):
+		return
+		
 	var sfx_player = AudioStreamPlayer.new()
+	sfx_player.bus = "Master"
 	add_child(sfx_player)
 	
-	sfx_player.stream = load(click_sfx_path)
-	sfx_player.volume_db = -5.0
-	sfx_player.play()
+	var stream_resource = load(SFX_MAP[sfx_key])
+	if not stream_resource:
+		sfx_player.queue_free()
+		return
+		
+	sfx_player.stream = stream_resource
+	
+	# Starts the audio stream at your exact requested timestamp!
+	sfx_player.play(start_from_sec)
 	
 	sfx_player.finished.connect(sfx_player.queue_free)
-
-# =========================================
-# MUSIC CONTROL SYSTEM
-# =========================================
-
-# Call this on your Main Menu setup
-func play_menu_music():
-	_change_bgm_track(menu_music_path, -6.0)
-
-# Call this inside your Gameplay Chapter scripts
-func play_chapter_music():
-	_change_bgm_track(general_music_path, -8.0)
-
-# Call this whenever the player enters the coffee shop scene location
-func play_coffeeshop_music():
-	_change_bgm_track(coffeeshop_music_path, -7.0) # Balanced for cozy dialogue ambience
-
-# Internal helper method to handle loading, volume-resetting, and playing tracks safely
-func _change_bgm_track(target_path : String, target_volume : float):
-	# If the requested track is already active and playing, leave it alone
-	if bgm_player.playing and current_track_path == target_path:
-		return
-		
-	var stream = load(target_path)
-	if stream:
-		bgm_player.stop() # Instant cutoff of any old tracking properties
-		bgm_player.stream = stream
-		bgm_player.volume_db = target_volume # RESET volume step from potential previous fade-outs
-		bgm_player.play()
-		current_track_path = target_path
-		print("[AUDIO] Now playing music track: ", target_path.get_file())
-	else:
-		print("[AUDIO ERROR] Track file not found at path: ", target_path)
-
-# Call this if you want to transition out of any scene track using a smooth 1-second fade
-func fade_out_music():
-	if not bgm_player.playing:
-		return
-		
-	print("[AUDIO] Initiating 1-second fade out loop structure...")
-	var fade_tween = create_tween()
-	fade_tween.tween_property(bgm_player, "volume_db", -80.0, 1.0)
-	fade_tween.finished.connect(func():
-		bgm_player.stop()
-		current_track_path = ""
-		print("[AUDIO] Fade out complete. Audio channel parked.")
-	)
+	
+	# =================================================================
+# FORCE STOP MUSIC FUNCTION
+# =================================================================
+func stop_all_music() -> void:
+	print("[AUDIO] Force stopping all background music streams.")
+	if is_instance_valid(player_1):
+		player_1.stop()
+		player_1.volume_db = -60.0
+	if is_instance_valid(player_2):
+		player_2.stop()
+		player_2.volume_db = -60.0
+	current_track_path = "" # Clear the path cache completely!

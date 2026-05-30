@@ -37,9 +37,14 @@ func play_intro(job_name: String, job_salary: int) -> void:
 	
 	var tween_in = create_tween()
 	tween_in.tween_property(notif_control, "modulate:a", 1.0, 1.0)
+	await tween_in.finished 
+	
+	# --- THE PERFECT SYNC POINT ---
+	# The text panel has completed its fade-in transition envelope.
+	# Fire the confirmation ding exactly as the player registers the visual numbers!
+	AudioManager.play_sfx("INCOME")
 	
 	# The main script will wait for this exact moment before adding the money!
-	await tween_in.finished 
 
 
 func play_outro() -> void:

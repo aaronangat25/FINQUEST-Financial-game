@@ -131,8 +131,10 @@ func _on_meal_choice_pressed(choice: String) -> void:
 	GameManager.log_choice("chap3_meal_choice", choice)
 	
 	if choice == "A": 
+		AudioManager.play_sfx("DEDUCT") # Trigger cash deduction feedback audio
 		GameManager.stage_finance_change(0, -90, "Purchased full meal at campus canteen")
 	elif choice == "B": 
+		AudioManager.play_sfx("DEDUCT") # Trigger cash deduction feedback audio
 		GameManager.stage_finance_change(0, -50, "Purchased budget meal at campus canteen")
 	elif choice == "C":
 		GameManager.log_choice("chap3_meal_choice", "C") # Skip Meal (P0 cost)

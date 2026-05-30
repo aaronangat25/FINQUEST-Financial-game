@@ -23,6 +23,9 @@ var active_dialogue_box
 var is_phone_clickable: bool = false
 
 func _ready() -> void:
+	# Keep ambient background music playing smoothly from the tutorial drop
+	AudioManager.play_chapter_music()
+	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
@@ -52,6 +55,8 @@ func _play_end_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini:
+		# Trigger your crisp phone alert ping sound effect
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
@@ -177,13 +182,15 @@ func _on_padlock_pressed() -> void:
 	# =================================================================
 	# STEP 2: GLOBAL BLACKOUT TRANSITION (MAINTAINED OVER SCENE LOADING)
 	# =================================================================
-	# We force the global visual manager overlay to drop down. This guarantees
-	# that the screen stays black even when this scene is destroyed!
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
 	
 	saving_screen.hide()
 	saving_screen.process_mode = PROCESS_MODE_DISABLED
+	
+	# --- GENERAL MUSIC RESTART TIMING ---
+	# Resets GENERAL MUSIC.mp3 back to frame zero for Chapter 2 context
+	AudioManager.restart_general_music()
 	
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:

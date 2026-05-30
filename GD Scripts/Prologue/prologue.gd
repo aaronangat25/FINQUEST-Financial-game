@@ -169,6 +169,7 @@ func _on_line_started(line_data):
 		
 func _on_line_finished(line_data):
 	if line_data.has("add_money"):
+		AudioManager.play_sfx("INCOME")
 		currency_hud.add_money(line_data["add_money"])
 
 func _on_dialogue_finished():
@@ -257,25 +258,27 @@ func show_choice_buttons():
 func _on_rideatrain_pressed():
 	if input_locked: return
 	input_locked = true
+	AudioManager.play_sfx("DEDUCT")
 	currency_hud.add_money(-20)
 	transport_spent += 20 
-	execute_choice_transition(TRAIN_BG)
+	execute_choice_transition(TRAIN_BG, "TRAIN")
 
 func _on_rideabus_pressed():
 	if input_locked: return
 	input_locked = true
+	AudioManager.play_sfx("DEDUCT")
 	currency_hud.add_money(-35)
 	transport_spent += 35
-	execute_choice_transition(BUS_BG)
+	execute_choice_transition(BUS_BG, "BUS")
 
 func _on_walkschool_pressed():
 	if input_locked: return
 	input_locked = true
-	execute_choice_transition(WALK_BG)
+	execute_choice_transition(WALK_BG, "WALK")
 
 # --- THE CINEMATIC CHOICE TRANSITION ---
 
-func execute_choice_transition(new_bg):
+func execute_choice_transition(new_bg, transport_type: String = ""):
 	choices_container.hide()
 	var tween = create_tween()
 	tween.tween_property(jane_big, "modulate:a", 0.0, 0.5)
@@ -285,14 +288,26 @@ func execute_choice_transition(new_bg):
 	await get_tree().create_timer(1.0).timeout
 	await transition_manager.fade_from_black()
 	
+	# Cleanly fade up the loopable environment track channel
+	if transport_type == "TRAIN":
+		AudioManager.play_ambience("TRAIN", 0.5, 11.0)
+	elif transport_type == "BUS":
+		AudioManager.play_ambience("BUS", 0.5)
+	
 	await get_tree().create_timer(2.0).timeout
+	
+	# Smoothly fade out travel sounds before loading the next location
+	AudioManager.fade_out_ambience(1.0)
 	
 	await transition_manager.fade_to_black()
 	background.texture = CLASSROOM_BG
 	await get_tree().create_timer(1.0).timeout
 	await transition_manager.fade_from_black()
 	
-	await get_tree().create_timer(2.0).timeout
+	# --- ADDED: Play the school bell sound effect on school arrival ---
+	AudioManager.play_sfx("BELL", 2.0)
+	
+	await get_tree().create_timer(5.0).timeout
 	
 	await transition_manager.fade_to_black()
 	background.texture = CANTEEN_BG
@@ -314,17 +329,19 @@ func execute_choice_transition(new_bg):
 func _on_siomairice_pressed():
 	if input_locked: return
 	input_locked = true
+	AudioManager.play_sfx("DEDUCT")
 	currency_hud.add_money(-60)
 	lunch_spent += 60 
-	lunch_choice = "siomai" 
+	lunch_choice = "siomai"
 	show_after_lunch_dialogue()
 
 func _on_bread_pressed():
 	if input_locked: return
 	input_locked = true
+	AudioManager.play_sfx("DEDUCT")
 	currency_hud.add_money(-25)
 	lunch_spent += 25
-	lunch_choice = "bread"  
+	lunch_choice = "bread" 
 	show_after_lunch_dialogue()
 
 func show_after_lunch_dialogue():
@@ -349,16 +366,17 @@ func show_after_lunch_dialogue():
 func _on_rideatrain_home_pressed():
 	if input_locked: return
 	input_locked = true
-	currency_hud.add_money(-20) 
+	AudioManager.play_sfx("DEDUCT")
+	currency_hud.add_money(-20)
 	transport_spent += 20
-	execute_going_home_transition(TRAIN_BG)
+	execute_going_home_transition(TRAIN_BG, "TRAIN")
 
 func _on_walktohome_pressed():
 	if input_locked: return
 	input_locked = true
-	execute_going_home_transition(WALK_BG)
+	execute_going_home_transition(WALK_BG, "WALK")
 
-func execute_going_home_transition(transit_bg):
+func execute_going_home_transition(transit_bg, transport_type: String = ""):
 	choices_container3.hide()
 	var tween = create_tween()
 	tween.tween_property(jane_big, "modulate:a", 0.0, 0.5)
@@ -368,7 +386,13 @@ func execute_going_home_transition(transit_bg):
 	await get_tree().create_timer(1.0).timeout
 	await transition_manager.fade_from_black()
 	
+	if transport_type == "TRAIN":
+		AudioManager.play_ambience("TRAIN", 0.5, 11.0)
+	
 	await get_tree().create_timer(2.0).timeout
+	
+	# Smoothly fade out evening transit before heading home
+	AudioManager.fade_out_ambience(1.0)
 	
 	await transition_manager.fade_to_black()
 	background.texture = OUTSIDEDARK_BG
@@ -376,6 +400,8 @@ func execute_going_home_transition(transit_bg):
 	await transition_manager.fade_from_black()
 	
 	current_scene = "evening"
+	
+	AudioManager.play_sfx("NOTIFICATION")
 	
 	var final_money = currency_hud.current_money
 	var evening_text = "OKAY, I STARTED THE DAY WITH P500... NGAYON MERON NALANG AKONG P" + str(final_money)
@@ -421,7 +447,10 @@ func _on_chapter1_btn_pressed():
 	currency_hud.hide() 
 	
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	# --- FIXED: Force the sandbox cache to clean balances BEFORE saving progress!
+=======
+>>>>>>> Stashed changes
 	GameManager.flush_buffer_to_database()
 	
 	saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
@@ -447,7 +476,10 @@ func _on_main_menu_btn_pressed():
 	currency_hud.hide()
 	
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	# --- FIXED: Wipes tutorial cash records safely on menu drop exit
+=======
+>>>>>>> Stashed changes
 	GameManager.flush_buffer_to_database()
 	
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"

@@ -114,6 +114,8 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
+		# Trigger the smartphone text alert notification sound ring cleanly
+		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
@@ -199,6 +201,8 @@ func _on_sis_pressed() -> void:
 		var sis_tex_btn = active_phone_screen_4.find_child("SISbuttexturebutton", true, false)
 		
 		if warning_panel and not warning_panel.visible:
+			# Trigger the error buzzer audio feedback since the site access is locked
+			AudioManager.play_sfx("ERROR")
 			warning_panel.show()
 			
 			if contacts_btn: contacts_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE

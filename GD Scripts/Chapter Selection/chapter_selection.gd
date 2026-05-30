@@ -159,6 +159,8 @@ func _on_back_arrow_pressed():
 # MAIN PLAY ACTION ROUTING
 # =========================================
 func _on_play_btn_pressed():
+	
+	AudioManager.stop_all_music()
 	var target_db_chapter_number = current_view_index
 
 	# PREVENT ACCIDENTAL CLICKS ON LOCKED OR FINISHED LEVELS
