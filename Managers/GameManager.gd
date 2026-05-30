@@ -114,16 +114,11 @@ func set_current_scene(scene_name : String):
 # =========================================
 func complete_current_chapter(grade : float):
 	# FORCE STABLE FLOATING POINT CONSTRAINTS
-	# Explicitly wrapping the parameter inside float() prevents SQLite columns
-	# from truncating your '1.50' values down into broken '0.50' structures!
 	var protected_grade : float = float(grade)
-	# If this is the first graded chapter (Chapter 2 / index 3 in your system tracker),
-	# or if grades haven't been recorded yet, set the baseline.
 	if grades == 0.0:
 		grades = protected_grade
 		print("[GRADE TRACKER] First grade recorded: ", grades)
 	else:
-		# If a grade already exists (like from Chapter 2), calculate the running average!
 		var old_grade = grades
 		grades = (old_grade + protected_grade) / 2.0
 		print("[GRADE TRACKER] Running Average Calculated! Old: ", old_grade, " | New: ", protected_grade, " | Average: ", grades)
@@ -151,7 +146,6 @@ func stage_finance_change(bank_delta: int, pocket_delta: int, description: Strin
 	buffered_on_hand_change += pocket_delta
 	current_chapter_description = description
 	
-	# Update localized visual runtime trackers dynamically for level feedback
 	bank_cash += bank_delta
 	on_hand_cash += pocket_delta
 	print("[BUFFER FINANCE] Bank Change: ₱", bank_delta, " | Pocket Change: ₱", pocket_delta)
@@ -180,16 +174,12 @@ func log_choice(choice_key: String, option_letter: String) -> void:
 func flush_buffer_to_database() -> void:
 	print("[DATABASE SAVE] Chapter ", current_chapter, " complete! Processing settlement...")
 	
-	# 1. ALWAYS write the narrative choices permanently to SQLite
 	for choice in buffered_choices:
 		DatabaseManager.db.query_with_bindings("""
 			INSERT INTO player_choices (player_id, chapter_number, scene_key, choice_key, choice_value, effect_summary)
 			VALUES (?, ?, ?, ?, ?, ?);
 		""", [choice["player_id"], choice["chapter_number"], choice["scene_key"], choice["choice_key"], choice["choice_value"], ""])
 	
-	# 2. PROLOGUE SANDBOX RULE ONLY
-	# FIXED: Remove 'or current_chapter == 2'. Only the Prologue (Index 1) resets to base.
-	# Chapter 1 (Index 2) needs to save its actual ending cash and log transactions!
 	if current_chapter == 1:
 		print("[DATABASE SAVE] Prologue sandbox complete. Hardwriting ₱3,000 bank and ₱0 pocket balances to row cells...")
 		bank_cash = 3000
@@ -201,27 +191,22 @@ func flush_buffer_to_database() -> void:
 			WHERE player_id = ?;
 		""", [player_id])
 	
-	# 3. STANDARD PLAYTHROUGH (Chapter 1 / Index 2 and onwards now processes here!)
 	else:
-		# Calculate actual transaction adjustments using the active buffer registers
 		var net_change = buffered_bank_change + buffered_on_hand_change
 		if net_change > 0:
 			total_income += net_change
 		else:
 			total_expenses += abs(net_change)
 			
-		# Log the bank app transactions to your SQLite table cleanly
 		if buffered_bank_change != 0:
 			DatabaseManager.add_transaction(player_id, current_chapter, "BANK_SETTLEMENT", buffered_bank_change, current_chapter_description)
 			
-		# Update the true wallet balances directly into your player_stats columns
 		DatabaseManager.db.query_with_bindings("""
 			UPDATE player_stats
 			SET bank_cash = ?, on_hand_cash = ?, total_income = ?, total_expenses = ?
 			WHERE player_id = ?;
 		""", [bank_cash, on_hand_cash, total_income, total_expenses, player_id])
 	
-	# 4. Wipe staging cache buffers clean
 	clear_temporary_buffer()
 	print("[DATABASE SAVE] Chapter flush sequence complete.")
 
@@ -233,9 +218,6 @@ func clear_temporary_buffer() -> void:
 	buffered_on_hand_change = 0
 	current_chapter_description = ""
 	
-	# --- THE MASTER RESET FIX ---
-	# If the user is in either the Prologue (1) or Chapter 1 (2), 
-	# hard-wipe the running memory variables back to pristine sandbox baselines!
 	if current_chapter == 1 or current_chapter == 2:
 		bank_cash = 3000
 		on_hand_cash = 0
@@ -271,12 +253,12 @@ func get_grade_history() -> Array:
 	return DatabaseManager.db.query_result
 
 # =================================================================
-# PRODUCTION GRADE RESTART RESYNCHRONIZATION INJECTOR
+# PRODUCTION GRADE RESTART RESYNCHRONIZATION INJECTOR (FIXED TABLES)
 # =================================================================
 func execute_production_factory_reset() -> void:
-	print("[GAME MANAGER] Wiping internal active RAM variable cache matrices...")
+	print("[GAME MANAGER] Performing absolute database and memory purge...")
 	
-	# 1. Reset baseline account configuration stats immediately inside running memory
+	# 1. Reset baseline account configuration stats inside running memory (RAM)
 	bank_cash = 3000
 	on_hand_cash = 0
 	financial_wisdom_points = 0
@@ -292,7 +274,26 @@ func execute_production_factory_reset() -> void:
 	buffered_on_hand_change = 0
 	current_chapter_description = ""
 	
-	# 3. Synchronize your active player stats columns directly down to the SQLite file
+	# 3. CLEAR ALL NARRATIVE DECISIONS FROM SQLITE
+	DatabaseManager.db.query_with_bindings("""
+		DELETE FROM player_choices WHERE player_id = ?;
+	""", [player_id])
+	
+	# 4. FIXED: Clear bank app ledger history using your exact table name: 'transactions'
+	DatabaseManager.db.query_with_bindings("""
+		DELETE FROM transactions WHERE player_id = ?;
+	""", [player_id])
+	
+	# 5. CLEAR MINIGAME AND ACHIEVEMENT TRACKERS FOR A TRUE FRESH RUN
+	DatabaseManager.db.query_with_bindings("""
+		DELETE FROM player_achievements WHERE player_id = ?;
+	""", [player_id])
+	
+	DatabaseManager.db.query_with_bindings("""
+		DELETE FROM minigame_progress WHERE player_id = ?;
+	""", [player_id])
+	
+	# 6. Synchronize your active player stats columns back to baseline settings
 	DatabaseManager.db.query_with_bindings("""
 		UPDATE player_stats
 		SET bank_cash = 3000, 
@@ -305,4 +306,4 @@ func execute_production_factory_reset() -> void:
 		WHERE player_id = ?;
 	""", [player_id])
 	
-	print("[GAME MANAGER] SQLite player_stats row accounts safely restored to baseline tutorial settings.")
+	print("[GAME MANAGER] All player choices, transactions, achievements, and stats completely purged.")
