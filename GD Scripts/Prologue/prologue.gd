@@ -64,33 +64,32 @@ const CHAPTER_1_SCENE = "res://Scenes/Chapter 1/chapter_1.tscn"
 
 
 func _ready():
-<<<<<<< Updated upstream
-=======
+
 	# --- AUDIO INITIALIZATION ---
->>>>>>> Stashed changes
+
 	AudioManager.play_chapter_music() # Fires up GENERAL MUSIC.mp3 immediately!
 	
 	input_locked = true # Lock inputs during the opening animation!
 	
-<<<<<<< Updated upstream
+
 	stats_screen.hide()
 	stats_screen.modulate.a = 0.0
-=======
+
 	# --- HIS CRITICAL ANTI-BLINK FIXES ---
 	# Forcefully hide everything on frame initialization so they don't blink on reload
 	if is_instance_valid(stats_screen):
 		stats_screen.hide()
 		stats_screen.modulate.a = 0.0
->>>>>>> Stashed changes
+
 	
 	choices_container.hide()
 	choices_container2.hide()
 	choices_container2.modulate.a = 0.0 
 	
-<<<<<<< Updated upstream
+
 	choices_container3.hide()
 	choices_container3.modulate.a = 0.0
-=======
+
 	if is_instance_valid(choices_container3):
 		choices_container3.hide()
 		choices_container3.modulate.a = 0.0
@@ -108,7 +107,7 @@ func _ready():
 	# Cleanly clear away the curtain layer smoothly
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
->>>>>>> Stashed changes
+
 	
 	dialogue_box.line_started.connect(_on_line_started)
 	dialogue_box.line_finished.connect(_on_line_finished) 
@@ -124,16 +123,16 @@ func _ready():
 	rideatrain_btn1.pressed.connect(_on_rideatrain_home_pressed)
 	walktohome_btn.pressed.connect(_on_walktohome_pressed)
 	
-<<<<<<< Updated upstream
+
 	#chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
 	main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
-=======
+
 	# Connect your navigation buttons cleanly
 	if chapter1_btn and not chapter1_btn.pressed.is_connected(_on_chapter1_btn_pressed):
 		chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
 	if main_menu_btn and not main_menu_btn.pressed.is_connected(_on_main_menu_btn_pressed):
 		main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
->>>>>>> Stashed changes
+
 		
 	var breakfast_sequence = [
 		{"speaker": "", "text": "The sun is rising."},
@@ -446,22 +445,20 @@ func _on_chapter1_btn_pressed():
 	stats_screen.hide()
 	currency_hud.hide() 
 	
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 	# --- FIXED: Force the sandbox cache to clean balances BEFORE saving progress!
-=======
->>>>>>> Stashed changes
+
 	GameManager.flush_buffer_to_database()
 	
 	saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
-=======
+
 	GameManager.flush_buffer_to_database()
 	
 	if is_instance_valid(saving_screen) and saving_screen.has_method("trigger_save_sequence"):
 		saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
 	else:
 		TransitionManager.transition_to(CHAPTER_1_SCENE, "CHAPTER 1")
->>>>>>> Stashed changes
+
 
 # =========================================
 # SAVE PROGRESS AND EXIT TO MAIN MENU BUTTON
@@ -475,21 +472,18 @@ func _on_main_menu_btn_pressed():
 	stats_screen.hide()
 	currency_hud.hide()
 	
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 	# --- FIXED: Wipes tutorial cash records safely on menu drop exit
-=======
->>>>>>> Stashed changes
+
 	GameManager.flush_buffer_to_database()
 	
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
 	saving_screen.trigger_save_sequence(main_screen_path)
-=======
+
 	GameManager.flush_buffer_to_database()
 	
-	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
+	#var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
 	if is_instance_valid(saving_screen) and saving_screen.has_method("trigger_save_sequence"):
 		saving_screen.trigger_save_sequence(main_screen_path)
 	else:
 		TransitionManager.transition_to(main_screen_path)
->>>>>>> Stashed changes
