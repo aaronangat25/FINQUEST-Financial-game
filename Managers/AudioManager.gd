@@ -7,7 +7,6 @@ const COFFEE_SHOP_MUSIC = "res://Assets/Audio/Music/COFFEE SHOP POSSBLE 3.mp3"
 const CONVENIENCE_STORE_MUSIC = "res://Assets/Audio/Music/Convenience Store and supermarket.mp3"
 
 # --- NEW TRACK INTEGRATION ---
-# Dedicated heavy atmosphere soundtrack for dark path evaluations
 const BAD_ENDING_MUSIC = "res://Assets/Audio/Music/For bad endings.mp3"
 
 # --- SOUND EFFECT PATHS (SFX Inventory) ---
@@ -31,7 +30,7 @@ var player_2 : AudioStreamPlayer
 var current_player : AudioStreamPlayer
 var current_track_path : String = ""
 
-# Dedicated channel for loopable environment details (Bus, Train, etc.)
+# Dedicated channel for loopable environment details
 var ambience_player : AudioStreamPlayer
 var active_ambience_tween : Tween
 
@@ -43,13 +42,16 @@ func _ready() -> void:
 	player_2 = AudioStreamPlayer.new()
 	add_child(player_1)
 	add_child(player_2)
-	player_1.bus = "Master"
-	player_2.bus = "Master"
+	
+	# --- FIXED ROUTING: Redirect Music to the Music Bus ---
+	player_1.bus = "Music"
+	player_2.bus = "Music"
 	current_player = player_1
 
 	# Initialize ambience channel
 	ambience_player = AudioStreamPlayer.new()
-	ambience_player.bus = "Master"
+	# --- FIXED ROUTING: Ambience counts as SFX/Environment ---
+	ambience_player.bus = "SFX"
 	add_child(ambience_player)
 
 	# Global interaction hooks
@@ -123,8 +125,6 @@ func play_ambience(sfx_key: String, fade_duration: float = 0.5, start_from_sec: 
 	ambience_player.stream = stream_resource
 	ambience_player.volume_db = -60.0
 	
-	# --- THE JUMP LOGIC ---
-	# Starts the audio stream tracking at your exact requested timestamp!
 	ambience_player.play(start_from_sec)
 	
 	active_ambience_tween = create_tween()
@@ -160,16 +160,15 @@ func play_convenience_store_music() -> void:
 	play_track(CONVENIENCE_STORE_MUSIC, 1.0, false)
 
 func play_bad_ending_music() -> void:
-	# Cross-fades seamlessly over into your brand new tragic theme layout map
 	play_track(BAD_ENDING_MUSIC, 1.0, false)
 
 # =================================================================
 # FIXED SCHOOL BELL CUT MECHANICS
 # =================================================================
 func play_bell_short() -> void:
-	# Instantiate a temporary player dynamically
 	var bell_player = AudioStreamPlayer.new()
-	bell_player.bus = "Master"
+	# --- FIXED ROUTING: Redirect Bell to SFX Bus ---
+	bell_player.bus = "SFX"
 	add_child(bell_player)
 	
 	var stream_resource = load(SFX_MAP["BELL"])
@@ -178,19 +177,13 @@ func play_bell_short() -> void:
 		return
 		
 	bell_player.stream = stream_resource
-	
-	# Jump straight to the 2-second mark of the audio track
 	bell_player.play(2.0)
-	print("[AUDIO] School bell started at 2.0s timestamp.")
 	
-	# Wait for exactly 2.0 seconds of gameplay time
 	await get_tree().create_timer(2.0).timeout
 	
-	# Verify the node still exists, then cleanly stop and delete it
 	if is_instance_valid(bell_player):
 		bell_player.stop()
 		bell_player.queue_free()
-		print("[AUDIO] School bell hard-stopped at 4.0s mark successfully.")
 		
 # =================================================================
 # AUTOMATED ONE-SHOT SFX ENGINE & LOOP TRACKER
@@ -202,7 +195,8 @@ func play_sfx(sfx_key: String, start_from_sec: float = 0.0) -> void:
 		return
 		
 	var sfx_player = AudioStreamPlayer.new()
-	sfx_player.bus = "Master"
+	# --- FIXED ROUTING: Redirect One-Shot SFX to SFX Bus ---
+	sfx_player.bus = "SFX"
 	add_child(sfx_player)
 	
 	var stream_resource = load(SFX_MAP[sfx_key])
@@ -212,18 +206,14 @@ func play_sfx(sfx_key: String, start_from_sec: float = 0.0) -> void:
 		
 	sfx_player.stream = stream_resource
 	
-	# Handle specific looping rule conditioning for the ringtone
 	if sfx_key == "PHONE_RING":
 		if sfx_player.stream is AudioStreamMP3:
 			sfx_player.stream.loop = true
 		active_looping_sfx[sfx_key] = sfx_player
 	else:
-		# Only auto-free non-looping sounds when finished
 		sfx_player.finished.connect(sfx_player.queue_free)
 		
-	# Starts the audio stream at your exact requested timestamp!
 	sfx_player.play(start_from_sec)
-
 
 # =================================================================
 # SPECIFIC SFX STOP TRIGGER
@@ -236,18 +226,13 @@ func stop_sfx(sfx_key: String) -> void:
 			player.queue_free()
 		active_looping_sfx.erase(sfx_key)
 
-
 # =================================================================
 # FORCE STOP MUSIC FUNCTION
 # =================================================================
 func stop_all_music() -> void:
-	print("[AUDIO] Force stopping all background music and active ring loops.")
-	
-	# Safely clear the active phone ring loop if it's currently running
 	if active_looping_sfx.has("PHONE_RING"):
 		stop_sfx("PHONE_RING")
 		
-	# Clean up standard background player channels
 	if is_instance_valid(player_1):
 		player_1.stop()
 		player_1.volume_db = -60.0
@@ -255,4 +240,4 @@ func stop_all_music() -> void:
 		player_2.stop()
 		player_2.volume_db = -60.0
 		
-	current_track_path = "" # Clear the path cache completely!
+	current_track_path = ""

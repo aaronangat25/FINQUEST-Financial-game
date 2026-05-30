@@ -1,0 +1,96 @@
+[gd_scene load_steps=5 format=3 uid="uid://cmxre5lotqiim"]
+
+[ext_resource type="Script" uid="uid://c387tlgm2beq1" path="res://Scenes/Main Screen/option.gd" id="1_bpd42"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_lbu4m"]
+[ext_resource type="Theme" uid="uid://c5dfohr52go08" path="res://Assets/Buttons/chapter_selection_btn.tres" id="3_oj3xb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lv8s7"]
+bg_color = Color(1, 0.87058824, 0.34901962, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.5764706, 0.34901962, 1)
+border_blend = true
+
+[node name="Option" type="CanvasLayer"]
+script = ExtResource("1_bpd42")
+
+[node name="OptionPanel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = -47.25
+offset_right = 35.5
+offset_bottom = 47.25
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lv8s7")
+
+[node name="SFXLabel" type="Label" parent="OptionPanel"]
+layout_mode = 0
+offset_left = 7.5
+offset_top = 46.25
+offset_right = 22.5
+offset_bottom = 56.25
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_lbu4m")
+theme_override_font_sizes/font_size = 10
+text = "SFX"
+
+[node name="MusicLabel" type="Label" parent="OptionPanel"]
+layout_mode = 0
+offset_left = 6.5
+offset_top = 16.25
+offset_right = 56.5
+offset_bottom = 39.25
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_lbu4m")
+theme_override_font_sizes/font_size = 8
+text = "Background
+Music"
+
+[node name="SFXToggle" type="CheckBox" parent="OptionPanel"]
+custom_minimum_size = Vector2(10, 5)
+layout_mode = 0
+offset_left = 45.5
+offset_top = 42.25
+offset_right = 69.5
+offset_bottom = 66.25
+focus_behavior_recursive = 1
+theme_override_font_sizes/font_size = 10
+
+[node name="MusicToggle" type="CheckBox" parent="OptionPanel"]
+custom_minimum_size = Vector2(10, 5)
+layout_mode = 0
+offset_left = 45.5
+offset_top = 12.25
+offset_right = 69.5
+offset_bottom = 36.25
+focus_behavior_recursive = 1
+theme_override_font_sizes/font_size = 10
+
+[node name="close_container" type="VBoxContainer" parent="OptionPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.786
+anchor_right = 0.51600003
+anchor_bottom = 0.79
+offset_left = -21.0
+offset_top = 12.973
+offset_right = 21.559998
+offset_bottom = 26.437035
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="CloseBtn" type="Button" parent="OptionPanel/close_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_oj3xb")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "close"
+autowrap_mode = 2
