@@ -16,6 +16,7 @@ const THUMB_ENDING = "res://Assets/Backgrounds/Chapter Selection/endingthumbnail
 # =========================================
 # NODE PATHS MATCHING YOUR EXACT TREE
 # =========================================
+@onready var back_menu_btn : Button = $chapter_selection_bg/back_menu_btn
 @onready var chapter_thumbnail : Panel = $chapter_selection_bg/chapter_container/chapter_thumbnail
 @onready var chapter_label : Label = $chapter_selection_bg/chapter_container/chapter_thumbnail/chapter_label
 @onready var play_btn : Button = $chapter_selection_bg/play_container/play_btn
@@ -33,6 +34,10 @@ func _ready():
 	back_arrow.pressed.connect(_on_back_arrow_pressed)
 	if play_btn:
 		play_btn.pressed.connect(_on_play_btn_pressed)
+	
+	# Connect the new back to menu navigation asset safely
+	if back_menu_btn:
+		back_menu_btn.pressed.connect(_on_back_menu_btn_pressed)
 	
 	update_selection_ui()
 
@@ -154,6 +159,16 @@ func _on_back_arrow_pressed():
 	if current_view_index > 1:
 		current_view_index -= 1
 		update_selection_ui()
+
+# =========================================
+# MENU NAVIGATION ACTION (KEEP MUSIC ALIVE)
+# =========================================
+func _on_back_menu_btn_pressed():
+	print("[SYSTEM] Returning to Main Menu. Keeping background streams looping smoothly.")
+	
+	# Directly change the scene context to the main screen layout.
+	# By bypassing AudioManager.stop_all_music(), your exploration theme stays persistent.
+	get_tree().change_scene_to_file("res://Scenes/Main Screen/main_screen.tscn")
 
 # =========================================
 # MAIN PLAY ACTION ROUTING
