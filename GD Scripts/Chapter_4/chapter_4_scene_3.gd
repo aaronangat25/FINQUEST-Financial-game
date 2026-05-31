@@ -9,8 +9,6 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var stat_screen = $StatsScreen
 
-
-
 # Using find_child grabs if deep inside Panels
 @onready var meeting_label = stat_screen.find_child("MeetingResultLabel", true, false)
 @onready var printing_label = stat_screen.find_child("PrintingLabel", true, false)
@@ -111,9 +109,12 @@ func _calculate_and_show_results() -> void:
 	var end_grade = 1.25
 	if meeting == "A" and printing == "A":
 		end_grade = 1.0
-		final_feedback = "RESULT: OUTSTANDING DEFENSE (1.0)"
+		final_feedback = "RESULT: OUTSTANDING DEFENSE (1.00)"
 		jane_reaction = "Worth it lahat ng pagod… napasa ko!"
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
+		
+		# 🏅 ACHIEVEMENT INTEGRATION: Pop the notification instantly when a perfect grade is reached
+		GameManager.unlock_achievement("MAGNA_CUM_BUDGET")
 		
 	elif printing == "C":
 		end_grade = 1.50
