@@ -5,8 +5,6 @@ const MAIN_MENU_MUSIC = "res://Assets/Audio/Music/FINQUEST MAIN MENU.mp3"
 const GENERAL_MUSIC = "res://Assets/Audio/Music/GENERAL MUSIC.mp3"
 const COFFEE_SHOP_MUSIC = "res://Assets/Audio/Music/COFFEE SHOP POSSBLE 3.mp3"
 const CONVENIENCE_STORE_MUSIC = "res://Assets/Audio/Music/Convenience Store and supermarket.mp3"
-
-# --- NEW TRACK INTEGRATION ---
 const BAD_ENDING_MUSIC = "res://Assets/Audio/Music/For bad endings.mp3"
 
 # --- SOUND EFFECT PATHS (SFX Inventory) ---

@@ -18,6 +18,7 @@ var is_phone_clickable: bool = false
 var click_blocked_by_timer: bool = false
 
 func _ready() -> void:
+	AudioManager.play_bad_ending_music()
 	# 1. Initialize everything to invisible so they don't blink on scene start
 	if jane_big:
 		jane_big.hide()

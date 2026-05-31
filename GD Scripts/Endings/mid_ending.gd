@@ -10,6 +10,8 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 var active_dialogue_box
 
 func _ready() -> void:
+	
+	AudioManager.play_chapter_music()
 	# 1. Start completely invisible via native node settings
 	if jane_office:
 		jane_office.hide()
@@ -79,23 +81,24 @@ func _play_mid_ending_sequence() -> void:
 		box_visual.modulate.a = 0.0
 		var t_box_in = create_tween()
 		t_box_in.tween_property(box_visual, "modulate:a", 1.0, 1.0)
-		await t_box_in.finished # Wait until dialogue box is completely visible
+		await t_box_in.finished
 		
 	# =========================================================
 	# === SEQUENTIAL RULE STEP 2: CHARACTER LAYOUTS FADE IN SAME TIMING ===
 	# =========================================================
-	# We call their built-in appear functions simultaneously!
 	if jane_office:
 		jane_office.show()
-		jane_office.appear("idle", false) # This safely handles its own internal 0.5s fade-in and plays "idle"!
+		jane_office.appear("idle", false)
 	
 	if jen_dialogue:
 		jen_dialogue.show()
 		if jen_dialogue.has_method("appear"):
-			jen_dialogue.appear("idle", false) # This safely handles its own internal fade-in and plays "idle"!
+			jen_dialogue.appear("idle", false)
 			
-	# Give them a brief moment to finish their built-in 0.5 second animations cleanly
 	await get_tree().create_timer(0.5).timeout
+
+	# 🏅 ACHIEVEMENT INTEGRATION: Pop the correct database key for the Corporate Ladder Climber Ending!
+	GameManager.unlock_achievement("MID_ENDING")
 
 	# Present dialogue lines
 	var dialogue_data = [
@@ -110,14 +113,12 @@ func _play_mid_ending_sequence() -> void:
 	# =========================================================
 	# === SEQUENTIAL RULE STEP 3: CHARACTER LAYOUTS FADE OUT FIRST ===
 	# =========================================================
-	# Use their built-in exit functions to fade them out smoothly at the same time
 	if jane_office and jane_office.has_method("exit"):
 		jane_office.exit(true)
 		
 	if jen_dialogue and jen_dialogue.has_method("exit"):
 		jen_dialogue.exit(true)
 		
-	# Wait for their internal exit fades (0.5 seconds) to finish cleanly
 	await get_tree().create_timer(0.5).timeout
 	
 	if jen_dialogue: jen_dialogue.hide()
@@ -129,7 +130,7 @@ func _play_mid_ending_sequence() -> void:
 	if box_visual:
 		var t_box_out = create_tween()
 		t_box_out.tween_property(box_visual, "modulate:a", 0.0, 1.0)
-		await t_box_out.finished # Wait until dialogue box is completely hidden
+		await t_box_out.finished
 		
 	active_dialogue_box.queue_free()
 	
@@ -147,7 +148,6 @@ func _play_mid_ending_sequence() -> void:
 		active_dialogue_box.show()
 		box_visual.modulate.a = 1.0
 		
-	# Completely hide Name Labels panels to style it as narration
 	var name_panel = active_dialogue_box.find_child("Panel", true, false)
 	var name_label = active_dialogue_box.find_child("NameLabel", true, false)
 	if name_panel: name_panel.hide(); name_panel.modulate.a = 0.0
@@ -160,7 +160,6 @@ func _play_mid_ending_sequence() -> void:
 	active_dialogue_box.start_dialogue(final_narration)
 	await active_dialogue_box.dialogue_finished
 	
-	# Fade out narration box view
 	if box_visual:
 		var t_box_final = create_tween()
 		t_box_final.tween_property(box_visual, "modulate:a", 0.0, 1.0)
@@ -173,5 +172,8 @@ func _play_mid_ending_sequence() -> void:
 	# 9. Fade into black overlay screen and switch over to game_end_choice.tscn
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
+		
+	# 💾 DATABASE FLUSH: Securely saves the unlocked "MID_ENDING" achievement data to the SQLite backend
+	GameManager.flush_buffer_to_database()
 		
 	get_tree().change_scene_to_file("res://Scenes/Game End/game_end_cholce.tscn")
