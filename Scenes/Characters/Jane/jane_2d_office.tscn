@@ -1,0 +1,181 @@
+[gd_scene load_steps=43 format=3 uid="uid://ciehi6n7s3i7b"]
+
+[ext_resource type="Script" uid="uid://booh5cxa0l8fj" path="res://GD Scripts/Characters/jane2d/jane_2d_office.gd" id="1_fhujm"]
+[ext_resource type="Texture2D" uid="uid://fyonnylgqkxg" path="res://Assets/Characters/Jane/Jane office/sprite_00.png" id="1_jna21"]
+[ext_resource type="Texture2D" uid="uid://1wr58b3c2ouq" path="res://Assets/Characters/Jane/Jane office/sprite_01.png" id="2_fhujm"]
+[ext_resource type="Texture2D" uid="uid://673tt4nfyc67" path="res://Assets/Characters/Jane/Jane office/sprite_02.png" id="3_vtnm7"]
+[ext_resource type="Texture2D" uid="uid://jl6x70gh211i" path="res://Assets/Characters/Jane/Jane office/sprite_03.png" id="4_iy80j"]
+[ext_resource type="Texture2D" uid="uid://dqif7ir8eby7j" path="res://Assets/Characters/Jane/Jane office/sprite_04.png" id="5_s31nb"]
+[ext_resource type="Texture2D" uid="uid://ksa46bgaojef" path="res://Assets/Characters/Jane/Jane office/sprite_05.png" id="6_qd8op"]
+[ext_resource type="Texture2D" uid="uid://7dj2vvdtb327" path="res://Assets/Characters/Jane/Jane office/sprite_06.png" id="7_lfhnw"]
+[ext_resource type="Texture2D" uid="uid://br0n442rbxrl6" path="res://Assets/Characters/Jane/Jane office/sprite_07.png" id="8_2fafe"]
+[ext_resource type="Texture2D" uid="uid://cj5abvnghjteh" path="res://Assets/Characters/Jane/Jane office/sprite_08.png" id="9_fk0gn"]
+[ext_resource type="Texture2D" uid="uid://bkicyuwhxd45w" path="res://Assets/Characters/Jane/Jane office/sprite_09.png" id="10_btx3t"]
+[ext_resource type="Texture2D" uid="uid://cmv76leftfmnt" path="res://Assets/Characters/Jane/Jane office/sprite_10.png" id="11_t4nfp"]
+[ext_resource type="Texture2D" uid="uid://ctj04s8jjmiqi" path="res://Assets/Characters/Jane/Jane office/sprite_11.png" id="12_2mit4"]
+[ext_resource type="Texture2D" uid="uid://berq05n74fbmv" path="res://Assets/Characters/Jane/Jane office/sprite_12.png" id="13_6t7cl"]
+[ext_resource type="Texture2D" uid="uid://bjcmdmtmnlm3s" path="res://Assets/Characters/Jane/Jane office/sprite_13.png" id="14_6ag1r"]
+[ext_resource type="Texture2D" uid="uid://dpmpd3lp5jj4e" path="res://Assets/Characters/Jane/Jane office/sprite_14.png" id="15_h83r6"]
+[ext_resource type="Texture2D" uid="uid://bn7ucx534kwvm" path="res://Assets/Characters/Jane/Jane office/sprite_15.png" id="16_f8puh"]
+[ext_resource type="Texture2D" uid="uid://hs1rw60jm5f" path="res://Assets/Characters/Jane/Jane office/sprite_16.png" id="17_tm5o5"]
+[ext_resource type="Texture2D" uid="uid://b5cvu4frhsln6" path="res://Assets/Characters/Jane/Jane office/sprite_17.png" id="18_g8p2j"]
+[ext_resource type="Texture2D" uid="uid://dxfxy3agw414w" path="res://Assets/Characters/Jane/Jane office/sprite_18.png" id="19_o53f8"]
+[ext_resource type="Texture2D" uid="uid://cgi3ygq40eldq" path="res://Assets/Characters/Jane/Jane office/sprite_19.png" id="20_68avs"]
+[ext_resource type="Texture2D" uid="uid://dwu4r0mw85v1b" path="res://Assets/Characters/Jane/Jane office/sprite_20.png" id="21_h5tei"]
+[ext_resource type="Texture2D" uid="uid://esuic2nw6tjh" path="res://Assets/Characters/Jane/Jane office/sprite_21.png" id="22_sw4ft"]
+[ext_resource type="Texture2D" uid="uid://bbkn4lo1r4r0t" path="res://Assets/Characters/Jane/Jane office/sprite_22.png" id="23_uqaja"]
+[ext_resource type="Texture2D" uid="uid://b7ynu7sgx6cii" path="res://Assets/Characters/Jane/Jane office/sprite_23.png" id="24_vq131"]
+[ext_resource type="Texture2D" uid="uid://diu8sep4ebfv" path="res://Assets/Characters/Jane/Jane office/sprite_24.png" id="25_5aa5q"]
+[ext_resource type="Texture2D" uid="uid://l4j46wkuss08" path="res://Assets/Characters/Jane/Jane office/sprite_25.png" id="26_81v1l"]
+[ext_resource type="Texture2D" uid="uid://b2fu0npp2syas" path="res://Assets/Characters/Jane/Jane office/sprite_26.png" id="27_nyp7g"]
+[ext_resource type="Texture2D" uid="uid://bb74fe2rkm8ue" path="res://Assets/Characters/Jane/Jane office/sprite_27.png" id="28_lowqv"]
+[ext_resource type="Texture2D" uid="uid://kyacpp05brnf" path="res://Assets/Characters/Jane/Jane office/sprite_28.png" id="29_10k1c"]
+[ext_resource type="Texture2D" uid="uid://x6hurfc5cios" path="res://Assets/Characters/Jane/Jane office/sprite_29.png" id="30_wr11p"]
+[ext_resource type="Texture2D" uid="uid://bo2xbuilkxks0" path="res://Assets/Characters/Jane/Jane office/sprite_30.png" id="31_45qss"]
+[ext_resource type="Texture2D" uid="uid://hygchg0hoicb" path="res://Assets/Characters/Jane/Jane office/sprite_31.png" id="32_kmpwh"]
+[ext_resource type="Texture2D" uid="uid://cfnl3st3odhay" path="res://Assets/Characters/Jane/Jane office/sprite_32.png" id="33_qbs7y"]
+[ext_resource type="Texture2D" uid="uid://xxy0kk4gnehq" path="res://Assets/Characters/Jane/Jane office/sprite_33.png" id="34_f8vdo"]
+[ext_resource type="Texture2D" uid="uid://cntqlesmire7b" path="res://Assets/Characters/Jane/Jane office/sprite_34.png" id="35_lcdeh"]
+[ext_resource type="Texture2D" uid="uid://clr66svh05p5i" path="res://Assets/Characters/Jane/Jane office/sprite_35.png" id="36_ogjtg"]
+[ext_resource type="Texture2D" uid="uid://d1usobthxdrdi" path="res://Assets/Characters/Jane/Jane office/sprite_36.png" id="37_gn3jf"]
+[ext_resource type="Texture2D" uid="uid://dkg8yq35uqay1" path="res://Assets/Characters/Jane/Jane office/sprite_37.png" id="38_ihmsd"]
+[ext_resource type="Texture2D" uid="uid://dl3msewapamea" path="res://Assets/Characters/Jane/Jane office/sprite_38.png" id="39_rqxox"]
+[ext_resource type="Texture2D" uid="uid://ck13hpseu3706" path="res://Assets/Characters/Jane/Jane office/sprite_39.png" id="40_uw0xm"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5u7qe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jna21")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_fhujm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_vtnm7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_iy80j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_s31nb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_qd8op")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_lfhnw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_2fafe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_fk0gn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_btx3t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_t4nfp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_2mit4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_6t7cl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_6ag1r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_h83r6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_f8puh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_tm5o5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_g8p2j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_o53f8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_68avs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_h5tei")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_sw4ft")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_uqaja")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_vq131")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_5aa5q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_81v1l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_nyp7g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_lowqv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_10k1c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_wr11p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_45qss")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_kmpwh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_qbs7y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_f8vdo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_lcdeh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_ogjtg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_gn3jf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_ihmsd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_rqxox")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_uw0xm")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 25.0
+}]
+
+[node name="jane2d_office" type="Node2D"]
+script = ExtResource("1_fhujm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(24.000002, 15)
+scale = Vector2(0.034919433, 0.037067525)
+sprite_frames = SubResource("SpriteFrames_5u7qe")
+animation = &"idle"
+frame_progress = 0.94179744

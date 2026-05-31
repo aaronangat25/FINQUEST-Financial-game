@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=3 uid="uid://b070iqmh7hn4k"]
+
+[ext_resource type="Texture2D" uid="uid://b1w7u4owkmfen" path="res://Assets/Backgrounds/Chapter 1/dorm/dormbg.png" id="1_d8cl0"]
+[ext_resource type="Script" uid="uid://cs8s2j0xpswsi" path="res://GD Scripts/Endings/dropout_ending.gd" id="1_h70cl"]
+[ext_resource type="PackedScene" uid="uid://dur8n81dn5e6v" path="res://Scenes/Phone Mini/phone_mini.tscn" id="2_spdr7"]
+[ext_resource type="PackedScene" uid="uid://bgxei0u48xj6i" path="res://Scenes/Characters/Jane/jane_2d.tscn" id="3_h70cl"]
+[ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="5_441gj"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1s8s6"]
+texture = ExtResource("1_d8cl0")
+
+[node name="dropout_ending" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h70cl")
+
+[node name="dormbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_1s8s6")
+
+[node name="PhoneMini" parent="." instance=ExtResource("2_spdr7")]
+
+[node name="JaneBigAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -33.999992
+offset_right = 35.155914
+offset_bottom = 0.11079407
+grow_vertical = 0
+scale = Vector2(1.2426955, 1.1460433)
+
+[node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("3_h70cl")]
+
+[node name="Jane2DThinkingAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.064
+anchor_top = 1.0
+anchor_right = 0.064
+anchor_bottom = 1.0
+offset_left = -2.7600002
+offset_top = -71.0
+offset_right = 42.239998
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d_thinking" parent="Jane2DThinkingAnchor" instance=ExtResource("5_441gj")]

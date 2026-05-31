@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://cmj4ieil15n8p"]
+
+[ext_resource type="Script" uid="uid://dj8sn61nxdmma" path="res://GD Scripts/Endings/good_ending_cafe.gd" id="1_5oymq"]
+[ext_resource type="Texture2D" uid="uid://bnitxjx0ngxe7" path="res://Assets/Backgrounds/Endings/janecafebg.png" id="1_hrtct"]
+[ext_resource type="PackedScene" uid="uid://s18ise8l61pg" path="res://Scenes/Characters/Jane/jane_2d_barista.tscn" id="2_y5lny"]
+[ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="3_7l876"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y5lny"]
+texture = ExtResource("1_hrtct")
+
+[node name="good_ending_cafe" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5oymq")
+
+[node name="janecafebg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_y5lny")
+
+[node name="Jane2DBaristaAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.08400001
+anchor_top = 1.0
+anchor_right = 0.08400001
+anchor_bottom = 1.0
+offset_left = -8.56
+offset_top = -61.0
+offset_right = 31.439999
+offset_bottom = -21.0
+grow_vertical = 0
+
+[node name="jane2d_barista" parent="Jane2DBaristaAnchor" instance=ExtResource("2_y5lny")]
+
+[node name="KylieDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.93200004
+anchor_top = 1.0
+anchor_right = 0.93200004
+anchor_bottom = 1.0
+offset_left = -24.879997
+offset_top = -59.0
+offset_right = 6.8390427
+offset_bottom = -1.7221375
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.85122335, 1.0300663)
+
+[node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("3_7l876")]
