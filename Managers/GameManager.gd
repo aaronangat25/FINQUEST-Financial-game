@@ -32,6 +32,78 @@ var buffered_bank_change : int = 0    # Tracks net bank deposits/withdrawals thi
 var buffered_on_hand_change : int = 0 # Tracks net visual wallet fluctuations this run
 var current_chapter_description : String = ""
 
+
+# =================================================================
+# FINQUEST: P.E.S.O. INTEGRATED ACHIEVEMENT SYSTEM [cite: 489]
+# =================================================================
+
+# --- PRELOAD THE NOTIFICATION OVERLAY SCENE ---
+const NOTIFICATION_SCENE = preload("res://Scenes/AchievementNotificatioon/achievement_notification.tscn")
+
+# --- TRACK UNLOCKED STATS TO PREVENT DOUBLE-TRIGGER POPUPS ---
+var unlocked_achievements: Dictionary = {
+	"PROLOGUE": false,
+	"NO_PASAHE": false,
+	"BANK_UNLOCKED": false,
+	"BARISTA_PERFECT": false,
+	"CLERK_PERFECT": false,
+	"CASHIER_PERFECT": false,
+	"ACADEMIC_WEAPON": false,
+	"INFLATION_FIGHTER": false,
+	"SOPAS_STARBUCKS": false,
+	"MAGNA_CUM_BUDGET": false,
+	"MID_ENDING": false,
+	"GOOD_ENDING": false
+}
+
+# --- TEXTURE MAP POINTERS (MATCHED TO YOUR SCENE ASSETS) [cite: 489] ---
+const ACHIEVEMENT_ASSETS: Dictionary = {
+	"PROLOGUE": "res://Assets/Achievements/prologue achievement.png",
+	"NO_PASAHE": "res://Assets/Achievements/no pamasahe achievement.png",
+	"BANK_UNLOCKED": "res://Assets/Achievements/virtual bank achievement.png",
+	"BARISTA_PERFECT": "res://Assets/Achievements/barista achievement.png",
+	"CLERK_PERFECT": "res://Assets/Achievements/clerk achievement.png",
+	"CASHIER_PERFECT": "res://Assets/Achievements/cashier achievement.png",
+	"ACADEMIC_WEAPON": "res://Assets/Achievements/academic weapon achievement.png",
+	"INFLATION_FIGHTER": "res://Assets/Achievements/inflation fighter achievement.png",
+	"SOPAS_STARBUCKS": "res://Assets/Achievements/meal achievement.png",
+	"MAGNA_CUM_BUDGET": "res://Assets/Achievements/graduation achievement.png",
+	"MID_ENDING": "res://Assets/Achievements/corporate achievement.png",
+	"GOOD_ENDING": "res://Assets/Achievements/business owner achievement.png"
+}
+
+## Globally available function to unlock and show any title achievement notification banner
+## Globally available function to unlock and show any title achievement notification banner
+func unlock_achievement(achievement_id: String) -> void:
+	# Guard clause: make sure ID exists in our script records
+	if not unlocked_achievements.has(achievement_id):
+		print("[ACHIEVEMENT ERROR] Invalid achievement code: ", achievement_id)
+		return
+		
+	# Skip if the user already unlocked this milestone earlier in their run
+	if unlocked_achievements[achievement_id] == true:
+		return
+		
+	# Mark as unlocked now
+	unlocked_achievements[achievement_id] = true
+	print("[ACHIEVEMENT UNLOCKED] Triggered: ", achievement_id)
+	
+	# 1. Instance the popup UI
+	var notification_instance = NOTIFICATION_SCENE.instantiate()
+	
+	# 2. Append it to the root window viewport
+	get_tree().root.add_child(notification_instance)
+	
+	# --- THE CRISIS FIX FOR TRANSITIONS ---
+	# Forcefully push this node to the absolute bottom of the root draw order stack
+	# This ensures it always renders on top of existing curtains/transition overlays!
+	get_tree().root.move_child(notification_instance, -1)
+	
+	# 3. Pass the target asset path into your panel texture handler code
+	var asset_path = ACHIEVEMENT_ASSETS[achievement_id]
+	notification_instance.trigger_popup(asset_path)
+
+
 # =========================================
 # START NEW GAME
 # =========================================
@@ -86,8 +158,8 @@ func load_player_stats():
 # =========================================
 func get_unlocked_chapters() -> Array:
 	DatabaseManager.db.query_with_bindings("""
-		SELECT chapter_number 
-		FROM chapter_progress 
+		SELECT chapter_number 
+		FROM chapter_progress 
 		WHERE player_id = ? AND is_unlocked = 1;
 	""", [player_id])
 	
@@ -238,15 +310,19 @@ func reset_game_data():
 	current_scene = ""
 	total_income = 0
 	total_expenses = 0
+	
+	# Reset local tracking state on manual reset sequence calls
+	for key in unlocked_achievements.keys():
+		unlocked_achievements[key] = false
 
 # =========================================
 # FETCH ACTIVE GRADE HISTORY FOR SIS APP
 # =========================================
 func get_grade_history() -> Array:
 	DatabaseManager.db.query_with_bindings("""
-		SELECT chapter_number, completion_grade 
-		FROM chapter_progress 
-		WHERE player_id = ? AND completion_grade > 0.0 
+		SELECT chapter_number, completion_grade 
+		FROM chapter_progress 
+		WHERE player_id = ? AND completion_grade > 0.0 
 		ORDER BY chapter_number ASC;
 	""", [player_id])
 	
@@ -267,6 +343,10 @@ func execute_production_factory_reset() -> void:
 	current_scene = ""
 	total_income = 0
 	total_expenses = 0
+	
+	# Reset local runtime validation tracking keys
+	for key in unlocked_achievements.keys():
+		unlocked_achievements[key] = false
 	
 	# 2. Hard-clear any choices or transaction values currently sitting in the level buffers
 	buffered_choices.clear()
@@ -296,13 +376,13 @@ func execute_production_factory_reset() -> void:
 	# 6. Synchronize your active player stats columns back to baseline settings
 	DatabaseManager.db.query_with_bindings("""
 		UPDATE player_stats
-		SET bank_cash = 3000, 
-		    on_hand_cash = 0, 
-		    financial_wisdom_points = 0, 
-		    grades = 0.0, 
-		    current_chapter = 1,
-		    total_income = 0,
-		    total_expenses = 0
+		SET bank_cash = 3000, 
+		    on_hand_cash = 0, 
+		    financial_wisdom_points = 0, 
+		    grades = 0.0, 
+		    current_chapter = 1,
+		    total_income = 0,
+		    total_expenses = 0
 		WHERE player_id = ?;
 	""", [player_id])
 	
