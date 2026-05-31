@@ -48,6 +48,7 @@ func _ready() -> void:
 	# Mapped choice logs with interaction SFX feedback
 	aisle_btn.pressed.connect(func(): 
 		GameManager.log_choice("chap1_clerk_assistance", "A")
+		GameManager.unlock_achievement("CLERK_PERFECT")
 		_on_store_choice_made(100)
 	)
 	storage_btn.pressed.connect(func(): 

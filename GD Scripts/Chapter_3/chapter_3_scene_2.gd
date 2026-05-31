@@ -126,20 +126,21 @@ func _on_meal_choice_pressed(choice: String) -> void:
 	budgetmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	skipmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# --- SAFE RAM STAGING REDIRECTION ---
-	# Log narrative choice value and apply pocket cash reduction directly to the memory buffers
+	# Log narrative choice value
 	GameManager.log_choice("chap3_meal_choice", choice)
 	
 	if choice == "A": 
-		AudioManager.play_sfx("DEDUCT") # Trigger cash deduction feedback audio
+		AudioManager.play_sfx("DEDUCT")
 		GameManager.stage_finance_change(0, -90, "Purchased full meal at campus canteen")
 	elif choice == "B": 
-		AudioManager.play_sfx("DEDUCT") # Trigger cash deduction feedback audio
+		AudioManager.play_sfx("DEDUCT")
 		GameManager.stage_finance_change(0, -50, "Purchased budget meal at campus canteen")
 	elif choice == "C":
-		GameManager.log_choice("chap3_meal_choice", "C") # Skip Meal (P0 cost)
+		AudioManager.play_sfx("DEDUCT")
+		GameManager.stage_finance_change(0, -25, "Skipped meal for snacks later due to inflation")
+		# 🏅 ACHIEVEMENT INTEGRATION: Unlocks instantly when extreme frugality habit is chosen
+		GameManager.unlock_achievement("SOPAS_STARBUCKS")
 	
-	# Force the currency HUD to pull the latest running tracker state safely
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 	
