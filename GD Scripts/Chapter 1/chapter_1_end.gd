@@ -168,14 +168,14 @@ func _on_padlock_pressed() -> void:
 		
 	print("[SYSTEM] Running database save sequence for Chapter 1.")
 	
-	# 1. Flush the choices and balances FIRST
+	# 1. Flush the choices, balances, and staged memory achievements to SQLite
 	GameManager.flush_buffer_to_database()
 	
 	# 2. Wake up save overlay graphic
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS
 	saving_screen.show()
 	
-	# 3. Mark Chapter 1 as complete, unlock Chapter 2 row, and advance tracker to 3
+	# 3. Mark Chapter 1 (ID: 2) as complete, unlock Chapter 2 (ID: 3), and advance tracker
 	GameManager.complete_current_chapter(100.0) 
 	await get_tree().create_timer(2.0).timeout
 	

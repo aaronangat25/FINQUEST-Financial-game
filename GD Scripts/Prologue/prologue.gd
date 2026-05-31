@@ -263,8 +263,6 @@ func _on_rideabus_pressed():
 func _on_walkschool_pressed():
 	if input_locked: return
 	input_locked = true
-	
-	# Unlock "No-Pamasahe Grind" for walking to school [cite: 494, 496]
 	GameManager.unlock_achievement("NO_PASAHE")
 	
 	execute_choice_transition(WALK_BG, "WALK")

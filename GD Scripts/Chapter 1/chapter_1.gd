@@ -47,7 +47,6 @@ var DORM_DIALOGUE: Array = [
 
 func _ready() -> void:
 	# --- AUDIO INITIALIZATION ---
-	# Bridges the chapter entrance over the bus arrival screen animation sequence
 	AudioManager.play_chapter_music()
 
 	# =================================================================
@@ -123,7 +122,6 @@ func _ready() -> void:
 	notification_pop.show_hint_and_blink()
 	await get_tree().create_timer(1.0).timeout
 	
-	# Trigger your smartphone text alert notification ping audio
 	AudioManager.play_sfx("NOTIFICATION")
 	phone_mini.trigger_notification()
 
@@ -152,6 +150,9 @@ func _on_phone_clicked() -> void:
 	await dialogue_box.dialogue_finished
 	await get_tree().create_timer(0.5).timeout
 	
+	# ACHIEVEMENT INTEGRATION: Unlocks when the bank application overview finishes
+	GameManager.unlock_achievement("BANK_UNLOCKED")
+	
 	click_shield.queue_free()
 	phone_screen_instance.unlock_app()
 
@@ -166,7 +167,6 @@ func _on_bank_app_clicked() -> void:
 	virtual_bank_instance.back_clicked.connect(_on_virtual_bank_back_clicked)
 
 func _on_money_withdrawn(_amount: int) -> void:
-	# Trigger the confirmation chime sound effect ("Withdraw or money increase")
 	AudioManager.play_sfx("INCOME")
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
@@ -205,8 +205,6 @@ func _on_virtual_bank_back_clicked() -> void:
 	await get_tree().create_timer(1.5).timeout
 	await TransitionManager.fade_from_black()
 	
-	# --- GENERAL BACKGROUND MUSIC TRANSITION ---
-	# Fades menu theme out and cross-fades general exploration music in inside the dorm
 	AudioManager.play_chapter_music()
 	
 	await get_tree().create_timer(1.0).timeout

@@ -119,8 +119,7 @@ func _play_intro_sequence() -> void:
 func _show_evaluation_stats() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
-	# --- FIXED HARDCODED LEAK ---
-	# Read her true accumulated expenses out of our safe RAM staging registers instead of Global!
+	# Read her true accumulated expenses out of our safe RAM staging registers
 	var true_expenses = abs(GameManager.buffered_on_hand_change)
 	
 	var jane_reaction_text = "" 
@@ -135,6 +134,9 @@ func _show_evaluation_stats() -> void:
 			feedback_label.text = "RESULT: EXCELLENT BUDGETING"
 			feedback_label.add_theme_color_override("font_color", Color("a5d68d")) 
 			jane_reaction_text = "Buti na lang nag-adjust ako kahit may inflation."
+			
+			# 🏅 ACHIEVEMENT INTEGRATION: Unlocks when securing the highest monthly budget result tier
+			GameManager.unlock_achievement("INFLATION_FIGHTER")
 			
 		elif true_expenses <= 250: 
 			feedback_label.text = "RESULT: GOOD BUDGETING"
@@ -272,7 +274,6 @@ func _on_main_menu_pressed() -> void:
 
 # --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
 func _execute_save_and_blackout(destination_path: String, play_cinematic_card: bool) -> void:
-	# --- MASTER FLUSH ADDITION ---
 	# Safely commits Chapter 3 choice sets and budget log arrays right before shifting scenes!
 	GameManager.flush_buffer_to_database()
 	
@@ -294,7 +295,6 @@ func _execute_save_and_blackout(destination_path: String, play_cinematic_card: b
 	
 	# 3. Handle specific level banner tweens if continuing forward
 	if play_cinematic_card:
-		# --- AUDIO ENGINE CLEANSER ---
 		# Clear track locks and restart the default background score loop from zero for Chapter 4
 		AudioManager.restart_general_music()
 

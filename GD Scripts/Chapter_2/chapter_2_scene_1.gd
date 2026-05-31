@@ -10,7 +10,7 @@ const PHONE_LOCK_SCREEN_3_SCENE = preload("res://Scenes/Phone/phone_lock_screen_
 const CLASSROOM_BG_TEXTURE = preload("res://Assets/Backgrounds/Chapter_2/classroom/classroom_bg.png") 
 
 # --- NODE REFERENCES ---
-@onready var saving_screen = $SavingScreen # Make sure to instantiate this in your scene tree!
+@onready var saving_screen = $SavingScreen
 @onready var background = $dormbg 
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking
 @onready var jane_big = $JaneBigAnchor/jane2d
@@ -57,27 +57,20 @@ var is_phone_clickable_phase_3: bool = false
 
 func _ready() -> void:
 	# --- AUDIO INITIALIZATION ---
-	# Automatically ensures the general exploration music tracks loops smoothly on setup
 	AudioManager.play_chapter_music()
 
-	# 1. Pulls her exact hard-saved wallet values from SQLite rows
 	GameManager.load_player_stats()
-	
-	# 2. Synchronize your Global tracking variable with the true database state
 	Global.player_money = GameManager.on_hand_cash
 	
-	# 3. Instantiate the HUD 
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	# --- THE PAUSE BUTTON TRANSITION FIX ---
 	pause_button = get_node_or_null("PauseButton")
 	if not pause_button:
 		pause_button = find_child("PauseButton", true, false)
 		
 	if pause_button:
-		pause_button.hide() # Kill pause button visibility immediately on frame zero
-	# ----------------------------------------
+		pause_button.hide()
 	
 	if phone_mini: phone_mini.hide() 
 	if jane_thinking: jane_thinking.modulate.a = 0.0
@@ -112,7 +105,6 @@ func _ready() -> void:
 		exam_starts_control.modulate.a = 0.0
 		exam_starts_control.hide()
 	
-	# --- BULLETPROOF TRANSITION HOOK OVERRIDE ---
 	if TransitionManager.color_rect:
 		TransitionManager.color_rect.show()
 		TransitionManager.color_rect.visible = true
@@ -125,7 +117,6 @@ func _ready() -> void:
 		
 	if pause_button:
 		pause_button.show()
-	# ----------------------------------------------
 		
 	_play_intro_sequence()
 
@@ -196,7 +187,6 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
-		# Trigger your incoming dialogue push notification alert sound effect ping
 		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
@@ -319,9 +309,6 @@ func _show_money_ui() -> void:
 	elif chosen == "C": 
 		job_salary = 2040
 		job_display_name = "Cashier"
-		
-	# Trigger your confirmation deposit alert chime ("Withdraw or money increase")
-	
 		
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
@@ -517,7 +504,6 @@ func _process_study_choice(choice: String) -> void:
 	
 	if choice == "Cafe":
 		study_choice = "A"
-		# Trigger your cash deduction wallet sweep sound effect
 		AudioManager.play_sfx("DEDUCT")
 		GameManager.stage_finance_change(0, -150, "Purchased coffee at study cafe")
 		GameManager.log_choice("chap2_study_location", "A")
@@ -652,13 +638,11 @@ func _process_travel_choice(choice: String) -> void:
 	await get_tree().create_timer(1.0).timeout
 	await TransitionManager.fade_to_black()
 	
-	# Cleanly play the loopable environment track channel if riding tricycle
 	if is_tricycle:
-		AudioManager.play_ambience("BUS", 0.5) # Reuses bus motor ambiance profile for travel text wrap
+		AudioManager.play_ambience("BUS", 0.5)
 	
 	await get_tree().create_timer(2.0).timeout
 	
-	# Smoothly fade out travel sounds before going inside the exam hall
 	AudioManager.fade_out_ambience(1.0)
 	
 	if background:
@@ -668,7 +652,6 @@ func _process_travel_choice(choice: String) -> void:
 		
 	await TransitionManager.fade_from_black()
 	
-	# Trigger your crisp high school bell sound effect on school arrival
 	AudioManager.play_sfx("BELL", 2.0)
 	
 	if pause_button:
@@ -772,7 +755,6 @@ func _play_exam_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
-		# Trigger your smartphone grade alert push notification chime sound effect
 		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
@@ -809,6 +791,8 @@ func _open_phone_screen_3() -> void:
 	if sis_text:
 		if study_choice == "A" and travel_choice == "A":
 			sis_text.text = "1.0"
+			# 🏅 ACHIEVEMENT INTEGRATION: Unlocks if the player secured a perfect 1.0 score
+			GameManager.unlock_achievement("ACADEMIC_WEAPON")
 		elif study_choice == "B" and travel_choice == "B":
 			sis_text.text = "1.50"
 		else:
@@ -820,9 +804,6 @@ func _open_phone_screen_3() -> void:
 	if back_tex_btn: back_tex_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 	if back_btn: back_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 
-# =================================================================
-# MASTER HANDOFF FIX FOR CHAPTER 2 END (STRICT PERSISTENCE)
-# =================================================================
 func _on_phone_3_back_pressed() -> void:
 	print("YES! The _on_phone_3_back_pressed signal fired perfectly!")
 	
@@ -889,8 +870,6 @@ func _on_phone_3_back_pressed() -> void:
 		await t2.finished
 		title_label.hide()
 	
-	# --- EXPLICIT MUSIC RESET FOR TRANSITION ---
-	# Forces GENERAL MUSIC.mp3 to fade down and restart from 0.0 for Chapter 3
 	AudioManager.restart_general_music()
 		
 	var next_scene_path = "res://Scenes/Chapter 3/chapter_3_scene_1.tscn"
