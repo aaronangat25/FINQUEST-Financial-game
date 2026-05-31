@@ -18,6 +18,9 @@ var db : SQLite
 
 const DB_NAME = "user://finquest.db"
 
+# --- THE CRITICAL FIX: Positioned at top-level for clean project readability ---
+var is_ready : bool = false
+
 # =========================================
 # GODOT READY
 # =========================================
@@ -39,6 +42,10 @@ func initialize_database():
 		print("[DATABASE] Connected successfully using standard stable plugin structures.")
 		create_tables()
 		create_default_achievements()
+		
+		# --- THE CRITICAL FIX: Only flips to true after all data setups finish ---
+		is_ready = true
+		print("[DATABASE] Ready state activated cleanly. System singletons can now safely query.")
 	else:
 		print("[DATABASE ERROR] Failed to connect database.")
 
@@ -204,37 +211,91 @@ func create_tables():
 # =========================================
 
 func create_default_achievements():
-
+	# Matrix containing all 12 official FinQuest: P.E.S.O. achievement keys [cite: 489, 490]
+	# Financial rewards are left at 0 while design values are being finalized
 	var achievements = [
+		# --- PROLOGUE SEED DATA ---
 		{
-			"key": "FIRST_SALARY",
-			"title": "First Salary",
-			"description": "Earn your first income.",
-			"reward": 100
+			"key": "PROLOGUE",
+			"title": "Every Peso Counts",
+			"description": "Complete the SHS Prologue tutorial sequence.",
+			"reward": 0
 		},
 		{
-			"key": "SAVE_5000",
-			"title": "Saver",
-			"description": "Reach ₱5000 savings.",
-			"reward": 500
+			"key": "NO_PASAHE",
+			"title": "No-Pasahe Grind",
+			"description": "Choose to walk to school in the morning to save cash.",
+			"reward": 0
+		},
+		
+		# --- CHAPTER 1 SEED DATA ---
+		{
+			"key": "BANK_UNLOCKED",
+			"title": "FinQuest Premium Member",
+			"description": "Unlock your first virtual wallet and bank account feature.",
+			"reward": 0
 		},
 		{
-			"key": "COMPLETE_CHAPTER_1",
-			"title": "Chapter 1 Complete",
-			"description": "Finish Chapter 1.",
-			"reward": 300
+			"key": "BARISTA_PERFECT",
+			"title": "Brewmaster Apprentice",
+			"description": "Complete the Barista mini-task training perfectly.",
+			"reward": 0
 		},
 		{
-			"key": "PLAY_ALL_JOBS",
-			"title": "Working Student",
-			"description": "Play all minigames.",
-			"reward": 500
+			"key": "CLERK_PERFECT",
+			"title": "Aisle Manager",
+			"description": "Correctly direct the student to Aisle 1 during clerk training.",
+			"reward": 0
 		},
 		{
-			"key": "GRADUATE",
-			"title": "Graduate",
-			"description": "Finish the game.",
-			"reward": 1000
+			"key": "CASHIER_PERFECT",
+			"title": "Human Calculator",
+			"description": "Compute change accurately under time limits during cashier training.",
+			"reward": 0
+		},
+		
+		# --- CHAPTER 2 SEED DATA ---
+		{
+			"key": "ACADEMIC_WEAPON",
+			"title": "Academic Weapon",
+			"description": "Achieve a perfect 1.0 GPA average score on Midterms.",
+			"reward": 0
+		},
+		
+		# --- CHAPTER 3 SEED DATA ---
+		{
+			"key": "INFLATION_FIGHTER",
+			"title": "Inflation Fighter",
+			"description": "Achieve Excellent Budgeting scores during an economic crisis.",
+			"reward": 0
+		},
+		{
+			"key": "SOPAS_STARBUCKS",
+			"title": "Sopas over Starbucks",
+			"description": "Opt to skip meals for cheap snacks or buy only essentials.",
+			"reward": 0
+		},
+		
+		# --- CHAPTER 4 SEED DATA ---
+		{
+			"key": "MAGNA_CUM_BUDGET",
+			"title": "Magna Cum Budget",
+			"description": "Secure an Outstanding 1.0 Thesis Defense rating with top budgeting choices.",
+			"reward": 0
+		},
+		
+		# --- CHAPTER 5 / ENDING SEED DATA ---
+		{
+			"key": "MID_ENDING",
+			"title": "Corporate Ladder Climber",
+			"description": "Unlocked the Office Worker Ending. Stable lifestyle secured!",
+			"reward": 0
+		},
+		{
+			"key": "GOOD_ENDING",
+			"title": "CEO of My Own Life",
+			"description": "Unlocked the Business Owner Ending. Attained Financial Freedom!",
+			"reward": 0
 		}
 	]
 
@@ -254,7 +315,7 @@ func create_default_achievements():
 			achievement["reward"]
 		])
 
-	print("[DATABASE] Default achievements initialized.")
+	print("[DATABASE] Production achievements table populated with 0-value placeholder rewards.")
 
 # =========================================
 # CREATE NEW PLAYER
@@ -303,12 +364,9 @@ func create_default_player_stats(player_id : int):
 	])
 
 # =========================================
-# DEFAULT CHAPTER PROGRESS
-# =========================================
-
-# =========================================
 # DEFAULT CHAPTER PROGRESS (FIXED RANGE)
 # =========================================
+
 func create_default_chapter_progress(player_id : int):
 	# Loop from 1 to 7 (range(1, 8) stops right before 8)
 	for chapter in range(1, 8):
@@ -472,15 +530,13 @@ func save_player_choice(player_id : int, chapter_number : int, scene_key : Strin
 # =========================================
 
 func complete_chapter(player_id : int, chapter_number : int, grade : float):
-	# 1. Marks current chapter (e.g., Prologue = 1) as completed
-	# CHANGED: Added casting constraint logic to match your architecture safely.
+
 	db.query_with_bindings("""
 	UPDATE chapter_progress
 	SET is_completed = 1, completion_grade = ?, completed_at = CURRENT_TIMESTAMP
 	WHERE player_id = ? AND chapter_number = ?;
 	""", [float(grade), player_id, chapter_number])
 
-	# 2. Instantly unlocks the NEXT sequential record row (e.g., Chapter 1 = 2)
 	db.query_with_bindings("""
 	UPDATE chapter_progress
 	SET is_unlocked = 1
@@ -583,9 +639,8 @@ func unlock_achievement(player_id : int, achievement_key : String):
 		achievement["id"]
 	])
 
-	# Give financial reward adjustment balance
 	update_player_money(player_id, achievement["reward_money"])
-	print("[ACHIEVEMENT] Unlocked: ", achievement["title"])
+	print("[DATABASE SUCCESS] Staged achievement committed permanently: ", achievement["title"])
 
 # =========================================
 # CHECK ACHIEVEMENT

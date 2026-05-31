@@ -204,7 +204,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("10_sk6rr")
 theme_override_font_sizes/font_size = 4
-text = "Ride the train(₱20)"
+text = "Ride the train (₱20)"
 
 [node name="walktohome_btn" type="Button" parent="choices_container3"]
 layout_mode = 2
