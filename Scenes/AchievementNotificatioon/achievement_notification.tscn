@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtabmirbb6tvx"]
+
+[ext_resource type="Script" uid="uid://d1wefg7dhfflx" path="res://achievement_notification.gd" id="1_hvian"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tw1qj"]
+
+[node name="AchievementNotification" type="CanvasLayer"]
+layer = 200
+script = ExtResource("1_hvian")
+
+[node name="AchievementBanner" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_tw1qj")

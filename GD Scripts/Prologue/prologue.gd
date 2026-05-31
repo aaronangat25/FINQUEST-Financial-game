@@ -66,12 +66,10 @@ const CHAPTER_1_SCENE = "res://Scenes/Chapter 1/chapter_1.tscn"
 func _ready():
 
 	# --- AUDIO INITIALIZATION ---
-
 	AudioManager.play_chapter_music() # Fires up GENERAL MUSIC.mp3 immediately!
 	
 	input_locked = true # Lock inputs during the opening animation!
 	
-
 	stats_screen.hide()
 	stats_screen.modulate.a = 0.0
 
@@ -81,12 +79,10 @@ func _ready():
 		stats_screen.hide()
 		stats_screen.modulate.a = 0.0
 
-	
 	choices_container.hide()
 	choices_container2.hide()
 	choices_container2.modulate.a = 0.0 
 	
-
 	choices_container3.hide()
 	choices_container3.modulate.a = 0.0
 
@@ -108,7 +104,6 @@ func _ready():
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
 
-	
 	dialogue_box.line_started.connect(_on_line_started)
 	dialogue_box.line_finished.connect(_on_line_finished) 
 	dialogue_box.dialogue_finished.connect(_on_dialogue_finished)
@@ -123,17 +118,12 @@ func _ready():
 	rideatrain_btn1.pressed.connect(_on_rideatrain_home_pressed)
 	walktohome_btn.pressed.connect(_on_walktohome_pressed)
 	
-
-	#chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
-	main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
-
 	# Connect your navigation buttons cleanly
 	if chapter1_btn and not chapter1_btn.pressed.is_connected(_on_chapter1_btn_pressed):
 		chapter1_btn.pressed.connect(_on_chapter1_btn_pressed)
 	if main_menu_btn and not main_menu_btn.pressed.is_connected(_on_main_menu_btn_pressed):
 		main_menu_btn.pressed.connect(_on_main_menu_btn_pressed) 
 
-		
 	var breakfast_sequence = [
 		{"speaker": "", "text": "The sun is rising."},
 		{"speaker": "Mom", "text": "Good morning, Jane! 9 am ang pasok mo diba?", "bg": DINING_TABLE, "show_jane": true, "show_mom": true},
@@ -273,6 +263,10 @@ func _on_rideabus_pressed():
 func _on_walkschool_pressed():
 	if input_locked: return
 	input_locked = true
+	
+	# Unlock "No-Pamasahe Grind" for walking to school [cite: 494, 496]
+	GameManager.unlock_achievement("NO_PASAHE")
+	
 	execute_choice_transition(WALK_BG, "WALK")
 
 # --- THE CINEMATIC CHOICE TRANSITION ---
@@ -303,7 +297,7 @@ func execute_choice_transition(new_bg, transport_type: String = ""):
 	await get_tree().create_timer(1.0).timeout
 	await transition_manager.fade_from_black()
 	
-	# --- ADDED: Play the school bell sound effect on school arrival ---
+	# Play the school bell sound effect on school arrival
 	AudioManager.play_sfx("BELL", 2.0)
 	
 	await get_tree().create_timer(5.0).timeout
@@ -415,6 +409,9 @@ func execute_going_home_transition(transit_bg, transport_type: String = ""):
 	input_locked = false
 	
 func show_stats_screen():
+	# Unlock "Every Peso Counts" for completing the SHS tutorial [cite: 491, 493]
+	GameManager.unlock_achievement("PROLOGUE")
+
 	transport_label.text = "P" + str(transport_spent)
 	lunch_label.text = "P" + str(lunch_spent)
 	total_label.text = "P" + str(currency_hud.current_money)
@@ -445,13 +442,7 @@ func _on_chapter1_btn_pressed():
 	stats_screen.hide()
 	currency_hud.hide() 
 	
-
-	# --- FIXED: Force the sandbox cache to clean balances BEFORE saving progress!
-
-	GameManager.flush_buffer_to_database()
-	
-	saving_screen.trigger_save_sequence(CHAPTER_1_SCENE)
-
+	# Force the sandbox cache to clean balances BEFORE saving progress!
 	GameManager.flush_buffer_to_database()
 	
 	if is_instance_valid(saving_screen) and saving_screen.has_method("trigger_save_sequence"):
@@ -472,17 +463,10 @@ func _on_main_menu_btn_pressed():
 	stats_screen.hide()
 	currency_hud.hide()
 	
-
-	# --- FIXED: Wipes tutorial cash records safely on menu drop exit
-
+	# Wipes tutorial cash records safely on menu drop exit
 	GameManager.flush_buffer_to_database()
 	
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
-	saving_screen.trigger_save_sequence(main_screen_path)
-
-	GameManager.flush_buffer_to_database()
-	
-	#var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
 	if is_instance_valid(saving_screen) and saving_screen.has_method("trigger_save_sequence"):
 		saving_screen.trigger_save_sequence(main_screen_path)
 	else:
