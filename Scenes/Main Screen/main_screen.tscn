@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b8iijuwlaxvhc"]
+[gd_scene load_steps=8 format=3 uid="uid://b8iijuwlaxvhc"]
 
 [ext_resource type="Script" uid="uid://7iw8ntvxo575" path="res://GD Scripts/Main Menu/main_screen.gd" id="1_bcuxt"]
 [ext_resource type="Texture2D" uid="uid://l5cm8kt5hp3r" path="res://Assets/Backgrounds/Main Screen/city1.png" id="1_rgx1t"]
@@ -6,6 +6,7 @@
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="3_wtm3e"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="4_cghwr"]
 [ext_resource type="PackedScene" uid="uid://cmxre5lotqiim" path="res://Scenes/Main Screen/option.tscn" id="6_kwyhm"]
+[ext_resource type="PackedScene" uid="uid://b1rgwpbqucddl" path="res://Scenes/Main Screen/achievement_list.tscn" id="7_udtpl"]
 
 [node name="Main Screen" type="Control"]
 layout_mode = 3
@@ -87,5 +88,7 @@ theme_override_font_sizes/font_size = 6
 text = "ACHIEVEMENTS"
 
 [node name="Option" parent="." instance=ExtResource("6_kwyhm")]
+
+[node name="AchievementList" parent="." instance=ExtResource("7_udtpl")]
 
 [connection signal="pressed" from="main_menu_bg/menu_button_container/playbtn" to="." method="_on_playbtn_pressed"]
