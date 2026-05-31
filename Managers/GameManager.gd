@@ -34,13 +34,14 @@ var current_chapter_description : String = ""
 
 
 # =================================================================
-# FINQUEST: P.E.S.O. INTEGRATED ACHIEVEMENT SYSTEM [cite: 489]
+# FINQUEST: P.E.S.O. INTEGRATED ACHIEVEMENT SYSTEM
 # =================================================================
 
-# --- PRELOAD THE NOTIFICATION OVERLAY SCENE ---
 const NOTIFICATION_SCENE = preload("res://Scenes/AchievementNotificatioon/achievement_notification.tscn")
 
-# --- TRACK UNLOCKED STATS TO PREVENT DOUBLE-TRIGGER POPUPS ---
+# Temporary runtime staging cache for achievements earned mid-chapter
+var buffered_achievements : Array = []
+
 var unlocked_achievements: Dictionary = {
 	"PROLOGUE": false,
 	"NO_PASAHE": false,
@@ -56,7 +57,6 @@ var unlocked_achievements: Dictionary = {
 	"GOOD_ENDING": false
 }
 
-# --- TEXTURE MAP POINTERS (MATCHED TO YOUR SCENE ASSETS) [cite: 489] ---
 const ACHIEVEMENT_ASSETS: Dictionary = {
 	"PROLOGUE": "res://Assets/Achievements/prologue achievement.png",
 	"NO_PASAHE": "res://Assets/Achievements/no pamasahe achievement.png",
@@ -73,33 +73,26 @@ const ACHIEVEMENT_ASSETS: Dictionary = {
 }
 
 ## Globally available function to unlock and show any title achievement notification banner
-## Globally available function to unlock and show any title achievement notification banner
 func unlock_achievement(achievement_id: String) -> void:
-	# Guard clause: make sure ID exists in our script records
 	if not unlocked_achievements.has(achievement_id):
 		print("[ACHIEVEMENT ERROR] Invalid achievement code: ", achievement_id)
 		return
 		
-	# Skip if the user already unlocked this milestone earlier in their run
 	if unlocked_achievements[achievement_id] == true:
 		return
 		
-	# Mark as unlocked now
+	# 1. Toggle runtime tracking state immediately so it doesn't double-trigger
 	unlocked_achievements[achievement_id] = true
-	print("[ACHIEVEMENT UNLOCKED] Triggered: ", achievement_id)
+	print("[ACHIEVEMENT UNLOCKED] Staged mid-game: ", achievement_id)
 	
-	# 1. Instance the popup UI
+	# 2. STAGE THE ACHIEVEMENT: Hold it in memory instead of forcing an immediate DB query!
+	buffered_achievements.append(achievement_id)
+	
+	# 3. Fire visual popup overlay safely on top of transitions
 	var notification_instance = NOTIFICATION_SCENE.instantiate()
-	
-	# 2. Append it to the root window viewport
 	get_tree().root.add_child(notification_instance)
-	
-	# --- THE CRISIS FIX FOR TRANSITIONS ---
-	# Forcefully push this node to the absolute bottom of the root draw order stack
-	# This ensures it always renders on top of existing curtains/transition overlays!
 	get_tree().root.move_child(notification_instance, -1)
 	
-	# 3. Pass the target asset path into your panel texture handler code
 	var asset_path = ACHIEVEMENT_ASSETS[achievement_id]
 	notification_instance.trigger_popup(asset_path)
 
@@ -157,9 +150,14 @@ func load_player_stats():
 # GET UNLOCKED CHAPTERS FROM DB
 # =========================================
 func get_unlocked_chapters() -> Array:
+	# 🛡️ THE CRITICAL MISSING GUARD: Stop the query if the DB isn't ready yet!
+	if not DatabaseManager or not DatabaseManager.is_ready:
+		print("[GAMEMANAGER WARNING] Database tables not fully cooked yet. Skipping frame query.")
+		return []
+
 	DatabaseManager.db.query_with_bindings("""
-		SELECT chapter_number 
-		FROM chapter_progress 
+		SELECT chapter_number 
+		FROM chapter_progress 
 		WHERE player_id = ? AND is_unlocked = 1;
 	""", [player_id])
 	
@@ -246,6 +244,10 @@ func log_choice(choice_key: String, option_letter: String) -> void:
 func flush_buffer_to_database() -> void:
 	print("[DATABASE SAVE] Chapter ", current_chapter, " complete! Processing settlement...")
 	
+	for achievement_key in buffered_achievements:
+		DatabaseManager.unlock_achievement(player_id, achievement_key)
+	buffered_achievements.clear() # Wipe the cache clean for the next chapter execution!
+	
 	for choice in buffered_choices:
 		DatabaseManager.db.query_with_bindings("""
 			INSERT INTO player_choices (player_id, chapter_number, scene_key, choice_key, choice_value, effect_summary)
@@ -286,6 +288,7 @@ func flush_buffer_to_database() -> void:
 func clear_temporary_buffer() -> void:
 	print("[SYSTEM BUFFER] Clearing staging caches and forcing sandbox validation...")
 	buffered_choices.clear()
+	buffered_achievements.clear()
 	buffered_bank_change = 0
 	buffered_on_hand_change = 0
 	current_chapter_description = ""
