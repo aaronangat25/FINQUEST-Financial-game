@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://uwjoivmhkgxv"]
+
+[ext_resource type="Script" uid="uid://xbd40jugxecd" path="res://GD Scripts/Endings/mid_ending.gd" id="1_8wo3u"]
+[ext_resource type="Texture2D" uid="uid://d4cfjr2wodjjh" path="res://Assets/Backgrounds/Endings/officebg.png" id="1_thy3i"]
+[ext_resource type="PackedScene" uid="uid://ciehi6n7s3i7b" path="res://Scenes/Characters/Jane/jane_2d_office.tscn" id="2_8wo3u"]
+[ext_resource type="PackedScene" uid="uid://wxgvprf03dsj" path="res://Scenes/Characters/Jen/jen_2d.tscn" id="4_t4e7r"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t4e7r"]
+texture = ExtResource("1_thy3i")
+
+[node name="mid_ending" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8wo3u")
+
+[node name="officebg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_t4e7r")
+
+[node name="Jane2DOfficeAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.066
+anchor_top = 1.0
+anchor_right = 0.066
+anchor_bottom = 1.0
+offset_left = -3.94
+offset_top = -59.0
+offset_right = 36.06
+offset_bottom = -19.0
+grow_vertical = 0
+
+[node name="jane2d_office" parent="Jane2DOfficeAnchor" instance=ExtResource("2_8wo3u")]
+
+[node name="JenDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.924
+anchor_top = 1.0
+anchor_right = 0.924
+anchor_bottom = 1.0
+offset_left = -24.160004
+offset_top = -55.5
+offset_right = 3.8399963
+offset_bottom = -24.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jen2d" parent="JenDialogueAnchor" instance=ExtResource("4_t4e7r")]

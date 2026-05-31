@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://qk81oeuihxnt"]
+
+[ext_resource type="Script" uid="uid://sg58gk045vic" path="res://GD Scripts/Endings/good_ending_clerk.gd" id="1_qpvat"]
+[ext_resource type="Texture2D" uid="uid://qxxoo8avdtib" path="res://Assets/Backgrounds/Endings/janesupermarketbg.png" id="1_wyx3g"]
+[ext_resource type="PackedScene" uid="uid://s18ise8l61pg" path="res://Scenes/Characters/Jane/jane_2d_barista.tscn" id="2_p3n4o"]
+[ext_resource type="PackedScene" uid="uid://vg3t1bwmovs0" path="res://Scenes/Characters/Kylie/kylie_2d.tscn" id="3_qpvat"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_urelk"]
+texture = ExtResource("1_wyx3g")
+
+[node name="good_ending_clerk" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qpvat")
+
+[node name="janesupermarketbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_urelk")
+
+[node name="Jane2DBaristaAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.08400001
+anchor_top = 1.0
+anchor_right = 0.08400001
+anchor_bottom = 1.0
+offset_left = -8.56
+offset_top = -61.0
+offset_right = 31.439999
+offset_bottom = -21.0
+grow_vertical = 0
+
+[node name="jane2d_barista" parent="Jane2DBaristaAnchor" instance=ExtResource("2_p3n4o")]
+
+[node name="KylieDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.93200004
+anchor_top = 1.0
+anchor_right = 0.93200004
+anchor_bottom = 1.0
+offset_left = -24.879997
+offset_top = -59.0
+offset_right = 6.8390427
+offset_bottom = -1.7221375
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.85122335, 1.0300663)
+
+[node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("3_qpvat")]

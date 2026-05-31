@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2osx41b0rmiw"]
+
+[ext_resource type="Texture2D" uid="uid://b1w7u4owkmfen" path="res://Assets/Backgrounds/Chapter 1/dorm/dormbg.png" id="1_u7jm2"]
+[ext_resource type="Script" uid="uid://bngtciviu41fp" path="res://GD Scripts/Endings/bad_ending.gd" id="1_x8c0q"]
+[ext_resource type="PackedScene" uid="uid://cofrm01oyk8p6" path="res://Scenes/Characters/Jane/jane_2d_thinking.tscn" id="2_jvl2w"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jvl2w"]
+texture = ExtResource("1_u7jm2")
+
+[node name="bad_ending" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x8c0q")
+
+[node name="dormbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_jvl2w")
+
+[node name="Jane2DThinkingAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.064
+anchor_top = 1.0
+anchor_right = 0.064
+anchor_bottom = 1.0
+offset_left = -2.7600002
+offset_top = -71.0
+offset_right = 42.239998
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d_thinking" parent="Jane2DThinkingAnchor" instance=ExtResource("2_jvl2w")]
