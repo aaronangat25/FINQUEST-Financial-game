@@ -10,6 +10,8 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 var active_dialogue_box
 
 func _ready() -> void:
+	
+	AudioManager.play_bad_ending_music()
 	# 1. Initialize elements to hidden so they don't flash on launch
 	if jane_thinking:
 		jane_thinking.hide()
