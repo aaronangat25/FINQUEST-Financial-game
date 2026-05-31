@@ -81,20 +81,30 @@ func unlock_achievement(achievement_id: String) -> void:
 	if unlocked_achievements[achievement_id] == true:
 		return
 		
-	# 1. Toggle runtime tracking state immediately so it doesn't double-trigger
 	unlocked_achievements[achievement_id] = true
 	print("[ACHIEVEMENT UNLOCKED] Staged mid-game: ", achievement_id)
 	
-	# 2. STAGE THE ACHIEVEMENT: Hold it in memory instead of forcing an immediate DB query!
 	buffered_achievements.append(achievement_id)
 	
-	# 3. Fire visual popup overlay safely on top of transitions
 	var notification_instance = NOTIFICATION_SCENE.instantiate()
 	get_tree().root.add_child(notification_instance)
 	get_tree().root.move_child(notification_instance, -1)
 	
 	var asset_path = ACHIEVEMENT_ASSETS[achievement_id]
 	notification_instance.trigger_popup(asset_path)
+
+	var sfx_player = AudioStreamPlayer.new()
+	var sfx_stream = load("res://Assets/Audio/SFX/AchievementUnlocked.mp3")
+	
+	if sfx_stream:
+		sfx_player.stream = sfx_stream
+		sfx_player.bus = "Master" 
+		
+		get_tree().root.add_child(sfx_player)
+		sfx_player.play()
+		sfx_player.finished.connect(sfx_player.queue_free)
+	else:
+		print("[AUDIO ERROR] Could not load AchievementUnlocked.mp3! Verify file path.")
 
 
 # =========================================

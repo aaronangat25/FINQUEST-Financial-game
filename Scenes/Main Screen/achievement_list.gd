@@ -8,7 +8,7 @@ extends CanvasLayer
 @onready var tutorial_panel: Panel = $TutorialPanel
 @onready var tutorial_label: RichTextLabel = $TutorialPanel/TutorialLabel
 
-# Configuration mapping with Title wrapped in your exact dark grey color hex
+# Dict matrix matching your 12 manual node names to your official SQLite achievement_keys
 const MASTER_DATA: Dictionary = {
 	"Achievement1": {
 		"key": "PROLOGUE",
@@ -81,20 +81,27 @@ func _ready() -> void:
 		
 	sync_with_sqlite_database()
 
+## Direct synchronization connection with the SQLite local files
 func sync_with_sqlite_database() -> void:
-	var player_id = GameManager.player_id
-	
+	# Fallback safety: Stop execution if the user id tracker hasn't set up yet
+	var active_player_id = GameManager.player_id
+	if active_player_id <= 0:
+		print("[ACHIEVEMENT BACKEND ENGINE] Warning: Active Player Session not tracked yet. Defaulting to mock state.")
+		return
+
+	# Query your exact player_achievements junction table row entries
 	DatabaseManager.db.query_with_bindings("""
 		SELECT a.achievement_key 
 		FROM player_achievements pa
 		INNER JOIN achievements a ON pa.achievement_id = a.id
 		WHERE pa.player_id = ?;
-	""", [player_id])
+	""", [active_player_id])
 	
 	var unlocked_keys = []
 	for row in DatabaseManager.db.query_result:
 		unlocked_keys.append(row["achievement_key"])
 		
+	# Loop through your 12 UI scene tree elements to apply dynamic modulation and text string injections
 	for slot_node in vbox_container.get_children():
 		var node_name = slot_node.name
 		
@@ -102,15 +109,18 @@ func sync_with_sqlite_database() -> void:
 			var data = MASTER_DATA[node_name]
 			var is_unlocked: bool = unlocked_keys.has(data["key"])
 			
+			# Apply exact coloration presets based on factual saved tracking table data
 			if is_unlocked:
-				slot_node.modulate = Color("5df05d")
+				slot_node.modulate = Color("5df05d") # Complete: Vibrant clean green
 			else:
-				slot_node.modulate = Color("aba178")
+				slot_node.modulate = Color("aba178") # Incomplete: Grayish-yellow
 				
 			if slot_node is Button:
+				# Clean old active signal connections to avoid duplication glitches during scene changes
 				if slot_node.pressed.is_connected(_on_achievement_clicked):
 					slot_node.pressed.disconnect(_on_achievement_clicked)
 					
+				# Build correct string formats based on structural save state calculations
 				var final_text = data["desc"]
 				if not is_unlocked:
 					final_text = final_text.replace("[color=green]Progress: Complete[/color]", "[color=crimson]Progress: Incomplete[/color]")
