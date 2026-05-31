@@ -1,0 +1,281 @@
+[gd_scene load_steps=13 format=3 uid="uid://b1rgwpbqucddl"]
+
+[ext_resource type="Script" uid="uid://cw51f2blhijxc" path="res://Scenes/Main Screen/achievement_list.gd" id="1_6mqg7"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="1_7ku6d"]
+[ext_resource type="Theme" uid="uid://c5dfohr52go08" path="res://Assets/Buttons/chapter_selection_btn.tres" id="2_6mqg7"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="3_7ku6d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m7jqq"]
+bg_color = Color(1, 0.87058824, 0.34901962, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.5764706, 0.34901962, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2axfl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oepto"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c38w3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mrk6i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dhrxl"]
+
+[sub_resource type="Theme" id="Theme_ochfv"]
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_2axfl")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxEmpty_oepto")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxEmpty_c38w3")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_mrk6i")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_dhrxl")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kii5t"]
+bg_color = Color(1, 0.87058824, 0.34901962, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.5764706, 0.34901962, 1)
+border_blend = true
+
+[node name="AchievementList" type="CanvasLayer"]
+script = ExtResource("1_6mqg7")
+
+[node name="AchievementPanel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = -60.125
+offset_right = 35.5
+offset_bottom = 60.125
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m7jqq")
+
+[node name="SFXLabel" type="Label" parent="AchievementPanel"]
+layout_mode = 0
+offset_left = 5.5
+offset_top = 5.125
+offset_right = 64.5
+offset_bottom = 15.125
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 10
+text = "Achievements"
+
+[node name="close_container" type="VBoxContainer" parent="AchievementPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.786
+anchor_right = 0.51600003
+anchor_bottom = 0.79
+offset_left = -21.0
+offset_top = 19.973
+offset_right = 21.559998
+offset_bottom = 33.437035
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="CloseBtn" type="Button" parent="AchievementPanel/close_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_6mqg7")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "close"
+autowrap_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AchievementPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -44.0
+offset_right = 31.0
+offset_bottom = 49.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_ochfv")
+
+[node name="MarginContainer" type="MarginContainer" parent="AchievementPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AchievementPanel/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+
+[node name="Achievement1" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "Every Peso Counts"
+
+[node name="Achievement2" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "No-Pasahe Grind"
+
+[node name="Achievement3" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 4
+text = "FinQuest Premium Member"
+
+[node name="Achievement4" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 4
+text = "Brewmaster Apprentice"
+
+[node name="Achievement5" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = " Aisle Manager"
+
+[node name="Achievement6" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "Human Calculator"
+
+[node name="Achievement7" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "Academic Weapon"
+
+[node name="Achievement8" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "Inflation Fighter"
+
+[node name="Achievement9" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "Sopas over Starbs"
+
+[node name="Achievement10" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "Magna Cum Budget"
+
+[node name="Achievement11" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 4
+text = "Corporate Ladder Climber"
+
+[node name="Achievement12" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("3_7ku6d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_7ku6d")
+theme_override_font_sizes/font_size = 5
+text = "CEO of My Own Life"
+
+[node name="DarkBG" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TutorialPanel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = -48.0
+offset_right = 35.5
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kii5t")
+
+[node name="TutorialLabel" type="RichTextLabel" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.5
+offset_top = -44.5
+offset_right = 30.5
+offset_bottom = 44.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_7ku6d")
+theme_override_font_sizes/normal_font_size = 6
+bbcode_enabled = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1

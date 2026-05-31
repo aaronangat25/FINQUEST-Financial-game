@@ -6,15 +6,24 @@ const NEXT_SCENE = "res://Scenes/Chapter Selection/chapter_selection.tscn"
 @onready var play_btn = $main_menu_bg/menu_button_container/playbtn
 @onready var option_btn = $main_menu_bg/menu_button_container/optionbtn
 
-# Direct path traversing through the CanvasLayer to the yellow OptionPanel container
+# 🏅 FIXED REFERENCE: Maps directly to the button inside your container path
+@onready var achievement_btn = $main_menu_bg/menu_button_container/achievementbtn
+
+# Direct paths traversing to your independent CanvasLayer overlay nodes
 @onready var option_panel = $Option
+@onready var achievement_panel = $AchievementList
 
 func _ready():
-	# Instantly hide the options panel at game frame zero
+	# Instantly hide overlays at game frame zero to clear the screen
 	if option_panel:
 		option_panel.hide()
 	else:
-		print("[ERROR] main_screen.gd cannot find the OptionPanel node! Check your hierarchy paths.")
+		print("[ERROR] main_screen.gd cannot find the OptionPanel node!")
+
+	if achievement_panel:
+		achievement_panel.hide()
+	else:
+		print("[WARNING] main_screen.gd cannot find the AchievementList node!")
 
 	# --- SIGNAL CONNECTIONS ---
 	if play_btn and not play_btn.pressed.is_connected(_on_playbtn_pressed):
@@ -22,6 +31,10 @@ func _ready():
 		
 	if option_btn and not option_btn.pressed.is_connected(_on_option_btn_pressed):
 		option_btn.pressed.connect(_on_option_btn_pressed)
+
+	# 🏅 FIXED SIGNAL: Listen for clicks on your newly added achievement button
+	if achievement_btn and not achievement_btn.pressed.is_connected(_on_achievement_btn_pressed):
+		achievement_btn.pressed.connect(_on_achievement_btn_pressed)
 
 	# --- AUDIO INITIALIZATION ---
 	AudioManager.play_menu_music()
@@ -53,6 +66,15 @@ func _on_option_btn_pressed():
 	if option_panel:
 		option_panel.show()
 		print("[MAIN SCREEN] Option Panel overlay opened.")
+
+# 🏅 FIXED ACTION: Safely synchronizes SQLite tables and reveals the panel
+func _on_achievement_btn_pressed():
+	if achievement_panel:
+		if achievement_panel.has_method("sync_with_sqlite_database"):
+			achievement_panel.sync_with_sqlite_database()
+		
+		achievement_panel.show()
+		print("[MAIN SCREEN] Achievement list overlay opened and populated from DB.")
 
 func _change_scene():
 	get_tree().change_scene_to_file(NEXT_SCENE)
