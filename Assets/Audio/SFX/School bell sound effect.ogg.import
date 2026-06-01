@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bd12siub2k4qk"
+path="res://.godot/imported/School bell sound effect.ogg-f385028b83ee17d43b33269e64868b28.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/School bell sound effect.ogg"
+dest_files=["res://.godot/imported/School bell sound effect.ogg-f385028b83ee17d43b33269e64868b28.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

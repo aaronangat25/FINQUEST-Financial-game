@@ -30,6 +30,10 @@ var current_view_index : int = 1
 # GODOT READY
 # =========================================
 func _ready():
+	# Wait for database to be fully ready before doing anything
+	while not DatabaseManager.is_ready:
+		await get_tree().process_frame
+	
 	next_arrow.pressed.connect(_on_next_arrow_pressed)
 	back_arrow.pressed.connect(_on_back_arrow_pressed)
 	if play_btn:
@@ -39,7 +43,7 @@ func _ready():
 	if back_menu_btn:
 		back_menu_btn.pressed.connect(_on_back_menu_btn_pressed)
 	
-	update_selection_ui()
+	await update_selection_ui()
 
 # =========================================
 # UI CORE UPDATE LOGIC
@@ -70,7 +74,7 @@ func update_selection_ui():
 	var target_db_chapter_number = current_view_index
 	
 	# Kumuha ng buong status ng current chapter view mula sa database table
-	DatabaseManager.db.query_with_bindings("""
+	await DatabaseManager.safe_query_with_bindings("""
 		SELECT is_unlocked, is_completed 
 		FROM chapter_progress 
 		WHERE player_id = ? AND chapter_number = ?;
@@ -153,12 +157,12 @@ func adjust_play_button_state(unlocked : bool, completed : bool):
 func _on_next_arrow_pressed():
 	if current_view_index < 7:
 		current_view_index += 1
-		update_selection_ui()
+		await update_selection_ui()
 
 func _on_back_arrow_pressed():
 	if current_view_index > 1:
 		current_view_index -= 1
-		update_selection_ui()
+		await update_selection_ui()
 
 # =========================================
 # MENU NAVIGATION ACTION (KEEP MUSIC ALIVE)
@@ -175,11 +179,13 @@ func _on_back_menu_btn_pressed():
 # =========================================
 func _on_play_btn_pressed():
 	
+	await get_tree().create_timer(0.1).timeout
+	
 	AudioManager.stop_all_music()
 	var target_db_chapter_number = current_view_index
 
 	# PREVENT ACCIDENTAL CLICKS ON LOCKED OR FINISHED LEVELS
-	DatabaseManager.db.query_with_bindings("""
+	await DatabaseManager.safe_query_with_bindings("""
 		SELECT is_unlocked, is_completed 
 		FROM chapter_progress 
 		WHERE player_id = ? AND chapter_number = ?;
@@ -205,16 +211,30 @@ func _on_play_btn_pressed():
 	
 	match current_view_index:
 		1:
-			TransitionManager.transition_to("res://Scenes/Prologue/prologue.tscn", "PROLOGUE")
+			callable_deferred_transition("res://Scenes/Prologue/prologue.tscn", "PROLOGUE")
 		2:
-			TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1.tscn", "CHAPTER 1")
+			callable_deferred_transition("res://Scenes/Chapter 1/chapter_1.tscn", "CHAPTER 1")
 		3:
-			TransitionManager.transition_to("res://Scenes/Chapter 2/chapter_2_scene_1.tscn", "CHAPTER 2")
+			callable_deferred_transition("res://Scenes/Chapter 2/chapter_2_scene_1.tscn", "CHAPTER 2")
 		4:
-			TransitionManager.transition_to("res://Scenes/Chapter 3/chapter_3_scene_1.tscn", "CHAPTER 3")
+			callable_deferred_transition("res://Scenes/Chapter 3/chapter_3_scene_1.tscn", "CHAPTER 3")
 		5:
-			TransitionManager.transition_to("res://Scenes/Chapter 4/chapter_4_scene_1.tscn", "CHAPTER 4")
+			callable_deferred_transition("res://Scenes/Chapter 4/chapter_4_scene_1.tscn", "CHAPTER 4")
 		6:
-			TransitionManager.transition_to("res://Scenes/Chapter 5/chapter_5_scene_1.tscn", "CHAPTER 5")
+			callable_deferred_transition("res://Scenes/Chapter 5/chapter_5_scene_1.tscn", "CHAPTER 5")
 		7:
-			TransitionManager.transition_to("res://Scenes/Ending/ending.tscn", "EPILOGUE")
+			callable_deferred_transition("res://Scenes/Ending/ending.tscn", "EPILOGUE")
+
+# HELPER FUNCTION FOR DEFERRED SCENE SWAPS & RAM FLUSH
+func callable_deferred_transition(scene_path: String, chapter_title: String) -> void:
+	TransitionManager.call_deferred("transition_to", scene_path, chapter_title)
+	call_deferred("force_memory_cleanup")
+
+# FORCE MEMORY PURGE BEFORE NEW CHAPTER LOADS
+func force_memory_cleanup() -> void:
+	print("[MEMORY] Forcing full garbage collection and texture flush...")
+	if chapter_thumbnail:
+		chapter_thumbnail.remove_theme_stylebox_override("panel")
+		
+	OS.delay_msec(10)
+	self.queue_free()

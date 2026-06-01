@@ -17,7 +17,7 @@ func save_game():
 		return
 
 	# Your original untouched save logic rows continue below safely:
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 	UPDATE player_stats
 	SET
 		bank_cash = ?,

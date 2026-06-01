@@ -166,8 +166,8 @@ grow_vertical = 2
 script = ExtResource("1_4t63r")
 
 [node name="busarrivalbg" type="AnimatedSprite2D" parent="."]
-position = Vector2(45.156242, 80.03124)
-scale = Vector2(0.035034183, 0.03332032)
+position = Vector2(45.214386, 80.1061)
+scale = Vector2(0.08202493, 0.0780214)
 sprite_frames = SubResource("SpriteFrames_t1d3b")
 animation = &"idle"
 frame = 3
@@ -251,13 +251,13 @@ scale = Vector2(0.85122335, 1.0300663)
 
 [node name="NotificationPopControl" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
+anchor_bottom = 0.046000004
 offset_left = -42.0
 offset_top = 19.0
 offset_right = 42.0
-offset_bottom = 31.0
+offset_bottom = 23.64
 grow_horizontal = 2
 script = ExtResource("29_hcdcd")
 

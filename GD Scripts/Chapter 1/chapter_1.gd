@@ -1,10 +1,10 @@
 extends Control
 
-const CURRENCY_HUD_SCENE = preload("res://Scenes/Currency/currency_hud.tscn")
-const GRAY_SCREEN_SCENE = preload("res://Scenes/Gray Screen/gray_screen.tscn")
-const PHONE_SCREEN_SCENE = preload("res://Scenes/Phone Screen/phone_screen.tscn")
-const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn") 
-const PHONE_SCREEN_VIRTUAL_SCENE = preload("res://Scenes/Phone Screen Virtual/phone_screen_virtual.tscn")
+var CURRENCY_HUD_SCENE = load("res://Scenes/Currency/currency_hud.tscn")
+var GRAY_SCREEN_SCENE = load("res://Scenes/Gray Screen/gray_screen.tscn")
+var PHONE_SCREEN_SCENE = load("res://Scenes/Phone Screen/phone_screen.tscn")
+var DIALOGUE_BOX_SCENE = load("res://Scenes/Dialogue Box/dialogue_box.tscn") 
+var PHONE_SCREEN_VIRTUAL_SCENE = load("res://Scenes/Phone Screen Virtual/phone_screen_virtual.tscn")
 
 const DORM_BG = preload("res://Assets/Backgrounds/Chapter 1/dorm/dormbg.png")
 const NEXT_SCENE = "res://Scenes/Chapter 1/chapter_1_scene_2.tscn"
@@ -46,30 +46,38 @@ var DORM_DIALOGUE: Array = [
 ]
 
 func _ready() -> void:
+	# Wait for database to be fully ready
+	while not DatabaseManager.is_ready:
+		await get_tree().process_frame
+	
 	# --- AUDIO INITIALIZATION ---
 	AudioManager.play_chapter_music()
+	
+	# ANDROID FIX: Wait a bit longer for scene transitions to settle
+	await get_tree().create_timer(0.3).timeout
 
 	# =================================================================
 	# AUTOMATIC DEVELOPER SAFETY INJECTION FOR DIRECT TESTING (F5)
 	# =================================================================
-	DatabaseManager.db.query_with_bindings("SELECT COUNT(*) as total FROM player_stats WHERE player_id = ?;", [GameManager.player_id])
+	DatabaseManager.safe_query_with_bindings("SELECT COUNT(*) as total FROM player_stats WHERE player_id = ?;", [GameManager.player_id])
+	
 	var row_exists = false
 	if DatabaseManager.db.query_result.size() > 0 and DatabaseManager.db.query_result[0]["total"] > 0:
 		row_exists = true
 		
 	if not row_exists:
 		print("[DEVELOPER SAFETY] No data entries found for testing. Injecting default profile rows for Player 1...")
-		DatabaseManager.db.query("""
+		DatabaseManager.safe_query("""
 			INSERT OR IGNORE INTO players (id, player_name, gender, job_path) 
 			VALUES (1, 'Jane Dev', 'Female', 'Cafe');
 		""")
-		DatabaseManager.db.query("""
+		DatabaseManager.safe_query("""
 			INSERT OR IGNORE INTO player_stats (player_id, bank_cash, on_hand_cash, current_chapter) 
 			VALUES (1, 3000, 0, 2);
 		""")
 		for chapter in range(1, 8):
 			var unlocked = 1 if chapter <= 2 else 0
-			DatabaseManager.db.query_with_bindings("""
+			DatabaseManager.safe_query_with_bindings("""
 				INSERT OR IGNORE INTO chapter_progress (player_id, chapter_number, is_unlocked, is_completed) 
 				VALUES (1, ?, ?, 0);
 			""", [chapter, unlocked])
@@ -87,7 +95,7 @@ func _ready() -> void:
 	
 	print("[SANDBOX RESET] Chapter 1 Initialized. Bank Cash: ₱", GameManager.bank_cash, " | On-Hand Cash: ₱", GameManager.on_hand_cash, " | Active Chapter Tracker: ", GameManager.current_chapter)
 	
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		UPDATE player_stats
 		SET bank_cash = 3000, on_hand_cash = 0, current_chapter = 2
 		WHERE player_id = ?;
@@ -108,12 +116,19 @@ func _ready() -> void:
 	
 	jane.modulate.a = 0.0
 	
+	# 🟢 FIXED SEQUENCE: Fire animation loop early while screen is pitch black
+	animated_bg.play("idle")
+	
+	# Give the phone GPU a single active processing frame to register texture nodes in the dark
+	await get_tree().process_frame
+	
+	# Now that assets are cached safely, wait for the black screen mask to disappear
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.transition_finished
 		
-	animated_bg.play("idle")
-	
+	# Wait smoothly for the bus sequence loop to naturally wrap up its frames
 	await animated_bg.animation_finished
+	
 	jane.appear()
 	await get_tree().create_timer(1.0).timeout
 	phone_mini.appear()

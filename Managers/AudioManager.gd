@@ -1,27 +1,27 @@
 extends Node
 
 # --- AUDIO TRACK PATHS (BGM) ---
-const MAIN_MENU_MUSIC = "res://Assets/Audio/Music/FINQUEST MAIN MENU.mp3"
-const GENERAL_MUSIC = "res://Assets/Audio/Music/GENERAL MUSIC.mp3"
-const COFFEE_SHOP_MUSIC = "res://Assets/Audio/Music/COFFEE SHOP POSSBLE 3.mp3"
-const CONVENIENCE_STORE_MUSIC = "res://Assets/Audio/Music/Convenience Store and supermarket.mp3"
-const BAD_ENDING_MUSIC = "res://Assets/Audio/Music/For bad endings.mp3"
+const MAIN_MENU_MUSIC = "res://Assets/Audio/Music/FINQUEST-MAIN-MENU.ogg"
+const GENERAL_MUSIC = "res://Assets/Audio/Music/GENERAL-MUSIC.ogg"
+const COFFEE_SHOP_MUSIC = "res://Assets/Audio/Music/COFFEE-SHOP-POSSBLE-3.ogg"
+const CONVENIENCE_STORE_MUSIC = "res://Assets/Audio/Music/Convenience-Store-and-supermarket.ogg"
+const BAD_ENDING_MUSIC = "res://Assets/Audio/Music/For-bad-endings.ogg"
 
 # --- SOUND EFFECT PATHS (SFX Inventory) ---
 const SFX_MAP = {
-	"CLICK": "res://Assets/Audio/SFX/Menu Selection Click.wav",
-	"SCANNER": "res://Assets/Audio/SFX/Barcode Scanner.mp3",
-	"BUS": "res://Assets/Audio/SFX/Bus atmosphere.mp3",
-	"DOORBELL": "res://Assets/Audio/SFX/Convinieence store doorbell.mp3",
+	"CLICK": "res://Assets/Audio/SFX/Menu-Selection-Click.ogg",
+	"SCANNER": "res://Assets/Audio/SFX/Barcode Scanner.ogg",
+	"BUS": "res://Assets/Audio/SFX/Bus atmosphere.ogg",
+	"DOORBELL": "res://Assets/Audio/SFX/Convinieence store doorbell.ogg",
 	"ERROR": "res://Assets/Audio/SFX/error.ogg",
-	"DEDUCT": "res://Assets/Audio/SFX/Money deduct.mp3",
-	"NOTIFICATION": "res://Assets/Audio/SFX/Phone Notification.mp3",
-	"TRAIN": "res://Assets/Audio/SFX/Train Station Sound Effect.mp3",
-	"INCOME": "res://Assets/Audio/SFX/Withdraw or money increase.mp3",
-	"BELL": "res://Assets/Audio/SFX/School bell sound effect .mp3",
-	"PHONE_RING": "res://Assets/Audio/SFX/Ring call.mp3",
-	"ROOSTER": "res://Assets/Audio/SFX/Rooster Sound.mp3",
-	"BIRD": "res://Assets/Audio/SFX/Bird Sound.mp3"
+	"DEDUCT": "res://Assets/Audio/SFX/Money deduct.ogg",
+	"NOTIFICATION": "res://Assets/Audio/SFX/Phone Notification.ogg",
+	"TRAIN": "res://Assets/Audio/SFX/Train-Station-Sound-Effect.ogg",
+	"INCOME": "res://Assets/Audio/SFX/Withdraw-or-money-increase.ogg",
+	"BELL": "res://Assets/Audio/SFX/School bell sound effect.ogg",
+	"PHONE_RING": "res://Assets/Audio/SFX/Ring call.ogg",
+	"ROOSTER": "res://Assets/Audio/SFX/Rooster Sound.ogg",
+	"BIRD": "res://Assets/Audio/SFX/Bird Sound.ogg"
 }
 
 # --- RUNTIME VARIABLES ---
@@ -207,8 +207,7 @@ func play_sfx(sfx_key: String, start_from_sec: float = 0.0) -> void:
 	sfx_player.stream = stream_resource
 	
 	if sfx_key == "PHONE_RING":
-		if sfx_player.stream is AudioStreamMP3:
-			sfx_player.stream.loop = true
+		sfx_player.stream.loop = true
 		active_looping_sfx[sfx_key] = sfx_player
 	else:
 		sfx_player.finished.connect(sfx_player.queue_free)

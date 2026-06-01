@@ -94,7 +94,7 @@ func unlock_achievement(achievement_id: String) -> void:
 	notification_instance.trigger_popup(asset_path)
 
 	var sfx_player = AudioStreamPlayer.new()
-	var sfx_stream = load("res://Assets/Audio/SFX/AchievementUnlocked.mp3")
+	var sfx_stream = load("res://Assets/Audio/SFX/AchievementUnlocked.ogg")
 	
 	if sfx_stream:
 		sfx_player.stream = sfx_stream
@@ -104,7 +104,7 @@ func unlock_achievement(achievement_id: String) -> void:
 		sfx_player.play()
 		sfx_player.finished.connect(sfx_player.queue_free)
 	else:
-		print("[AUDIO ERROR] Could not load AchievementUnlocked.mp3! Verify file path.")
+		print("[AUDIO ERROR] Could not load AchievementUnlocked.ogg! Verify file path.")
 
 
 # =========================================
@@ -160,21 +160,16 @@ func load_player_stats():
 # GET UNLOCKED CHAPTERS FROM DB
 # =========================================
 func get_unlocked_chapters() -> Array:
-	# 🛡️ THE CRITICAL MISSING GUARD: Stop the query if the DB isn't ready yet!
 	if not DatabaseManager or not DatabaseManager.is_ready:
-		print("[GAMEMANAGER WARNING] Database tables not fully cooked yet. Skipping frame query.")
 		return []
-
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		SELECT chapter_number 
 		FROM chapter_progress 
 		WHERE player_id = ? AND is_unlocked = 1;
 	""", [player_id])
-	
 	var unlocked_list = []
 	for row in DatabaseManager.db.query_result:
 		unlocked_list.append(int(row["chapter_number"]))
-		
 	return unlocked_list
 	
 # =========================================
@@ -210,7 +205,7 @@ func complete_current_chapter(grade : float):
 	current_chapter += 1
 	
 	# 3. Synchronize player_stats record with the new active progression step
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		UPDATE player_stats
 		SET current_chapter = ?
 		WHERE player_id = ?;
@@ -259,7 +254,7 @@ func flush_buffer_to_database() -> void:
 	buffered_achievements.clear() # Wipe the cache clean for the next chapter execution!
 	
 	for choice in buffered_choices:
-		DatabaseManager.db.query_with_bindings("""
+		DatabaseManager.safe_query_with_bindings("""
 			INSERT INTO player_choices (player_id, chapter_number, scene_key, choice_key, choice_value, effect_summary)
 			VALUES (?, ?, ?, ?, ?, ?);
 		""", [choice["player_id"], choice["chapter_number"], choice["scene_key"], choice["choice_key"], choice["choice_value"], ""])
@@ -269,7 +264,7 @@ func flush_buffer_to_database() -> void:
 		bank_cash = 3000
 		on_hand_cash = 0
 		
-		DatabaseManager.db.query_with_bindings("""
+		DatabaseManager.safe_query_with_bindings("""
 			UPDATE player_stats
 			SET bank_cash = 3000, on_hand_cash = 0
 			WHERE player_id = ?;
@@ -285,7 +280,7 @@ func flush_buffer_to_database() -> void:
 		if buffered_bank_change != 0:
 			DatabaseManager.add_transaction(player_id, current_chapter, "BANK_SETTLEMENT", buffered_bank_change, current_chapter_description)
 			
-		DatabaseManager.db.query_with_bindings("""
+		DatabaseManager.safe_query_with_bindings("""
 			UPDATE player_stats
 			SET bank_cash = ?, on_hand_cash = ?, total_income = ?, total_expenses = ?
 			WHERE player_id = ?;
@@ -332,7 +327,7 @@ func reset_game_data():
 # FETCH ACTIVE GRADE HISTORY FOR SIS APP
 # =========================================
 func get_grade_history() -> Array:
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		SELECT chapter_number, completion_grade 
 		FROM chapter_progress 
 		WHERE player_id = ? AND completion_grade > 0.0 
@@ -368,26 +363,26 @@ func execute_production_factory_reset() -> void:
 	current_chapter_description = ""
 	
 	# 3. CLEAR ALL NARRATIVE DECISIONS FROM SQLITE
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		DELETE FROM player_choices WHERE player_id = ?;
 	""", [player_id])
 	
 	# 4. FIXED: Clear bank app ledger history using your exact table name: 'transactions'
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		DELETE FROM transactions WHERE player_id = ?;
 	""", [player_id])
 	
 	# 5. CLEAR MINIGAME AND ACHIEVEMENT TRACKERS FOR A TRUE FRESH RUN
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		DELETE FROM player_achievements WHERE player_id = ?;
 	""", [player_id])
 	
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		DELETE FROM minigame_progress WHERE player_id = ?;
 	""", [player_id])
 	
 	# 6. Synchronize your active player stats columns back to baseline settings
-	DatabaseManager.db.query_with_bindings("""
+	DatabaseManager.safe_query_with_bindings("""
 		UPDATE player_stats
 		SET bank_cash = 3000, 
 		    on_hand_cash = 0, 

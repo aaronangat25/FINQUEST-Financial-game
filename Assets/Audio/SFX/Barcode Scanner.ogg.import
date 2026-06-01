@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dgseg8j8b64i0"
+path="res://.godot/imported/Barcode Scanner.ogg-01ccfe02c982abac886d95e63dc98075.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Barcode Scanner.ogg"
+dest_files=["res://.godot/imported/Barcode Scanner.ogg-01ccfe02c982abac886d95e63dc98075.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

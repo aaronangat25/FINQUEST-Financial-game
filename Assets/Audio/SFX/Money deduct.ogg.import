@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://civrqeb27v7d8"
+path="res://.godot/imported/Money deduct.ogg-66464b15479ef1ed2b887b2d4a826d88.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Money deduct.ogg"
+dest_files=["res://.godot/imported/Money deduct.ogg-66464b15479ef1ed2b887b2d4a826d88.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
