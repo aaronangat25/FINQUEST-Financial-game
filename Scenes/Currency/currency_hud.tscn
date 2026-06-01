@@ -64,4 +64,4 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_bi6pf")
 theme_override_font_sizes/font_size = 5
-text = "widthraw"
+text = "withdraw"

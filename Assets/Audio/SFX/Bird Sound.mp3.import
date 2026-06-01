@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bwm214lu4cceu"
+path="res://.godot/imported/Bird Sound.mp3-45bb8837626f84561fec98fff27fd5a6.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Bird Sound.mp3"
+dest_files=["res://.godot/imported/Bird Sound.mp3-45bb8837626f84561fec98fff27fd5a6.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

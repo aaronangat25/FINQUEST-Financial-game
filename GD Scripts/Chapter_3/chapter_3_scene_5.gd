@@ -19,6 +19,9 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var total_label = $StatsScreen/Panel/TotalName/TotalLabel
 @onready var feedback_label = $StatsScreen/Panel/FeedbackLabel
 
+# Matches image_429f1d.png verbatim
+@onready var pause_btn = $pause_btn
+
 var currency_hud
 var active_dialogue_box 
 
@@ -128,14 +131,11 @@ func _show_evaluation_stats() -> void:
 		total_label.text = "P" + str(true_expenses)
 		
 	if feedback_label:
-		# COMBINED INFLATION CARD TARGET BOUNDARIES
-		# Meal (0 to 90) + Groceries (100 to 250)
 		if true_expenses <= 150: 
 			feedback_label.text = "RESULT: EXCELLENT BUDGETING"
 			feedback_label.add_theme_color_override("font_color", Color("a5d68d")) 
 			jane_reaction_text = "Buti na lang nag-adjust ako kahit may inflation."
 			
-			# 🏅 ACHIEVEMENT INTEGRATION: Unlocks when securing the highest monthly budget result tier
 			GameManager.unlock_achievement("INFLATION_FIGHTER")
 			
 		elif true_expenses <= 250: 
@@ -148,7 +148,6 @@ func _show_evaluation_stats() -> void:
 			feedback_label.add_theme_color_override("font_color", Color("d95763")) 
 			jane_reaction_text = "Ang bilis maubos ng pera ko... kailangan kong mag-budget better next time."
 	
-	# 1. Show only the Stats Panel (Yellow Box)
 	if stats_screen:
 		stats_screen.show()
 		if stats_panel: stats_panel.show()
@@ -157,7 +156,6 @@ func _show_evaluation_stats() -> void:
 		tween.tween_property(stats_screen, "modulate:a", 1.0, 1.0)
 		await tween.finished 
 		
-	# 2. PAUSE FOR 5 SECONDS
 	waiting_for_click = true
 	can_click_result = false
 	
@@ -166,11 +164,9 @@ func _show_evaluation_stats() -> void:
 	
 	await self.result_clicked
 	
-	# 3. Instantly hide ONLY the Yellow Box result panel upon click
 	if stats_panel:
 		stats_panel.hide()
 		
-	# 4. Spawn Dialogue Box for Jane's reaction
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true 
@@ -197,7 +193,6 @@ func _show_evaluation_stats() -> void:
 	active_dialogue_box.start_dialogue(reaction_convo)
 	await active_dialogue_box.dialogue_finished
 	
-	# 5. Cleanup the dialogue and Jane
 	if jane_thinking: jane_thinking.exit(true)
 	await get_tree().create_timer(0.6).timeout
 			
@@ -207,10 +202,8 @@ func _show_evaluation_stats() -> void:
 		await tween_box_out.finished 
 	active_dialogue_box.queue_free()
 		
-	# 6. FINALLY: Show BOTH the Chapter 4 and Main Menu Navigation Buttons!
 	if stats_screen: stats_screen.show() 
 	
-	# Setup Chapter 4 Continue Button
 	if next_button:
 		next_button.show()
 		next_button.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -221,7 +214,6 @@ func _show_evaluation_stats() -> void:
 		if not next_button.pressed.is_connected(_on_next_pressed):
 			next_button.pressed.connect(_on_next_pressed)
 
-	# Setup Exit to Main Menu Button
 	if main_menu_button:
 		main_menu_button.show()
 		main_menu_button.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -232,6 +224,7 @@ func _show_evaluation_stats() -> void:
 		if not main_menu_button.pressed.is_connected(_on_main_menu_pressed):
 			main_menu_button.pressed.connect(_on_main_menu_pressed)
 
+
 # --- CONTINUE TO CHAPTER 4 BUTTON CLICKED ---
 func _on_next_pressed() -> void:
 	if is_transitioning: return
@@ -240,12 +233,13 @@ func _on_next_pressed() -> void:
 	if next_button: next_button.disabled = true
 	if main_menu_button: main_menu_button.disabled = true
 	
+	if pause_btn: pause_btn.hide()
+	
 	print("Chapter 3 Complete! Preparing 3-second database save sequence...")
 	
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# Force tracker safely to Chapter 4 (Row 5 inside SQLite chapter_progress table)
 	GameManager.current_chapter = 4
 	
 	var next_scene_path = "res://Scenes/Chapter 4/chapter_4_scene_1.tscn" 
@@ -260,12 +254,13 @@ func _on_main_menu_pressed() -> void:
 	if next_button: next_button.disabled = true
 	if main_menu_button: main_menu_button.disabled = true
 	
+	if pause_btn: pause_btn.hide()
+	
 	print("Quitting to Main Menu. Running database save sequence first...")
 	
 	if currency_hud: currency_hud.hide()
 	if stats_screen: stats_screen.hide()
 	
-	# Force tracker safely to Chapter 4 (Row 5 inside SQLite chapter_progress table)
 	GameManager.current_chapter = 4
 	
 	var main_screen_path = "res://Scenes/Main Screen/main_screen.tscn"
@@ -274,13 +269,20 @@ func _on_main_menu_pressed() -> void:
 
 # --- ENCAPSULATED SAVE OVERLAY RUNTIME CARRIER ---
 func _execute_save_and_blackout(destination_path: String, play_cinematic_card: bool) -> void:
-	# Safely commits Chapter 3 choice sets and budget log arrays right before shifting scenes!
+	if pause_btn: 
+		pause_btn.hide()
+		pause_btn.process_mode = PROCESS_MODE_DISABLED 
+		
 	GameManager.flush_buffer_to_database()
 	
 	# 1. Fire up the saving overlay asset node
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS
 	saving_screen.show()
 	GameManager.complete_current_chapter(100.0)
+	
+	# 🛡️ THE RUNTIME PROTECTION LINE: Force-hide pause button again after GameManager updates chapter state 
+	if pause_btn: 
+		pause_btn.hide()
 	
 	await get_tree().create_timer(3.0).timeout
 	
@@ -295,7 +297,6 @@ func _execute_save_and_blackout(destination_path: String, play_cinematic_card: b
 	
 	# 3. Handle specific level banner tweens if continuing forward
 	if play_cinematic_card:
-		# Clear track locks and restart the default background score loop from zero for Chapter 4
 		AudioManager.restart_general_music()
 
 		var title_label = TransitionManager.get_node_or_null("TitleLabel")

@@ -54,10 +54,23 @@ func _ready() -> void:
 	
 	phone_mini.phone_clicked.connect(_on_phone_clicked)
 	
+	# 🟢 TRIGGER MORNING SUNRISE AUDIO TRANSITION
+	# Fires both sound effect nodes simultaneously via AudioManager's sound mapping system
+	_play_morning_ambience()
+	
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.transition_finished
 	
 	_play_sunrise_sequence()
+
+
+# --- SIMULTANEOUS AMBIENCE CARRIER ---
+func _play_morning_ambience() -> void:
+	print("[ENVIRONMENT] Scene loaded. Instantiating rooster and bird audio channels...")
+	if AudioManager.has_method("play_sfx"):
+		AudioManager.play_sfx("ROOSTER")
+		AudioManager.play_sfx("BIRD")
+
 
 func _play_sunrise_sequence() -> void:
 	sunrise_bg.play("idle")
@@ -188,7 +201,7 @@ func _on_resto_pressed() -> void:
 
 # --- THE TRANSITION LOGIC ---
 func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
-	# Trigger your cash deduction wallet sweep sound effect
+	# Trigger your cash deduction wallet swipe sound effect
 	AudioManager.play_sfx("DEDUCT")
 	
 	currency_hud.add_money(-cost)

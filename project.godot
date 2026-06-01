@@ -10,12 +10,12 @@ config_version=5
 
 [application]
 
-config/name="Finquest-v2"
+config/name="Finquest"
 run/main_scene="uid://b8iijuwlaxvhc"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/show_image=false
-config/icon="res://icon.svg"
+config/icon="uid://bkhw3s06dxfe7"
 
 [autoload]
 
