@@ -105,7 +105,7 @@ func update_selection_ui():
 			title_text = "CHAPTER 5"
 			target_thumbnail_path = THUMB_CHAPTER_5
 		7:
-			title_text = "ENDING"
+			title_text = "EPILOGUE"
 			target_thumbnail_path = THUMB_ENDING
 
 	# BOUNDARY HIDING CONTROLS
@@ -217,4 +217,4 @@ func _on_play_btn_pressed():
 		6:
 			TransitionManager.transition_to("res://Scenes/Chapter 5/chapter_5_scene_1.tscn", "CHAPTER 5")
 		7:
-			TransitionManager.transition_to("res://Scenes/Ending/ending.tscn", "ENDING")
+			TransitionManager.transition_to("res://Scenes/Ending/ending.tscn", "EPILOGUE")

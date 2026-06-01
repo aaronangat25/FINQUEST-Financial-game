@@ -193,3 +193,4 @@ text = "main menu"
 [node name="pause_btn" parent="." instance=ExtResource("6_fi5xn")]
 
 [node name="SavingScreen" parent="." instance=ExtResource("7_7r7fh")]
+visible = false

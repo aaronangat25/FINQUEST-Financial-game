@@ -831,7 +831,7 @@ func _on_phone_3_back_pressed() -> void:
 	
 	var end_grade = 1.25
 	if study_choice == "A" and travel_choice == "A":
-		end_grade = 1.0
+		end_grade = 1.00
 	elif study_choice == "B" and travel_choice == "B":
 		end_grade = 1.50
 	
