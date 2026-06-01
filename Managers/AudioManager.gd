@@ -19,7 +19,9 @@ const SFX_MAP = {
 	"TRAIN": "res://Assets/Audio/SFX/Train Station Sound Effect.mp3",
 	"INCOME": "res://Assets/Audio/SFX/Withdraw or money increase.mp3",
 	"BELL": "res://Assets/Audio/SFX/School bell sound effect .mp3",
-	"PHONE_RING": "res://Assets/Audio/SFX/Ring call.mp3"
+	"PHONE_RING": "res://Assets/Audio/SFX/Ring call.mp3",
+	"ROOSTER": "res://Assets/Audio/SFX/Rooster Sound.mp3",
+	"BIRD": "res://Assets/Audio/SFX/Bird Sound.mp3"
 }
 
 # --- RUNTIME VARIABLES ---

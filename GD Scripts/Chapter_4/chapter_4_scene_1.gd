@@ -13,6 +13,7 @@ const GRAY_SCREEN_SCENE = preload("res://Scenes/Gray Screen/gray_screen.tscn")
 @onready var jane_big = $JaneBigAnchor/jane2d
 @onready var phone_mini = $PhoneMini
 @onready var choose_control = $ChooseControl9
+@onready var pause_btn = $pause_btn
 
 var currency_hud
 var active_dialogue_box
@@ -43,6 +44,16 @@ func _ready() -> void:
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 	
+	# 🛡️ THE STARTUP LOCKOUT FIX: Force hide both elements instantly before titles run
+	if pause_btn:
+		pause_btn.hide()
+		pause_btn.process_mode = PROCESS_MODE_DISABLED
+		
+	if is_instance_valid(currency_hud):
+		var hud_withdraw_btn = currency_hud.find_child("withdraw_btn", true, false)
+		if hud_withdraw_btn:
+			hud_withdraw_btn.hide()
+
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_big: jane_big.hide()
 	if phone_mini: phone_mini.hide()
@@ -53,10 +64,21 @@ func _ready() -> void:
 			
 	await get_tree().process_frame
 	
+	# Block execution here while the black screens show "CHAPTER 4" -> "START OF THESIS SEMESTER"
 	await _run_title_sequence()
 	
 	if TransitionManager.color_rect.visible:
 		await TransitionManager.fade_from_black()
+		
+	# 🟢 RE-REVEAL HUD & CONTROLS: Title sequences finished, now safe to interact!
+	if pause_btn:
+		pause_btn.show()
+		pause_btn.process_mode = PROCESS_MODE_INHERIT
+		
+	if is_instance_valid(currency_hud):
+		var hud_withdraw_btn = currency_hud.find_child("withdraw_btn", true, false)
+		if hud_withdraw_btn:
+			hud_withdraw_btn.show()
 		
 	_play_intro_sequence()
 
@@ -390,10 +412,16 @@ func _on_choice_a_pressed() -> void:
 	Global.choice_meeting = "A"
 	# Trigger your cash deduction wallet swipe sound effect for transit costs
 	AudioManager.play_sfx("DEDUCT")
+	
+	# Hide pause controls instantly upon clicking choice card
+	_hide_pause_button_completely()
 	_handle_choice_reaction("A", "Medyo magastos… pero ang bilis namin naka-progress")
 
 func _on_choice_b_pressed() -> void:
 	Global.choice_meeting = "B"
+	
+	# Hide pause controls instantly upon clicking choice card
+	_hide_pause_button_completely()
 	_handle_choice_reaction("B", "Tipid nga… pero ang damiing interruptions.")
 
 func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
@@ -450,6 +478,9 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 	
 	await get_tree().create_timer(2.0).timeout
 	
+	# Force clean lockdown again before firing black title cards
+	_hide_pause_button_completely()
+
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
 		
@@ -472,6 +503,8 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 		
 	print("Chapter 4 Scene 1 Complete! Transitioning to Scene 2...")
 	
+	if is_instance_valid(currency_hud): currency_hud.hide()
+
 	var next_scene_path = "res://Scenes/Chapter 4/chapter_4_scene_2.tscn"
 	ResourceLoader.load_threaded_request(next_scene_path)
 	var load_status = ResourceLoader.load_threaded_get_status(next_scene_path)
@@ -483,3 +516,16 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 	if load_status == ResourceLoader.THREAD_LOAD_LOADED:
 		var new_scene = ResourceLoader.load_threaded_get(next_scene_path)
 		get_tree().change_scene_to_packed(new_scene)
+
+
+# 🛡️ UNIFIED CLEAN PAUSE KILLER UTILITY
+func _hide_pause_button_completely() -> void:
+	if is_instance_valid(currency_hud):
+		var hud_withdraw_btn = currency_hud.find_child("withdraw_btn", true, false)
+		if hud_withdraw_btn:
+			hud_withdraw_btn.hide()
+			
+	var active_pause = find_child("pause_btn", true, false)
+	if active_pause:
+		active_pause.hide()
+		active_pause.process_mode = PROCESS_MODE_DISABLED

@@ -47,24 +47,40 @@ func _on_restart_btn_pressed() -> void:
 		menu_button_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# =================================================================
-	# 1. RUNTIME RAM & STATS RESYNC (Clearing GameManager First)
+	# 1. RUNTIME RAM & STATS RESYNC (With Achievement Preservation)
 	# =================================================================
+	# Back up the currently unlocked achievements dictionary from memory cache before reset clears it
+	var saved_achievements = {}
+	if "unlocked_achievements" in GameManager:
+		saved_achievements = GameManager.unlocked_achievements.duplicate()
+
 	# Revert structural currency states in Global script containers
 	if "money" in Global: Global.money = 0
 	if "currency" in Global: Global.currency = 0
 	if "choice_meeting" in Global: Global.choice_meeting = ""
 	if "choice_printing" in Global: Global.choice_printing = ""
 
-	# Drops active cache parameters down to zero
+	# Manually clear finance tracking records to avoid running standard full factory purge query logs
 	if "on_hand_cash" in GameManager: GameManager.on_hand_cash = 0
 	if "bank_cash" in GameManager: GameManager.bank_cash = 0
 	if "total_expenses" in GameManager: GameManager.total_expenses = 0
+	if "total_income" in GameManager: GameManager.total_income = 0
+	if "financial_wisdom_points" in GameManager: GameManager.financial_wisdom_points = 0
+	if "grades" in GameManager: GameManager.grades = 0.0
+	if "current_chapter" in GameManager: GameManager.current_chapter = 1
+	if "current_scene" in GameManager: GameManager.current_scene = ""
+	
+	if "buffered_choices" in GameManager: GameManager.buffered_choices.clear()
+	if "buffered_bank_change" in GameManager: GameManager.buffered_bank_change = 0
+	if "buffered_on_hand_change" in GameManager: GameManager.buffered_on_hand_change = 0
+	if "current_chapter_description" in GameManager: GameManager.current_chapter_description = ""
 
-	if GameManager.has_method("execute_production_factory_reset"):
-		GameManager.execute_production_factory_reset()
+	# Restore the backed up achievement states to memory RAM
+	if "unlocked_achievements" in GameManager:
+		GameManager.unlocked_achievements = saved_achievements
 
 	# =================================================================
-	# 2. DATABASE PROGRESSION RESET PIPELINE (SQLite Level Progress Wipe)
+	# 2. DATABASE PROGRESSION RESET PIPELINE (Customized Selective Clear)
 	# =================================================================
 	# Force-relock all subsequent levels (Chapters 2-7 & Ending tracking slots) back to 0 state
 	DatabaseManager.db.query_with_bindings("""
@@ -80,19 +96,39 @@ func _on_restart_btn_pressed() -> void:
 		WHERE player_id = ? AND chapter_number = 1;
 	""", [GameManager.player_id])
 	
-	# 🟢 THE FIX: Hard-wipe persistent currency savings inside SQL tables completely!
-	# Adjust these column/table names if your database layout stores cash balances under different keys.
+	# Clear narrative decision histories
 	DatabaseManager.db.query_with_bindings("""
-		UPDATE player_reserves 
-		SET on_hand_cash = 0, bank_cash = 0 
+		DELETE FROM player_choices WHERE player_id = ?;
+	""", [GameManager.player_id])
+	
+	# Clear bank app transactions ledger history logs
+	DatabaseManager.db.query_with_bindings("""
+		DELETE FROM transactions WHERE player_id = ?;
+	""", [GameManager.player_id])
+	
+	# Clear minigame progress scores
+	DatabaseManager.db.query_with_bindings("""
+		DELETE FROM minigame_progress WHERE player_id = ?;
+	""", [GameManager.player_id])
+	
+	# Reset persistent balances inside player statistics rows to tutorial defaults (₱3000 Bank, ₱0 Wallet)
+	DatabaseManager.db.query_with_bindings("""
+		UPDATE player_stats
+		SET bank_cash = 3000, 
+			on_hand_cash = 0, 
+			financial_wisdom_points = 0, 
+			grades = 0.0, 
+			current_chapter = 1,
+			total_income = 0,
+			total_expenses = 0
 		WHERE player_id = ?;
 	""", [GameManager.player_id])
 	
-	# Safely commit and flush transaction updates to disk instantly
+	# Safely commit and flush updates to disk instantly
 	if GameManager.has_method("flush_buffer_to_database"):
 		GameManager.flush_buffer_to_database()
 	
-	print("[DATABASE] SQLite chapter selection and currency tables safely reset and written to disk.")
+	print("[DATABASE] SQLite parameters synchronized. Stored achievements kept untouched for QA metrics.")
 
 	# =================================================================
 	# 3. VISUAL TRANSITION SEQUENCING

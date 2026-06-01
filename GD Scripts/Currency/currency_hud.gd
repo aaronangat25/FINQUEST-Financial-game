@@ -19,7 +19,7 @@ func _ready():
 	
 	# --- PROLOGUE AUTOMATIC HIDE CHECK ---
 	if withdraw_btn:
-		if "current_chapter" in GameManager and GameManager.current_chapter == 0:
+		if "current_chapter" in GameManager and GameManager.current_chapter == 1:
 			withdraw_btn.hide()
 		else:
 			withdraw_btn.show()
