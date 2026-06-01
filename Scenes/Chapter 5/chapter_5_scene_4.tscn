@@ -76,9 +76,9 @@ anchor_top = 0.156
 anchor_right = 0.5
 anchor_bottom = 0.156
 offset_left = -35.0
-offset_top = -5.960001
+offset_top = 0.03999901
 offset_right = 36.0
-offset_bottom = 79.04
+offset_bottom = 85.04
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -323,3 +323,4 @@ theme_override_font_sizes/font_size = 6
 text = "main menu"
 
 [node name="SavingScreen" parent="." instance=ExtResource("7_46tpv")]
+visible = false

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://7kcsbsly5tk8"]
+[gd_scene load_steps=5 format=3 uid="uid://7kcsbsly5tk8"]
 
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="1_bi6pf"]
 [ext_resource type="Script" uid="uid://b70nvlf7j5ill" path="res://GD Scripts/Currency/currency_hud.gd" id="1_v8rjt"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="3_d4rje"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8rjt"]
 bg_color = Color(0, 0, 0, 0.49019608)
@@ -46,3 +47,21 @@ theme_override_fonts/font = ExtResource("1_bi6pf")
 theme_override_font_sizes/font_size = 8
 text = "P0"
 horizontal_alignment = 2
+
+[node name="withdraw_btn" type="Button" parent="."]
+anchors_preset = -1
+anchor_left = 0.94400007
+anchor_top = 0.094000004
+anchor_right = 1.0
+anchor_bottom = 0.13700001
+offset_left = -21.960007
+offset_top = -0.040000916
+offset_right = -5.0
+offset_bottom = 0.07999802
+focus_mode = 0
+theme = ExtResource("3_d4rje")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_bi6pf")
+theme_override_font_sizes/font_size = 5
+text = "widthraw"

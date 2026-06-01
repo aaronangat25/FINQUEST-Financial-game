@@ -1,18 +1,49 @@
-[gd_scene load_steps=4 format=3 uid="uid://8qhlywmd4o2r"]
+[gd_scene load_steps=6 format=3 uid="uid://8qhlywmd4o2r"]
 
 [ext_resource type="Script" uid="uid://b3exbob7d1kwc" path="res://Scenes/Loading Screen/SavingScreen.gd" id="1_h5ct6"]
-[ext_resource type="Texture2D" uid="uid://mw180wigih40" path="res://Assets/Backgrounds/Loading Screen/SAVING PROGRESS BG.png" id="1_vlyaw"]
+[ext_resource type="Texture2D" uid="uid://bkhw3s06dxfe7" path="res://Assets/Logo/logo finquest.png" id="2_7l61c"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="3_cxxtp"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h5ct6"]
-texture = ExtResource("1_vlyaw")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quw60"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_brnkd"]
+texture = ExtResource("2_7l61c")
 
 [node name="SavingScreen" type="CanvasLayer"]
 script = ExtResource("1_h5ct6")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="BlackBG" type="Panel" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_h5ct6")
+theme_override_styles/panel = SubResource("StyleBoxFlat_quw60")
+
+[node name="Logo" type="Panel" parent="BlackBG"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.38700002
+anchor_right = 0.5
+anchor_bottom = 0.38700002
+offset_left = -29.0
+offset_top = -29.920006
+offset_right = 29.0
+offset_bottom = 30.079994
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_brnkd")
+
+[node name="Label" type="Label" parent="BlackBG"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 121.0
+offset_right = 87.0
+offset_bottom = 131.0
+theme_override_fonts/font = ExtResource("3_cxxtp")
+theme_override_font_sizes/font_size = 8
+text = "Saving Progress..."
+horizontal_alignment = 1
+vertical_alignment = 1

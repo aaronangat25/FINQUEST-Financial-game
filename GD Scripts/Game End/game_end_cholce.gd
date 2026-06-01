@@ -49,7 +49,17 @@ func _on_restart_btn_pressed() -> void:
 	# =================================================================
 	# 1. RUNTIME RAM & STATS RESYNC (Clearing GameManager First)
 	# =================================================================
-	# Drops cash to ₱3000/₱0, re-tracks chapter index back to 1, and clears buffers!
+	# Revert structural currency states in Global script containers
+	if "money" in Global: Global.money = 0
+	if "currency" in Global: Global.currency = 0
+	if "choice_meeting" in Global: Global.choice_meeting = ""
+	if "choice_printing" in Global: Global.choice_printing = ""
+
+	# Drops active cache parameters down to zero
+	if "on_hand_cash" in GameManager: GameManager.on_hand_cash = 0
+	if "bank_cash" in GameManager: GameManager.bank_cash = 0
+	if "total_expenses" in GameManager: GameManager.total_expenses = 0
+
 	if GameManager.has_method("execute_production_factory_reset"):
 		GameManager.execute_production_factory_reset()
 
@@ -70,13 +80,19 @@ func _on_restart_btn_pressed() -> void:
 		WHERE player_id = ? AND chapter_number = 1;
 	""", [GameManager.player_id])
 	
-	# Revert structural currency states in Global script containers
-	if "money" in Global: Global.money = 0
-	if "currency" in Global: Global.currency = 0
-	if "choice_meeting" in Global: Global.choice_meeting = ""
-	if "choice_printing" in Global: Global.choice_printing = ""
+	# 🟢 THE FIX: Hard-wipe persistent currency savings inside SQL tables completely!
+	# Adjust these column/table names if your database layout stores cash balances under different keys.
+	DatabaseManager.db.query_with_bindings("""
+		UPDATE player_reserves 
+		SET on_hand_cash = 0, bank_cash = 0 
+		WHERE player_id = ?;
+	""", [GameManager.player_id])
 	
-	print("[DATABASE] SQLite chapter selection logs safely synchronized with GameManager resets.")
+	# Safely commit and flush transaction updates to disk instantly
+	if GameManager.has_method("flush_buffer_to_database"):
+		GameManager.flush_buffer_to_database()
+	
+	print("[DATABASE] SQLite chapter selection and currency tables safely reset and written to disk.")
 
 	# =================================================================
 	# 3. VISUAL TRANSITION SEQUENCING

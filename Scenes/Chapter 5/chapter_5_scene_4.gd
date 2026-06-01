@@ -253,7 +253,7 @@ func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bo
 			title_label.modulate.a = 0.0
 			title_label.show()
 			
-			title_label.text = "THE ENDING"
+			title_label.text = "EPILOGUE"
 			var t1 = create_tween()
 			t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
 			await t1.finished
