@@ -15,7 +15,7 @@ run/main_scene="uid://b8iijuwlaxvhc"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/show_image=false
-config/icon="uid://bkhw3s06dxfe7"
+config/icon="uid://b6xpuqlq8a1j8"
 
 [autoload]
 
@@ -71,3 +71,4 @@ rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)

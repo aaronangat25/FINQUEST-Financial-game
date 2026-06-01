@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dbougl1v3otjc"
+path="res://.godot/imported/Bird Sound.ogg-46b34da27c8da98320c93087dd267a08.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Bird Sound.ogg"
+dest_files=["res://.godot/imported/Bird Sound.ogg-46b34da27c8da98320c93087dd267a08.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

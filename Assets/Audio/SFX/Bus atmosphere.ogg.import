@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://mbr8grar1den"
+path="res://.godot/imported/Bus atmosphere.ogg-5390faa4d79d022b3e601670e360c92b.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Bus atmosphere.ogg"
+dest_files=["res://.godot/imported/Bus atmosphere.ogg-5390faa4d79d022b3e601670e360c92b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

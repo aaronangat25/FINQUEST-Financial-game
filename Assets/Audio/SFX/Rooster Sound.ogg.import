@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://w0wfapii5nva"
+path="res://.godot/imported/Rooster Sound.ogg-609c5d9599aa8d9ebb0f8e2132d8310b.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Rooster Sound.ogg"
+dest_files=["res://.godot/imported/Rooster Sound.ogg-609c5d9599aa8d9ebb0f8e2132d8310b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
