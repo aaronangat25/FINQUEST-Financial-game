@@ -185,11 +185,11 @@ func _on_grocery_choice_pressed(choice: String) -> void:
 	AudioManager.play_sfx("DEDUCT")
 	
 	if choice == "A": 
-		GameManager.stage_finance_change(0, -250, "Purchased branded grocery items")
+		GameManager.request_expense_payment(250, "Purchased branded grocery items")
 	elif choice == "B": 
-		GameManager.stage_finance_change(0, -150, "Purchased generic grocery items")
+		GameManager.request_expense_payment(150, "Purchased generic grocery items")
 	elif choice == "C": 
-		GameManager.stage_finance_change(0, -100, "Purchased strictly essential groceries")
+		GameManager.request_expense_payment(100, "Purchased strictly essential groceries")
 	
 	# Refresh UI visually using our memory synchronization method
 	if currency_hud and currency_hud.has_method("refresh_display"):

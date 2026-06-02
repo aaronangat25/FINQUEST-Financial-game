@@ -434,7 +434,7 @@ func _handle_choice_reaction(choice_id: String, choice_text: String) -> void:
 	# --- SAFE RAM STAGING REDIRECTION ---
 	GameManager.log_choice("chap4_meeting_preference", choice_id)
 	if choice_id == "A":
-		GameManager.stage_finance_change(0, -120, "Commuter travel fare for physical group thesis session")
+		GameManager.request_expense_payment(120, "Commuter travel fare for physical group thesis session")
 
 	# Pull fresh metrics into the HUD display layer instantly
 	if currency_hud and currency_hud.has_method("refresh_display"):

@@ -224,6 +224,32 @@ func stage_finance_change(bank_delta: int, pocket_delta: int, description: Strin
 	bank_cash += bank_delta
 	on_hand_cash += pocket_delta
 	print("[BUFFER FINANCE] Bank Change: ₱", bank_delta, " | Pocket Change: ₱", pocket_delta)
+# =================================================================
+# SMART DEBIT CARD FALLBACK PAYMENT SYSTEM
+# =================================================================
+func request_expense_payment(total_cost: int, description: String) -> void:
+	var bank_delta: int = 0
+	var pocket_delta: int = 0
+	
+	# Scenario A: Player has enough physical pocket cash to cover it all
+	if on_hand_cash >= total_cost:
+		pocket_delta = -total_cost
+		print("[PAYMENT] Covered completely by Pocket Cash: ₱", total_cost)
+		
+	# Scenario B: Pocket cash is NOT enough. Time to use the Bank Debit Card fallback!
+	else:
+		# Calculate how much we are short after draining all pocket money
+		var remaining_balance_needed: int = total_cost - on_hand_cash
+		
+		# Pocket loses whatever is currently left in it (drains to ₱0)
+		pocket_delta = -on_hand_cash
+		
+		# Bank loses the rest of the bill
+		bank_delta = -remaining_balance_needed
+		print("[PAYMENT FALLBACK] Pocket cash insufficient. Draining pocket by ₱", on_hand_cash, " | Deducting remaining ₱", remaining_balance_needed, " from Bank account.")
+		
+	# Feed the calculated split directly into your safe runtime staging buffer
+	stage_finance_change(bank_delta, pocket_delta, description)
 
 # =================================================================
 # STAGE A NARRATIVE CHOICE TO BUFFER
@@ -246,19 +272,24 @@ func log_choice(choice_key: String, option_letter: String) -> void:
 # =================================================================
 # COMMIT ALL STAGED PROGRESS TO THE DATABASE AT CHAPTER END
 # =================================================================
+# =================================================================
+# COMMIT ALL STAGED PROGRESS TO THE DATABASE AT CHAPTER END
+# =================================================================
 func flush_buffer_to_database() -> void:
 	print("[DATABASE SAVE] Chapter ", current_chapter, " complete! Processing settlement...")
 	
+	# 1. First, process and write achievements to SQLite
 	for achievement_key in buffered_achievements:
 		DatabaseManager.unlock_achievement(player_id, achievement_key)
-	buffered_achievements.clear() # Wipe the cache clean for the next chapter execution!
 	
+	# 2. Next, write narrative decisions safely to player_choices table
 	for choice in buffered_choices:
 		DatabaseManager.safe_query_with_bindings("""
 			INSERT INTO player_choices (player_id, chapter_number, scene_key, choice_key, choice_value, effect_summary)
 			VALUES (?, ?, ?, ?, ?, ?);
 		""", [choice["player_id"], choice["chapter_number"], choice["scene_key"], choice["choice_key"], choice["choice_value"], ""])
 	
+	# 3. Apply standard cash balancing matrices based on chapter indices
 	if current_chapter == 1:
 		print("[DATABASE SAVE] Prologue sandbox complete. Hardwriting ₱3,000 bank and ₱0 pocket balances to row cells...")
 		bank_cash = 3000
@@ -269,7 +300,6 @@ func flush_buffer_to_database() -> void:
 			SET bank_cash = 3000, on_hand_cash = 0
 			WHERE player_id = ?;
 		""", [player_id])
-	
 	else:
 		var net_change = buffered_bank_change + buffered_on_hand_change
 		if net_change > 0:
@@ -286,6 +316,7 @@ func flush_buffer_to_database() -> void:
 			WHERE player_id = ?;
 		""", [bank_cash, on_hand_cash, total_income, total_expenses, player_id])
 	
+	# 🟢 FIXED: Clear temporary runtime memory buffers ONLY after everything above has finalized writing!
 	clear_temporary_buffer()
 	print("[DATABASE SAVE] Chapter flush sequence complete.")
 
@@ -298,7 +329,7 @@ func clear_temporary_buffer() -> void:
 	buffered_on_hand_change = 0
 	current_chapter_description = ""
 	
-	if current_chapter == 1 or current_chapter == 2:
+	if current_chapter == 1:
 		bank_cash = 3000
 		on_hand_cash = 0
 

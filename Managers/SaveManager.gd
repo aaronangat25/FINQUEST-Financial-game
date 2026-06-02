@@ -105,9 +105,14 @@ func delete_save():
 # =========================================
 
 func _notification(what):
-
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# 1. Let the save game process completely finish writing to disk
 		save_game()
-		if DatabaseManager.db:
-			DatabaseManager.db.close_db()
+		
+		# 2. Use the thread-safe close function instead of slamming it shut raw
+		if DatabaseManager.has_method("safe_close_db"):
+			DatabaseManager.safe_close_db()
+			
+		# 3. Quit the application cleanly now that the database is safe
 		get_tree().quit()
+		

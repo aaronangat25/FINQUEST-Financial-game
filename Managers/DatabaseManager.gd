@@ -702,6 +702,19 @@ func get_player_achievements(player_id : int):
 	])
 
 	return db.query_result
+	
+# =================================================================
+# THREAD-SAFE DATABASE CLOSING UTILITY
+# =================================================================
+# This function locks the mutex to make sure the database never closes 
+# while a save operation or query is still running in another thread.
+func safe_close_db() -> void:
+	if db:
+		_mutex.lock()
+		print("[DATABASE] Mutex locked. Safe closing database connection...")
+		db.close_db()
+		_mutex.unlock()
+		print("[DATABASE] Database closed cleanly without conflicts.")
 
 # =========================================
 # DELETE SAVE DATA

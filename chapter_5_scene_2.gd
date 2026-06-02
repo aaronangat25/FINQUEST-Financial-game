@@ -7,7 +7,7 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 # --- NODE REFERENCES ---
 @onready var jane_thinking = $Jane2DThinkingAnchor/jane2d_thinking 
 @onready var jane_big_anchor = $JaneBigAnchor
-@onready var jane_big_sprite = $JaneBigAnchor/jane2d       
+@onready var jane_big_sprite = $JaneBigAnchor/jane2d         
 @onready var phone_mini = $PhoneMini               
 @onready var phone_ringing = $PhoneRinging        
 @onready var mom_anchor = $MomAnchor
@@ -25,6 +25,9 @@ var is_phone_waiting_for_click: bool = false
 func _ready() -> void:
 	# Continuous ambient exploration tracks flowing through call setups smoothly
 	AudioManager.play_chapter_music()
+
+	
+	Global.player_money = GameManager.on_hand_cash
 
 	# 1. Persistent UI setup
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()

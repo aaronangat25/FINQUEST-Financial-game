@@ -65,9 +65,9 @@ func _ready() -> void:
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
-	pause_button = get_node_or_null("PauseButton")
+	pause_button = get_node_or_null("pause_btn")
 	if not pause_button:
-		pause_button = find_child("PauseButton", true, false)
+		pause_button = find_child("pause_btn", true, false)
 		
 	if pause_button:
 		pause_button.hide()
@@ -298,22 +298,25 @@ func _show_money_ui() -> void:
 	var job_salary = 0
 	var job_display_name = "" 
 	
-	var chosen = Global.chapter_1_cafe_choice
+	# 🟢 FIXED: Now correctly reads the variable saved by Chapter 1 Scene 1
+	var chosen = Global.job_choice
 	
-	if chosen == "A": 
+	if chosen == "A" or chosen == "Cafe": 
 		job_salary = 2550
 		job_display_name = "Cafe"
-	elif chosen == "B": 
+	elif chosen == "B" or chosen == "Clerk": 
 		job_salary = 1700
 		job_display_name = "Clerk"
-	elif chosen == "C": 
+	elif chosen == "C" or chosen == "Cashier": 
 		job_salary = 2040
+		job_display_name = "Cashier"
 		job_display_name = "Cashier"
 		
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
-	GameManager.stage_finance_change(0, base_allowance + job_salary, "Weekly Allowance & Part-Time Salary Payoff")
+	var total_payout = base_allowance + job_salary
+	GameManager.stage_finance_change(total_payout, 0, "Weekly Allowance & Part-Time Salary Payoff")
 	
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
@@ -505,7 +508,7 @@ func _process_study_choice(choice: String) -> void:
 	if choice == "Cafe":
 		study_choice = "A"
 		AudioManager.play_sfx("DEDUCT")
-		GameManager.stage_finance_change(0, -150, "Purchased coffee at study cafe")
+		GameManager.request_expense_payment(150, "Purchased coffee at study cafe")
 		GameManager.log_choice("chap2_study_location", "A")
 	elif choice == "Lounge":
 		study_choice = "B"
@@ -617,7 +620,7 @@ func _process_travel_choice(choice: String) -> void:
 		is_tricycle = true
 		travel_choice = "A"
 		AudioManager.play_sfx("DEDUCT")
-		GameManager.stage_finance_change(0, -30, "Paid fare for tricycle ride to campus")
+		GameManager.request_expense_payment(30, "Paid fare for tricycle ride to campus")
 		GameManager.log_choice("chap2_travel_method", "A")
 	elif choice == "Walk":
 		travel_choice = "B"
@@ -790,7 +793,7 @@ func _open_phone_screen_3() -> void:
 	
 	if sis_text:
 		if study_choice == "A" and travel_choice == "A":
-			sis_text.text = "1.0"
+			sis_text.text = "1.00"
 			# 🏅 ACHIEVEMENT INTEGRATION: Unlocks if the player secured a perfect 1.0 score
 			GameManager.unlock_achievement("ACADEMIC_WEAPON")
 		elif study_choice == "B" and travel_choice == "B":
@@ -823,6 +826,8 @@ func _on_phone_3_back_pressed() -> void:
 	
 	await get_tree().create_timer(1.0).timeout
 	
+	
+	
 	if currency_hud:
 		currency_hud.hide()
 		
@@ -835,6 +840,7 @@ func _on_phone_3_back_pressed() -> void:
 	elif study_choice == "B" and travel_choice == "B":
 		end_grade = 1.50
 	
+		
 	GameManager.flush_buffer_to_database()
 	
 	saving_screen.process_mode = PROCESS_MODE_ALWAYS

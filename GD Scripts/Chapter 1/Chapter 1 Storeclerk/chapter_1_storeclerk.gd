@@ -187,9 +187,10 @@ func _on_store_choice_made(reward: int) -> void:
 	if reward > 0:
 		# Trigger your transaction deposit notification chime sound effect ("Withdraw or money increase")
 		AudioManager.play_sfx("INCOME")
-		currency_hud.add_money(reward)
 		
 	GameManager.stage_finance_change(0, reward, "Chapter 1 Clerk Part-Time Training Reward")
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	var jane_tween = create_tween()
 	jane_tween.tween_property(jane_big, "modulate:a", 0.0, 0.5)
