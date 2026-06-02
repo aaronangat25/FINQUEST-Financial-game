@@ -402,3 +402,4 @@ vertical_alignment = 1
 [node name="pause_btn" parent="." instance=ExtResource("11_ihr8v")]
 
 [node name="SavingScreen" parent="." instance=ExtResource("12_ym0qg")]
+visible = false

@@ -81,7 +81,6 @@ func create_tables():
 	CREATE TABLE IF NOT EXISTS players (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		player_name TEXT NOT NULL,
-		gender TEXT NOT NULL,
 		job_path TEXT,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
@@ -93,7 +92,7 @@ func create_tables():
 	safe_query("""
 	CREATE TABLE IF NOT EXISTS player_stats (
 		player_id INTEGER PRIMARY KEY,
-		bank_cash INTEGER DEFAULT 0, -- CHANGED FROM 3000 TO 0
+		bank_cash INTEGER DEFAULT 0, -- CHANGED FROM 1500 TO 0
 		on_hand_cash INTEGER DEFAULT 0,
 		financial_wisdom_points INTEGER DEFAULT 0,
 		grades REAL DEFAULT 0,
@@ -340,19 +339,17 @@ func create_default_achievements():
 # CREATE NEW PLAYER
 # =========================================
 
-func create_player(player_name : String, gender : String, job_path : String):
+func create_player(player_name : String, job_path : String):
 
 	# Insert player
 	safe_query_with_bindings("""
 	INSERT INTO players (
 		player_name,
-		gender,
 		job_path
 	)
-	VALUES (?, ?, ?);
+	VALUES (?, ?);
 	""", [
 		player_name,
-		gender,
 		job_path
 	])
 

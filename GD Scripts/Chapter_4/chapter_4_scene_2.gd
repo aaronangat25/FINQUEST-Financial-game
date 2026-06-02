@@ -135,14 +135,14 @@ func _on_choice_a_pressed() -> void:
 	Global.choice_printing = "A" 
 	# Trigger deduction sound effect for colored copy purchase
 	AudioManager.play_sfx("DEDUCT")
-	_handle_choice_reaction(200, "Maganda yung output… sana worth it.")
+	_handle_choice_reaction(600, "Maganda yung output… sana worth it.")
 
 
 func _on_choice_b_pressed() -> void:
 	Global.choice_printing = "B" 
 	# Trigger deduction sound effect for grayscale copy purchase
 	AudioManager.play_sfx("DEDUCT")
-	_handle_choice_reaction(120, "Okay na ‘to… basta malinaw.")
+	_handle_choice_reaction(150, "Okay na ‘to… basta malinaw.")
 	
 
 func _on_choice_c_pressed() -> void:

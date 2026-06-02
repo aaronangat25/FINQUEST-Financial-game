@@ -130,11 +130,11 @@ func _on_meal_choice_pressed(choice: String) -> void:
 	GameManager.log_choice("chap3_meal_choice", choice)
 	
 	if choice == "A": 
-		GameManager.request_expense_payment(90, "Purchased full meal at campus canteen")
+		GameManager.request_expense_payment(180, "Purchased full meal at campus canteen")
 	elif choice == "B": 
-		GameManager.request_expense_payment(50, "Purchased budget meal at campus canteen")
+		GameManager.request_expense_payment(90, "Purchased budget meal at campus canteen")
 	elif choice == "C":
-		GameManager.request_expense_payment(25, "Skipped meal for snacks later due to inflation")
+		GameManager.request_expense_payment(40, "Skipped meal for snacks later due to inflation")
 		# ACHIEVEMENT INTEGRATION: Unlocks instantly when extreme frugality habit is chosen
 		GameManager.unlock_achievement("SOPAS_STARBUCKS")
 	

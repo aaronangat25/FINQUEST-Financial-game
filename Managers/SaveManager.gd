@@ -63,7 +63,6 @@ func load_game() -> bool:
 	# PLAYER INFO
 	GameManager.player_id = player["id"]
 	GameManager.player_name = player["player_name"]
-	GameManager.gender = player["gender"]
 	GameManager.job_path = player["job_path"]
 
 	# PLAYER STATS

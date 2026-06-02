@@ -818,13 +818,13 @@ frame_progress = 1.0
 [node name="moneyreceivenotifcontrol" type="Control" parent="."]
 layout_mode = 3
 anchor_left = 0.5
-anchor_top = 0.523
+anchor_top = 0.52500004
 anchor_right = 0.5
-anchor_bottom = 0.523
-offset_left = -31.75
-offset_top = -11.43
-offset_right = 32.0
-offset_bottom = 11.32
+anchor_bottom = 0.52500004
+offset_left = -31.875
+offset_top = -17.375008
+offset_right = 31.875
+offset_bottom = 17.999992
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -851,7 +851,7 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
 theme_override_fonts/font = ExtResource("182_1whhi")
 theme_override_font_sizes/font_size = 4
-text = "+P3,000 from mom and 2
+text = "+P1,500 from mom and 2
 months salary from your
 part time:"
 horizontal_alignment = 1

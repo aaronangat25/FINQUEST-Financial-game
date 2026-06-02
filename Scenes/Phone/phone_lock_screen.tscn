@@ -140,7 +140,7 @@ theme_override_colors/font_color = Color(0.7490196, 0.7490196, 0.7490196, 1)
 theme_override_constants/line_spacing = 0
 theme_override_fonts/font = ExtResource("2_67isw")
 theme_override_font_sizes/font_size = 4
-text = "Balance: P3,000
+text = "Balance: P1,500
 Today’s goal:
 Learn  part-time
 job + basic money

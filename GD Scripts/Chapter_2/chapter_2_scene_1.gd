@@ -294,29 +294,42 @@ func _show_money_ui() -> void:
 	active_money_ui = loaded_money_scene.instantiate()
 	add_child(active_money_ui)
 	
-	var base_allowance = 3000
+	var base_allowance = 1500
 	var job_salary = 0
 	var job_display_name = "" 
 	
-	# 🟢 FIXED: Now correctly reads the variable saved by Chapter 1 Scene 1
-	var chosen = Global.job_choice
+	# 🟢 STEP 1: Determine the active job choice using a bulletproof fallback order
+	var chosen = GameManager.job_path
 	
-	if chosen == "A" or chosen == "Cafe": 
-		job_salary = 2550
-		job_display_name = "Cafe"
-	elif chosen == "B" or chosen == "Clerk": 
+	if chosen == "":
+		chosen = Global.job_choice
+		
+	# Sandbox testing fallback: if starting Chapter 2 directly (F5), default to Barista
+	if chosen == "":
+		print("[SANDBOX FALLBACK] No job choice detected in RAM. Defaulting to Barista for scene testing.")
+		chosen = "Barista"
+		
+	# Ensure all global track states stay perfectly synchronized
+	GameManager.job_path = chosen
+	Global.job_choice = chosen
+	
+	# 🟢 STEP 2: Evaluate using your exact string identifiers
+	if chosen == "Barista" or chosen == "A": 
 		job_salary = 1700
+		job_display_name = "Barista"
+	elif chosen == "Clerk" or chosen == "B": 
+		job_salary = 1600
 		job_display_name = "Clerk"
-	elif chosen == "C" or chosen == "Cashier": 
-		job_salary = 2040
-		job_display_name = "Cashier"
+	elif chosen == "Cashier" or chosen == "C": 
+		job_salary = 1500
 		job_display_name = "Cashier"
 		
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
-	var total_payout = base_allowance + job_salary
-	GameManager.stage_finance_change(total_payout, 0, "Weekly Allowance & Part-Time Salary Payoff")
+	# 🟢 STEP 3: Apply the ₱2,000 rent deduction to balance the gameplay loop!
+	var total_payout = (base_allowance + job_salary) - 2000
+	GameManager.stage_finance_change(total_payout, 0, "Weekly Allowance & Salary (Minus ₱2,000 Rent)")
 	
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
@@ -424,7 +437,8 @@ func _play_kylie_conversation() -> void:
 	var kylie_convo = [
 		{"speaker": "Kylie", "text": "Uy, exam week mo rin ngayon? Hindi ako natulog kakareview."},
 		{"speaker": "Jane", "text": "Same. Nag-iisip nga ako kung saan magre-review mamaya."},
-		{"speaker": "Kylie", "text": "May study lounge sa baba, libre. Pero may café sa labas—may kape, pero magastos."}
+		{"speaker": "Kylie", "text": "May study lounge sa baba, libre, pero mahirap mag-focus."},
+		{"speaker": "Kylie", "text": "May café naman sa labas, makakafocus ka pero magastos."}
 	]
 	
 	active_dialogue_box.is_fading = false 
@@ -508,7 +522,7 @@ func _process_study_choice(choice: String) -> void:
 	if choice == "Cafe":
 		study_choice = "A"
 		AudioManager.play_sfx("DEDUCT")
-		GameManager.request_expense_payment(150, "Purchased coffee at study cafe")
+		GameManager.request_expense_payment(200, "Purchased coffee at study cafe")
 		GameManager.log_choice("chap2_study_location", "A")
 	elif choice == "Lounge":
 		study_choice = "B"
@@ -620,7 +634,7 @@ func _process_travel_choice(choice: String) -> void:
 		is_tricycle = true
 		travel_choice = "A"
 		AudioManager.play_sfx("DEDUCT")
-		GameManager.request_expense_payment(30, "Paid fare for tricycle ride to campus")
+		GameManager.request_expense_payment(40, "Paid fare for tricycle ride to campus")
 		GameManager.log_choice("chap2_travel_method", "A")
 	elif choice == "Walk":
 		travel_choice = "B"
@@ -793,13 +807,15 @@ func _open_phone_screen_3() -> void:
 	
 	if sis_text:
 		if study_choice == "A" and travel_choice == "A":
-			sis_text.text = "1.00"
+			sis_text.text = "1.25"
 			# 🏅 ACHIEVEMENT INTEGRATION: Unlocks if the player secured a perfect 1.0 score
 			GameManager.unlock_achievement("ACADEMIC_WEAPON")
 		elif study_choice == "B" and travel_choice == "B":
-			sis_text.text = "1.50"
+			sis_text.text = "2.50"
+		elif study_choice == "B" and travel_choice == "A":
+			sis_text.text = "2.00"
 		else:
-			sis_text.text = "1.25"
+			sis_text.text = "1.75"
 			
 	if sis_grade: sis_grade.show()
 	await get_tree().create_timer(3.0).timeout
