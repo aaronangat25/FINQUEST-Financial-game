@@ -185,6 +185,9 @@ func _trigger_shift_end_transition() -> void:
 		text_out.tween_property(title_label, "modulate:a", 0.0, 1.0)
 		await text_out.finished
 		title_label.hide()
+		
+	if "barista_game_completed" in Global:
+		Global.barista_game_completed = false
 	
 	AudioManager.play_chapter_music()
 	get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1_end.tscn")

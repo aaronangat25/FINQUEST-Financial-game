@@ -255,7 +255,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("7_3e66v")
 theme_override_font_sizes/font_size = 4
 text = "A. Study at cafe
-( P150, + Focus )"
+( P200, + Focus )"
 
 [node name="studydormlounge_btn" type="Button" parent="ChooseControl5/ChoicesContainer5"]
 layout_mode = 2

@@ -118,10 +118,35 @@ func update_selection_ui():
 
 	# INSTANT VISUAL ASSIGNMENT
 	chapter_label.text = title_text
-	set_panel_image(target_thumbnail_path if is_chapter_unlocked else LOGO_LOCKED)
 	
-	# IPASA ANG STATUS PARA SA BAGONG COMPLETED/FINISHED CONFIGURATIONS
-	adjust_play_button_state(is_chapter_unlocked, is_chapter_completed)
+	# 🟢 ACADEMIC CHECK FOR CHAPTER 5 LOCKOUT
+	var is_failing_gpa: bool = (GameManager.grades >= 2.75)
+	
+	if current_view_index == 6 and is_failing_gpa:
+		print("[SYSTEM SELECTION] Player has dropped out (GPA: ", GameManager.grades, "). Hard-locking Chapter 5 layout.")
+		set_panel_image(LOGO_LOCKED)
+		adjust_play_button_state(false, false)
+		
+	# 🟢 DYNAMIC EPILOGUE CHECKING LOGIC
+	elif current_view_index == 7:
+		# Check if they dropped out OR if they unlocked an entry in the player choices/ending table
+		DatabaseManager.safe_query_with_bindings("""
+			SELECT choice_value FROM player_choices 
+			WHERE player_id = ? AND choice_key = 'chap5_career_pathway';
+		""", [GameManager.player_id])
+		
+		var has_career_choice = DatabaseManager.db.query_result.size() > 0
+		
+		if is_failing_gpa or has_career_choice or is_chapter_unlocked:
+			print("[SYSTEM SELECTION] Epilogue unlocked via branching path history.")
+			set_panel_image(target_thumbnail_path)
+			adjust_play_button_state(true, false) # Always allow replayability
+		else:
+			set_panel_image(LOGO_LOCKED)
+			adjust_play_button_state(false, false)
+	else:
+		set_panel_image(target_thumbnail_path if is_chapter_unlocked else LOGO_LOCKED)
+		adjust_play_button_state(is_chapter_unlocked, is_chapter_completed)
 
 # =========================================
 # PANEL IMAGE HELPER
@@ -140,15 +165,15 @@ func adjust_play_button_state(unlocked : bool, completed : bool):
 		
 		if completed:
 			play_btn.text = "FINISHED"
-			play_btn.modulate = Color(0.5, 0.9, 0.5, 1.0) # Light Green overlay modulation
+			play_btn.modulate = Color(0.5, 0.9, 0.5, 1.0)
 			play_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		elif unlocked:
 			play_btn.text = "PLAY"
-			play_btn.modulate = Color(1.0, 1.0, 1.0, 1.0) # Native color style maps
+			play_btn.modulate = Color(1.0, 1.0, 1.0, 1.0)
 			play_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 		else:
 			play_btn.text = "LOCKED"
-			play_btn.modulate = Color(0.35, 0.35, 0.35, 1.0) # Dark Grey overlay
+			play_btn.modulate = Color(0.35, 0.35, 0.35, 1.0)
 			play_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 # =========================================
@@ -169,22 +194,58 @@ func _on_back_arrow_pressed():
 # =========================================
 func _on_back_menu_btn_pressed():
 	print("[SYSTEM] Returning to Main Menu. Keeping background streams looping smoothly.")
-	
-	# Directly change the scene context to the main screen layout.
-	# By bypassing AudioManager.stop_all_music(), your exploration theme stays persistent.
 	get_tree().change_scene_to_file("res://Scenes/Main Screen/main_screen.tscn")
 
 # =========================================
 # MAIN PLAY ACTION ROUTING
 # =========================================
 func _on_play_btn_pressed():
-	
 	await get_tree().create_timer(0.1).timeout
 	
-	AudioManager.stop_all_music()
+	# Block Chapter 5 completely if they failed academically
+	if current_view_index == 6 and GameManager.grades >= 2.75:
+		print("[SYSTEM ACTION] Action aborted. Chapter 5 is structurally locked.")
+		return
+		
+	# 🟢 SMART EPILOGUE ROUTER (INDEX 7)
+	if current_view_index == 7:
+		AudioManager.stop_all_music()
+		
+		# Condition 1: Check low GPA for Dropout Ending
+		if GameManager.grades >= 2.75:
+			print("[ROUTER] Branching right into Dropout Ending Scene.")
+			callable_deferred_transition("res://Scenes/Endings/dropout_ending.tscn", "EPILOGUE")
+			return
+			
+		# Fetch career pathway selection history row from SQLite
+		await DatabaseManager.safe_query_with_bindings("""
+			SELECT choice_value FROM player_choices 
+			WHERE player_id = ? AND choice_key = 'chap5_career_pathway' 
+			ORDER BY created_at DESC LIMIT 1;
+		""", [GameManager.player_id])
+		
+		if DatabaseManager.db.query_result.size() > 0:
+			var path_taken = DatabaseManager.db.query_result[0]["choice_value"]
+			
+			# Condition 2: Corporate decision
+			if path_taken == "Corporate":
+				print("[ROUTER] Branching right into Mid Ending Corporate Scene.")
+				callable_deferred_transition("res://Scenes/Endings/mid_ending.tscn", "EPILOGUE")
+				return
+				
+			# 🟢 Condition 3: Stop First decision for Bad Ending
+			elif path_taken == "Stop":
+				print("[ROUTER] Branching right into Bad Ending Scene.")
+				callable_deferred_transition("res://Scenes/Endings/bad_ending.tscn", "EPILOGUE")
+				return
+		
+		# Condition 4: Default fallback (Good Ending)
+		print("[ROUTER] Branching right into standard Good Ending Scene.")
+		callable_deferred_transition("res://Scenes/Ending/ending.tscn", "EPILOGUE")
+		return
+		
 	var target_db_chapter_number = current_view_index
 
-	# PREVENT ACCIDENTAL CLICKS ON LOCKED OR FINISHED LEVELS
 	await DatabaseManager.safe_query_with_bindings("""
 		SELECT is_unlocked, is_completed 
 		FROM chapter_progress 
@@ -203,27 +264,18 @@ func _on_play_btn_pressed():
 			can_play = true
 
 	if not can_play:
-		print("[SYSTEM] Chapter is currently locked or already finished. Action aborted.")
+		print("[SYSTEM] Chapter is locked or finished. Action aborted.")
 		return 
 
-	# MATCH AND ASSIGN ACTIVE GAME STATE TRACKERS BEFORE ROUTING
 	GameManager.current_chapter = current_view_index
 	
 	match current_view_index:
-		1:
-			callable_deferred_transition("res://Scenes/Prologue/prologue.tscn", "PROLOGUE")
-		2:
-			callable_deferred_transition("res://Scenes/Chapter 1/chapter_1.tscn", "CHAPTER 1")
-		3:
-			callable_deferred_transition("res://Scenes/Chapter 2/chapter_2_scene_1.tscn", "CHAPTER 2")
-		4:
-			callable_deferred_transition("res://Scenes/Chapter 3/chapter_3_scene_1.tscn", "CHAPTER 3")
-		5:
-			callable_deferred_transition("res://Scenes/Chapter 4/chapter_4_scene_1.tscn", "CHAPTER 4")
-		6:
-			callable_deferred_transition("res://Scenes/Chapter 5/chapter_5_scene_1.tscn", "CHAPTER 5")
-		7:
-			callable_deferred_transition("res://Scenes/Ending/ending.tscn", "EPILOGUE")
+		1: callable_deferred_transition("res://Scenes/Prologue/prologue.tscn", "PROLOGUE")
+		2: callable_deferred_transition("res://Scenes/Chapter 1/chapter_1.tscn", "CHAPTER 1")
+		3: callable_deferred_transition("res://Scenes/Chapter 2/chapter_2_scene_1.tscn", "CHAPTER 2")
+		4: callable_deferred_transition("res://Scenes/Chapter 3/chapter_3_scene_1.tscn", "CHAPTER 3")
+		5: callable_deferred_transition("res://Scenes/Chapter 4/chapter_4_scene_1.tscn", "CHAPTER 4")
+		6: callable_deferred_transition("res://Scenes/Chapter 5/chapter_5_scene_1.tscn", "CHAPTER 5")
 
 # HELPER FUNCTION FOR DEFERRED SCENE SWAPS & RAM FLUSH
 func callable_deferred_transition(scene_path: String, chapter_title: String) -> void:
@@ -235,6 +287,5 @@ func force_memory_cleanup() -> void:
 	print("[MEMORY] Forcing full garbage collection and texture flush...")
 	if chapter_thumbnail:
 		chapter_thumbnail.remove_theme_stylebox_override("panel")
-		
 	OS.delay_msec(10)
 	self.queue_free()

@@ -49,7 +49,7 @@ func _ready() -> void:
 		choose_control.hide()
 		choose_control.modulate.a = 0.0
 	if choice_appears_banner: choice_appears_banner.hide()
-	if choices_container: choices_container.hide()
+	if choices_container: choices_container.show()
 	
 	if stats_screen:
 		stats_screen.hide()
@@ -200,8 +200,38 @@ func _on_final_chapter_exit_pressed() -> void:
 	if stats_screen: stats_screen.hide()
 	
 	GameManager.current_chapter = 6
-	var next_scene_path = "res://Scenes/Ending/ending.tscn"
-	_execute_save_and_blackout(next_scene_path, true)
+	
+	# 🟢 FIXED: Branching logic for the Corporate Ending path
+	if career_choice == "Corporate":
+		print("[ROUTER] Corporate path chosen! Unlocking achievement and routing to Mid Ending.")
+		GameManager.unlock_achievement("MID_ENDING")
+		
+		DatabaseManager.safe_query_with_bindings("""
+			UPDATE chapter_progress 
+			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+			WHERE player_id = ? AND chapter_number = 7;
+		""", [GameManager.grades, GameManager.player_id])
+		
+		var corporate_ending_path = "res://Scenes/Endings/mid_ending.tscn"
+		_execute_save_and_blackout(corporate_ending_path, false)
+
+	# 🟢 ADD THIS BRANCH FOR THE "STOP FIRST" CHOICE:
+	elif career_choice == "Stop":
+		print("[ROUTER] 'Stop First' path chosen! Routing to Bad Ending.")
+		
+		DatabaseManager.safe_query_with_bindings("""
+			UPDATE chapter_progress 
+			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+			WHERE player_id = ? AND chapter_number = 7;
+		""", [GameManager.grades, GameManager.player_id])
+		
+		var bad_ending_path = "res://Scenes/Endings/bad_ending.tscn"
+		_execute_save_and_blackout(bad_ending_path, false)
+	
+	else:
+		# Default fallback progression path context loop
+		var next_scene_path = "res://Scenes/Ending/ending.tscn"
+		_execute_save_and_blackout(next_scene_path, true)
 
 
 # --- MAIN MENU PRESSED EVENT ---
@@ -216,6 +246,15 @@ func _on_main_menu_pressed() -> void:
 	if stats_screen: stats_screen.hide()
 	
 	GameManager.current_chapter = 6
+	
+	# 🟢 SILENT SAVE: Update the database selection table if they decide to quit here
+	if career_choice == "Corporate":
+		DatabaseManager.safe_query_with_bindings("""
+			UPDATE chapter_progress 
+			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+			WHERE player_id = ? AND chapter_number = 7;
+		""", [GameManager.grades, GameManager.player_id])
+		
 	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
 	_execute_save_and_blackout(main_menu_path, false)
 
@@ -246,8 +285,6 @@ func _execute_save_and_blackout(destination_path: String, run_cinematic_card: bo
 		if TransitionManager.has_method("fade_to_black"):
 			await TransitionManager.fade_to_black()
 			
-		# --- AUDIO STREAM THEME RESET ---
-		# Clear existing track locks and restart the score head cleanly for the game's finale layout
 		AudioManager.restart_general_music()
 			
 		var title_label = TransitionManager.get_node_or_null("TitleLabel")

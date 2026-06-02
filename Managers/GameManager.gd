@@ -187,18 +187,22 @@ func set_current_scene(scene_name : String):
 	current_scene = scene_name
 
 # =========================================
-# COMPLETE CHAPTER
+# COMPLETE CHAPTER (🟢 FIXED WITH GRADES SAVE)
 # =========================================
 func complete_current_chapter(grade : float):
-	# FORCE STABLE FLOATING POINT CONSTRAINTS
 	var protected_grade : float = float(grade)
-	if grades == 0.0:
-		grades = protected_grade
-		print("[GRADE TRACKER] First grade recorded: ", grades)
+	
+	# 🟢 ONLY calculate GPA if it's a real academic grade (ignores the 100.0 placeholders)
+	if protected_grade != 100.0:
+		if grades == 0.0:
+			grades = protected_grade
+			print("[GRADE TRACKER] First valid academic grade recorded: ", grades)
+		else:
+			var old_grade = grades
+			grades = (old_grade + protected_grade) / 2.0
+			print("[GRADE TRACKER] True Running Average Calculated! Old: ", old_grade, " | New: ", protected_grade, " | Average: ", grades)
 	else:
-		var old_grade = grades
-		grades = (old_grade + protected_grade) / 2.0
-		print("[GRADE TRACKER] Running Average Calculated! Old: ", old_grade, " | New: ", protected_grade, " | Average: ", grades)
+		print("[GRADE TRACKER] Skipping placeholder grade (100.0). Current GPA stays: ", grades)
 
 	# 1. Updates current chapter rows inside SQLite
 	DatabaseManager.complete_chapter(player_id, current_chapter, grade)
@@ -206,12 +210,12 @@ func complete_current_chapter(grade : float):
 	# 2. Advance the local runtime progress variable
 	current_chapter += 1
 	
-	# 3. Synchronize player_stats record with the new active progression step
+	# 3. Synchronize player_stats record with the new active progression step and cumulative grades
 	DatabaseManager.safe_query_with_bindings("""
-		UPDATE player_stats
-		SET current_chapter = ?
-		WHERE player_id = ?;
-	""", [current_chapter, player_id])
+			UPDATE player_stats
+			SET bank_cash = ?, on_hand_cash = ?, total_income = ?, total_expenses = ?, grades = ?
+			WHERE player_id = ?;
+		""", [bank_cash, on_hand_cash, total_income, total_expenses, grades, player_id])
 
 	print("Chapter completed safely. Grade updated to: ", protected_grade, " | Next available chapter: ", current_chapter)
 

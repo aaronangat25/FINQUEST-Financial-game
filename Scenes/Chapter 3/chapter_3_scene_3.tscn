@@ -140,7 +140,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_osyu8")
 theme_override_font_sizes/font_size = 4
 text = "A. Buy branded groceries
-(–P250, +Quality)"
+(–11100, +Quality)"
 
 [node name="genericB_btn" type="Button" parent="ChooseControl8/ChoicesContainer8"]
 layout_mode = 2
@@ -151,7 +151,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_osyu8")
 theme_override_font_sizes/font_size = 4
 text = "B. Buy generic/store brands
-(–P1150, saves money)"
+(–P450, saves money)"
 autowrap_mode = 2
 
 [node name="essentialsC_btn" type="Button" parent="ChooseControl8/ChoicesContainer8"]
@@ -163,7 +163,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_osyu8")
 theme_override_font_sizes/font_size = 4
 text = "C. Buy only essentials
-(–P1100, limited supplies)"
+(–P200, limited supplies)"
 
 [node name="JaneBigAnchor2" type="Control" parent="."]
 layout_mode = 1
