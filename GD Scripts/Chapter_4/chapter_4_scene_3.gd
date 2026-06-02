@@ -25,8 +25,9 @@ func _ready() -> void:
 	# Keep background music loops moving smoothly into final score assessment cards
 	AudioManager.play_chapter_music()
 
+	# 🟢 FIXED: Instantiate directly to the scene tree to avoid thread lag
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
-	call_deferred("add_child", currency_hud)
+	add_child(currency_hud)
 	
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if stat_screen: stat_screen.hide()
@@ -45,7 +46,8 @@ func _ready() -> void:
 	await get_tree().create_timer(2.0).timeout
 	_play_intro_sequence()
 
-# User Interaction Section
+
+# --- USER INTERACTION SECTION ---
 func _play_intro_sequence() -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -84,7 +86,8 @@ func _play_intro_sequence() -> void:
 	active_dialogue_box.queue_free()
 	_calculate_and_show_results()
 
-# Calculations Area
+
+# --- CALCULATIONS AREA ---
 func _calculate_and_show_results() -> void:
 	var meeting = Global.choice_meeting 
 	var printing = Global.choice_printing 
@@ -113,7 +116,7 @@ func _calculate_and_show_results() -> void:
 		jane_reaction = "Worth it lahat ng pagod… napasa ko!"
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
 		
-		# 🏅 ACHIEVEMENT INTEGRATION: Pop the notification instantly when a perfect grade is reached
+		# 🏅 ACHIEVEMENT INTEGRATION
 		GameManager.unlock_achievement("MAGNA_CUM_BUDGET")
 		
 	elif printing == "C":
@@ -141,7 +144,8 @@ func _calculate_and_show_results() -> void:
 
 	_play_result_dialogue(jane_reaction, end_grade)
 
-# Scoring Evaluation Layout
+
+# --- SCORING EVALUATION LAYOUT ---
 func _play_result_dialogue(reaction_text: String, earned_grade: float) -> void:
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
@@ -205,13 +209,15 @@ func _on_chapter_5_btn_pressed(final_grade: float) -> void:
 	if is_transitioning: return
 	is_transitioning = true
 	
+	# 🟢 FIXED: Disable pause controls instantly before calculations begin
+	_hide_pause_button_completely()
+	
 	if chapter5_btn: chapter5_btn.disabled = true
 	if main_menu_btn: main_menu_btn.disabled = true
 	
 	if currency_hud: currency_hud.hide()
 	if stat_screen: stat_screen.hide()
 	
-	# Index 5 targets Chapter 4 completion row data targets inside SQLite
 	GameManager.current_chapter = 5
 	
 	var next_scene_path = "res://Scenes/Chapter 5/chapter_5_scene_1.tscn"
@@ -222,6 +228,9 @@ func _on_chapter_5_btn_pressed(final_grade: float) -> void:
 func _on_main_menu_pressed(final_grade: float) -> void:
 	if is_transitioning: return
 	is_transitioning = true
+	
+	# 🟢 FIXED: Disable pause controls instantly before calculations begin
+	_hide_pause_button_completely()
 	
 	if chapter5_btn: chapter5_btn.disabled = true
 	if main_menu_btn: main_menu_btn.disabled = true
@@ -237,14 +246,12 @@ func _on_main_menu_pressed(final_grade: float) -> void:
 
 # --- REUSABLE SYSTEM TRANSACTION HANDLER ---
 func _execute_save_and_transition(destination_path: String, run_chapter_card: bool, grade_scored: float) -> void:
-	# Writes physical commuter costs and document printing deductions cleanly to SQLite
 	GameManager.flush_buffer_to_database()
 	
 	if saving_screen:
 		saving_screen.process_mode = PROCESS_MODE_ALWAYS
 		saving_screen.show()
 		
-	# Pass her actual calculated performance metrics straight into the progress matrix
 	GameManager.complete_current_chapter(grade_scored)
 	print("[DATABASE] Chapter 4 Progression committed smoothly.")
 	
@@ -263,8 +270,6 @@ func _execute_save_and_transition(destination_path: String, run_chapter_card: bo
 		if TransitionManager.has_method("fade_to_black"):
 			await TransitionManager.fade_to_black()
 			
-		# --- AUDIO SYSTEM RESET TIMING ---
-		# Resets GENERAL MUSIC background tracking streams smoothly for Chapter 5 ("GRADUATION")
 		AudioManager.restart_general_music()
 			
 		var title_label = TransitionManager.get_node_or_null("TitleLabel")
@@ -300,3 +305,16 @@ func _execute_save_and_transition(destination_path: String, run_chapter_card: bo
 		get_tree().change_scene_to_file(destination_path)
 	else:
 		get_tree().change_scene_to_file(destination_path)
+
+
+# 🛡️ UNIFIED CLEAN PAUSE KILLER UTILITY
+func _hide_pause_button_completely() -> void:
+	if is_instance_valid(currency_hud):
+		var hud_withdraw_btn = currency_hud.find_child("withdraw_btn", true, false)
+		if hud_withdraw_btn:
+			hud_withdraw_btn.hide()
+			
+	var active_pause = find_child("pause_btn", true, false)
+	if active_pause:
+		active_pause.hide()
+		active_pause.process_mode = PROCESS_MODE_DISABLED

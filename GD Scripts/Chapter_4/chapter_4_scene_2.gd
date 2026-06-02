@@ -137,12 +137,14 @@ func _on_choice_a_pressed() -> void:
 	AudioManager.play_sfx("DEDUCT")
 	_handle_choice_reaction(200, "Maganda yung output… sana worth it.")
 
+
 func _on_choice_b_pressed() -> void:
 	Global.choice_printing = "B" 
 	# Trigger deduction sound effect for grayscale copy purchase
 	AudioManager.play_sfx("DEDUCT")
 	_handle_choice_reaction(120, "Okay na ‘to… basta malinaw.")
 	
+
 func _on_choice_c_pressed() -> void:
 	Global.choice_printing = "C" 
 	_handle_choice_reaction(0, "Tipid… pero baka makaapekto sa evaluation.")
@@ -158,7 +160,7 @@ func _handle_choice_reaction(deduction_amount: int, choice_text: String) -> void
 	# --- SAFE RAM STAGING REDIRECTION ---
 	GameManager.log_choice("chap4_printing_choice", Global.choice_printing)
 	if deduction_amount > 0:
-		GameManager.stage_finance_change(0, -deduction_amount, "Thesis document printing services expense")
+		GameManager.request_expense_payment(deduction_amount, "Thesis document printing services expense")
 
 	# Force visual layout update loop immediately
 	if currency_hud and currency_hud.has_method("refresh_display"):

@@ -123,7 +123,7 @@ func _show_evaluation_stats() -> void:
 	await get_tree().create_timer(0.5).timeout
 	
 	# Read her true accumulated expenses out of our safe RAM staging registers
-	var true_expenses = abs(GameManager.buffered_on_hand_change)
+	var true_expenses = abs(GameManager.buffered_on_hand_change + GameManager.buffered_bank_change)
 	
 	var jane_reaction_text = "" 
 	

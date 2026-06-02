@@ -204,8 +204,9 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 	# Trigger your cash deduction wallet swipe sound effect
 	AudioManager.play_sfx("DEDUCT")
 	
-	currency_hud.add_money(-cost)
-	GameManager.stage_finance_change(0, -cost, "Chapter 1 Sandbox Breakfast Spending")
+	GameManager.request_expense_payment(cost, "Chapter 1 Sandbox Breakfast Spending")
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	var tween = create_tween()
 	tween.tween_property(choose_control_2, "modulate:a", 0.0, 0.5)

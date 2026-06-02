@@ -230,9 +230,10 @@ func _on_cashier_choice_made(reward: int) -> void:
 	if reward > 0:
 		# Trigger your transaction cash deposit confirmation chime sound effect ("Withdraw or money increase")
 		AudioManager.play_sfx("INCOME")
-		currency_hud.add_money(reward)
 		
 	GameManager.stage_finance_change(0, reward, "Chapter 1 Cashier Part-Time Training Reward")
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
 	
 	var tween_fade = create_tween()
 	tween_fade.tween_property(choose_control_4, "modulate:a", 0.0, 0.5)

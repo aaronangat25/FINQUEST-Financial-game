@@ -33,6 +33,8 @@ var is_transitioning: bool = false
 func _ready() -> void:
 	# Continuous ambient loops moving cleanly through final metrics
 	AudioManager.play_chapter_music()
+	
+	Global.player_money = GameManager.on_hand_cash
 
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	call_deferred("add_child", currency_hud)
