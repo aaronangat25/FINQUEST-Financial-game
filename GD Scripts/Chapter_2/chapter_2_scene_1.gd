@@ -850,11 +850,14 @@ func _on_phone_3_back_pressed() -> void:
 	GameManager.current_chapter = 3
 	print("[SYSTEM] Running database save sequence for Chapter 2.")
 	
-	var end_grade = 1.25
+	var end_grade = 1.75 # Default fallback matching the "else" visual text condition
+	
 	if study_choice == "A" and travel_choice == "A":
-		end_grade = 1.00
+		end_grade = 1.25
 	elif study_choice == "B" and travel_choice == "B":
-		end_grade = 1.50
+		end_grade = 2.50
+	elif study_choice == "B" and travel_choice == "A":
+		end_grade = 2.00
 	
 		
 	GameManager.flush_buffer_to_database()

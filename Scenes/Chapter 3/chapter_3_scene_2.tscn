@@ -154,7 +154,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_hh2xp")
 theme_override_font_sizes/font_size = 4
-text = "A. Buy full meal (–P90,
+text = "A. Buy full meal (–P180,
 +Energy)"
 
 [node name="budgetmealB_btn" type="Button" parent="ChooseControl7/ChoicesContainer7"]
@@ -165,7 +165,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_hh2xp")
 theme_override_font_sizes/font_size = 4
-text = "B. Buy budget meal (–P50, balanced)"
+text = "B. Buy budget meal (–P90, balanced)"
 autowrap_mode = 2
 
 [node name="skipmealC_btn" type="Button" parent="ChooseControl7/ChoicesContainer7"]
@@ -177,7 +177,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_hh2xp")
 theme_override_font_sizes/font_size = 4
 text = "C. Skip meal and eat snacks later
-(–P25, -Energy)"
+(–P40, -Energy)"
 
 [node name="JaneBigAnchor2" type="Control" parent="."]
 layout_mode = 1

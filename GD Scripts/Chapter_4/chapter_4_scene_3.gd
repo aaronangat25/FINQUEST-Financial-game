@@ -111,42 +111,40 @@ func _calculate_and_show_results() -> void:
 	
 	var end_grade = 2.0
 	
-	# 🟢 TIER 1: Outstanding Defense (1.0) -> Choices: (A, A)
+	# 🟢 TIER 1: Outstanding Defense (1.0)
 	if meeting == "A" and printing == "A":
 		end_grade = 1.00
 		final_feedback = "RESULT: OUTSTANDING DEFENSE (1.00)"
 		jane_reaction = "Worth it lahat ng pagod… napasa ko!"
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
-		
-		# 🏅 ACHIEVEMENT INTEGRATION
 		GameManager.unlock_achievement("MAGNA_CUM_BUDGET")
 		
-	# 🟢 TIER 2: Struggled Defense (3.0) -> Choices: (B, C)
+	# 🟢 TIER 2: Struggled Defense (3.0)
 	elif meeting == "B" and printing == "C":
 		end_grade = 3.00
 		final_feedback = "RESULT: STRUGGLED DEFENSE (3.00)"
-		# Updated dialogue based on image_8b755f.png
 		jane_reaction = "Nakaraos… pero sobrang hirap. Babawi nalang ako next time."
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_red)
 		
-	# 🟢 TIER 3: Passed Defense (2.0) -> Covers: (A, B) // (B, A) // (A, C)
+	# 🟢 TIER 3: Passed Defense (2.0)
 	else:
 		end_grade = 2.00
 		final_feedback = "RESULT: PASSED DEFENSE (2.00)"
 		jane_reaction = "Kinaya ko… pero ang dami ko pang pwedeng i-improve."
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
 
-	if feedback_label:
-		feedback_label.text = final_feedback
-		
-	if grade_label:
-		grade_label.text = str(end_grade)
+	if feedback_label: feedback_label.text = final_feedback
+	if grade_label: grade_label.text = str(end_grade)
 
-	if feedback_label:
-		feedback_label.text = final_feedback
-		
-	if grade_label:
-		grade_label.text = str(end_grade)
+	# =================================================================
+	# 🟢 RUN TIME GPA CALCULATION IMMEDIATELY FOR BUTTON RULES
+	# =================================================================
+	var protected_grade : float = float(end_grade)
+	if GameManager.grades == 0.0:
+		GameManager.grades = protected_grade
+	else:
+		GameManager.grades = (GameManager.grades + protected_grade) / 2.0
+	# =================================================================
 
 	stat_screen.show()
 	stat_screen.modulate.a = 0.0
@@ -205,6 +203,13 @@ func _play_result_dialogue(reaction_text: String, earned_grade: float) -> void:
 		chapter5_btn.show()
 		chapter5_btn.modulate.a = 0.0
 		t_show_buttons.tween_property(chapter5_btn, "modulate:a", 1.0, 1.0)
+		
+		# 🟢 Rules check the global running average directly for testing
+		if GameManager.grades >= 2.75:
+			chapter5_btn.text = "Continue to Epilogue"
+		else:
+			chapter5_btn.text = "Continue to Chapter 5"
+			
 		if not chapter5_btn.pressed.is_connected(_on_chapter_5_btn_pressed.bind(earned_grade)):
 			chapter5_btn.pressed.connect(_on_chapter_5_btn_pressed.bind(earned_grade))
 			
@@ -221,7 +226,6 @@ func _on_chapter_5_btn_pressed(final_grade: float) -> void:
 	if is_transitioning: return
 	is_transitioning = true
 	
-	# 🟢 FIXED: Disable pause controls instantly before calculations begin
 	_hide_pause_button_completely()
 	
 	if chapter5_btn: chapter5_btn.disabled = true
@@ -232,8 +236,21 @@ func _on_chapter_5_btn_pressed(final_grade: float) -> void:
 	
 	GameManager.current_chapter = 5
 	
-	var next_scene_path = "res://Scenes/Chapter 5/chapter_5_scene_1.tscn"
-	_execute_save_and_transition(next_scene_path, true, final_grade)
+	# 🟢 FIXED: Check the cumulative average to route to the correct ending branch
+	if GameManager.grades >= 2.75:
+		# Safely lock the chapter select progression row in SQLite using '='
+		DatabaseManager.safe_query_with_bindings("""
+			UPDATE chapter_progress 
+			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+			WHERE player_id = ? AND chapter_number = 5;
+		""", [GameManager.grades, GameManager.player_id])
+		
+		var epilogue_path = "res://Scenes/Endings/dropout_ending.tscn"
+		# Pass false so it completely skips the passing graduation layout animations!
+		_execute_save_and_transition(epilogue_path, false, final_grade)
+	else:
+		var next_scene_path = "res://Scenes/Chapter 5/chapter_5_scene_1.tscn"
+		_execute_save_and_transition(next_scene_path, true, final_grade)
 
 
 # --- MAIN MENU BUTTON EVENT ---
@@ -241,17 +258,19 @@ func _on_main_menu_pressed(final_grade: float) -> void:
 	if is_transitioning: return
 	is_transitioning = true
 	
-	# 🟢 FIXED: Disable pause controls instantly before calculations begin
 	_hide_pause_button_completely()
 	
-	if chapter5_btn: chapter5_btn.disabled = true
-	if main_menu_btn: main_menu_btn.disabled = true
+	GameManager.current_chapter = 5 
 	
-	if currency_hud: currency_hud.hide()
-	if stat_screen: stat_screen.hide()
-	
-	GameManager.current_chapter = 5
-	
+	# 🟢 FIXED: Cleared comparison operators inside the SET assignment string
+	if GameManager.grades >= 2.75:
+		DatabaseManager.safe_query_with_bindings("""
+			UPDATE chapter_progress 
+			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+			WHERE player_id = ? AND chapter_number = 5;
+		""", [GameManager.grades, GameManager.player_id])
+		
+	# Main menu button always routes back safely to the title interface setup scene
 	var main_menu_path = "res://Scenes/Main Screen/main_screen.tscn"
 	_execute_save_and_transition(main_menu_path, false, final_grade)
 
@@ -264,7 +283,15 @@ func _execute_save_and_transition(destination_path: String, run_chapter_card: bo
 		saving_screen.process_mode = PROCESS_MODE_ALWAYS
 		saving_screen.show()
 		
-	GameManager.complete_current_chapter(grade_scored)
+	# 🟢 FIXED: Bypass double calculation by using direct table columns updates here
+	DatabaseManager.complete_chapter(GameManager.player_id, GameManager.current_chapter, grade_scored)
+	GameManager.current_chapter += 1
+	
+	DatabaseManager.safe_query_with_bindings("""
+		UPDATE player_stats
+		SET current_chapter = ?, grades = ?
+		WHERE player_id = ?;
+	""", [GameManager.current_chapter, GameManager.grades, GameManager.player_id])
 	print("[DATABASE] Chapter 4 Progression committed smoothly.")
 	
 	await get_tree().create_timer(3.0).timeout

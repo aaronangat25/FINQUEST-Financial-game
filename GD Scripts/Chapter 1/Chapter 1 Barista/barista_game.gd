@@ -226,7 +226,8 @@ func _process_second_choice_animation(second_flavor: String) -> void:
 		# Check combo outcomes matching
 		if (first_choice_flavor == "espresso" and second_flavor == "milk") or (first_choice_flavor == "milk" and second_flavor == "espresso"):
 			await get_tree().create_timer(1.5).timeout
-			# Pass true to activate reward loops synchronized with the visual popping effect
+			if GameManager.has_method("unlock_achievement"):
+				GameManager.unlock_achievement("BARISTA_PERFECT")
 			await _run_like_ui_sequence(true) 
 		else:
 			await get_tree().create_timer(1.5).timeout
