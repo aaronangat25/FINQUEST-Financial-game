@@ -131,14 +131,14 @@ func _show_evaluation_stats() -> void:
 		total_label.text = "P" + str(true_expenses)
 		
 	if feedback_label:
-		if true_expenses <= 150: 
+		if true_expenses <= 350: 
 			feedback_label.text = "RESULT: EXCELLENT BUDGETING"
 			feedback_label.add_theme_color_override("font_color", Color("a5d68d")) 
 			jane_reaction_text = "Buti na lang nag-adjust ako kahit may inflation."
 			
 			GameManager.unlock_achievement("INFLATION_FIGHTER")
 			
-		elif true_expenses <= 250: 
+		elif true_expenses <= 520: 
 			feedback_label.text = "RESULT: GOOD BUDGETING"
 			feedback_label.add_theme_color_override("font_color", Color("78dfb7ff")) 
 			jane_reaction_text = "Okay naman... pero pwede ko pa pagbutihin."

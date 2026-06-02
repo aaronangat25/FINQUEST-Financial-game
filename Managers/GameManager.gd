@@ -7,7 +7,6 @@ extends Node
 # ACTIVE PLAYER DATA
 var player_id : int = 1
 var player_name : String = ""
-var gender : String = ""
 var job_path : String = ""
 
 # PLAYER STATS
@@ -110,28 +109,28 @@ func unlock_achievement(achievement_id: String) -> void:
 # =========================================
 # START NEW GAME
 # =========================================
-func start_new_game(new_player_name : String, new_gender : String, new_job_path : String):
+func start_new_game(new_player_name : String, new_job_path : String):
 
 	player_id = DatabaseManager.create_player(
 		new_player_name,
-		new_gender,
 		new_job_path
 	)
 
 	player_name = new_player_name
-	gender = new_gender
 	job_path = new_job_path
-
 	load_player_stats()
 	
 	# --- FIX FOR BUG 2 ---
 	# The absolute second a new game initializes, we hand her the 3,000 tutorial bank cash
 	# so her phone banking screen will never read 0 pesos on a clean playthrough!
-	bank_cash = 3000
+	bank_cash = 1500
 	on_hand_cash = 0
 	
-	print("New game started. Tutorial initialized with Bank Account: ₱3000")
+	print("New game started. Tutorial initialized with Bank Account: 1500")
 
+# =========================================
+# LOAD PLAYER STATS (UPDATED & BULLETPROOF)
+# =========================================
 # =========================================
 # LOAD PLAYER STATS (UPDATED & BULLETPROOF)
 # =========================================
@@ -142,19 +141,22 @@ func load_player_stats():
 
 	var stats = result[0]
 	
-	# If a player quits mid-chapter, this reloads their exact hard-saved cash positions safely!
 	bank_cash = stats["bank_cash"] if stats["bank_cash"] != null else 0
 	on_hand_cash = stats["on_hand_cash"] if stats["on_hand_cash"] != null else 0
 	financial_wisdom_points = stats["financial_wisdom_points"] if stats["financial_wisdom_points"] != null else 0
 	grades = stats["grades"] if stats["grades"] != null else 0.0
 	current_chapter = stats["current_chapter"] if stats["current_chapter"] != null else 1
 	
-	# --- SAFE TYPE CAST FALLBACKS ---
 	current_scene = stats["current_scene"] if stats["current_scene"] != null else ""
 	total_income = stats["total_income"] if stats["total_income"] != null else 0
 	total_expenses = stats["total_expenses"] if stats["total_expenses"] != null else 0
 
-	print("[SYSTEM STATS] Bank Account: ₱", bank_cash, " | Pocket Cash: ₱", on_hand_cash)
+	# 🟢 FIXED: Fetch the persistent job_path straight from the players table!
+	DatabaseManager.safe_query_with_bindings("SELECT job_path FROM players WHERE id = ?;", [player_id])
+	if DatabaseManager.db.query_result.size() > 0:
+		job_path = DatabaseManager.db.query_result[0]["job_path"] if DatabaseManager.db.query_result[0]["job_path"] != null else ""
+
+	print("[SYSTEM STATS] Job Path: ", job_path, " | Bank: ₱", bank_cash, " | Pocket: ₱", on_hand_cash)
 
 # =========================================
 # GET UNLOCKED CHAPTERS FROM DB
@@ -292,12 +294,12 @@ func flush_buffer_to_database() -> void:
 	# 3. Apply standard cash balancing matrices based on chapter indices
 	if current_chapter == 1:
 		print("[DATABASE SAVE] Prologue sandbox complete. Hardwriting ₱3,000 bank and ₱0 pocket balances to row cells...")
-		bank_cash = 3000
+		bank_cash = 1500
 		on_hand_cash = 0
 		
 		DatabaseManager.safe_query_with_bindings("""
 			UPDATE player_stats
-			SET bank_cash = 3000, on_hand_cash = 0
+			SET bank_cash = 1500, on_hand_cash = 0
 			WHERE player_id = ?;
 		""", [player_id])
 	else:
@@ -330,7 +332,7 @@ func clear_temporary_buffer() -> void:
 	current_chapter_description = ""
 	
 	if current_chapter == 1:
-		bank_cash = 3000
+		bank_cash = 1500
 		on_hand_cash = 0
 
 # =========================================
@@ -339,7 +341,6 @@ func clear_temporary_buffer() -> void:
 func reset_game_data():
 	player_id = 1
 	player_name = ""
-	gender = ""
 	job_path = ""
 	bank_cash = 0
 	on_hand_cash = 0
@@ -353,6 +354,23 @@ func reset_game_data():
 	# Reset local tracking state on manual reset sequence calls
 	for key in unlocked_achievements.keys():
 		unlocked_achievements[key] = false
+		
+# =================================================================
+# FETCH PERSISTENT NARRATIVE CHOICE FROM DATABASE
+# =================================================================
+func get_saved_choice(choice_key: String) -> String:
+	# Query the database for the player's saved choice matching the key
+	DatabaseManager.safe_query_with_bindings("""
+		SELECT choice_value 
+		FROM player_choices 
+		WHERE player_id = ? AND choice_key = ? 
+		ORDER BY created_at DESC LIMIT 1;
+	""", [player_id, choice_key])
+	
+	# If a record exists, return it; otherwise return an empty string
+	if DatabaseManager.db.query_result.size() > 0:
+		return DatabaseManager.db.query_result[0]["choice_value"]
+	return ""
 
 # =========================================
 # FETCH ACTIVE GRADE HISTORY FOR SIS APP
@@ -374,7 +392,7 @@ func execute_production_factory_reset() -> void:
 	print("[GAME MANAGER] Performing absolute database and memory purge...")
 	
 	# 1. Reset baseline account configuration stats inside running memory (RAM)
-	bank_cash = 3000
+	bank_cash = 1500
 	on_hand_cash = 0
 	financial_wisdom_points = 0
 	grades = 0.0
@@ -415,7 +433,7 @@ func execute_production_factory_reset() -> void:
 	# 6. Synchronize your active player stats columns back to baseline settings
 	DatabaseManager.safe_query_with_bindings("""
 		UPDATE player_stats
-		SET bank_cash = 3000, 
+		SET bank_cash = 1500, 
 		    on_hand_cash = 0, 
 		    financial_wisdom_points = 0, 
 		    grades = 0.0, 

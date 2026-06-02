@@ -21,7 +21,7 @@ func _ready() -> void:
 func play_intro(job_name: String, job_salary: int) -> void:
 	
 	# Update the text dynamically before it fades in!
-	notif_text.text = "+P3,000 from mom and 2\nmonths salary from your\npart time: " + job_name + " +" + str(job_salary)
+	notif_text.text = "+P1,500 from mom\n2months salary from your\npart time: " + job_name + " + P" + str(job_salary) + "\nrent: -P2000\ntotal: P1200"
 	
 	intro_anim.show()
 	intro_anim.play() 

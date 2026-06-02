@@ -69,7 +69,7 @@ func _ready() -> void:
 	btn_50c.pressed.connect(func(): 
 		GameManager.log_choice("chap1_cashier_change", "C")
 		GameManager.unlock_achievement("CASHIER_PERFECT")
-		_on_cashier_choice_made(120) # Correct choice awards the cash reward
+		_on_cashier_choice_made(60) # Correct choice awards the cash reward
 	)
 	
 	_set_choice_buttons_disabled(true)

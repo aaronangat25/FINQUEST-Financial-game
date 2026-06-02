@@ -197,7 +197,7 @@ func _on_resto_pressed() -> void:
 	choices_locked = true
 	
 	GameManager.log_choice("chap1_breakfast_spending", "C")
-	execute_food_transition(RESTO_BG, 200)
+	execute_food_transition(RESTO_BG, 350)
 
 # --- THE TRANSITION LOGIC ---
 func execute_food_transition(new_bg: Texture2D, cost: int) -> void:

@@ -109,9 +109,11 @@ func _calculate_and_show_results() -> void:
 	var color_green = Color("2ecc71") 
 	var color_red = Color("e74c3c")      
 	
-	var end_grade = 1.25
+	var end_grade = 2.0
+	
+	# 🟢 TIER 1: Outstanding Defense (1.0) -> Choices: (A, A)
 	if meeting == "A" and printing == "A":
-		end_grade = 1.0
+		end_grade = 1.00
 		final_feedback = "RESULT: OUTSTANDING DEFENSE (1.00)"
 		jane_reaction = "Worth it lahat ng pagod… napasa ko!"
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
@@ -119,16 +121,26 @@ func _calculate_and_show_results() -> void:
 		# 🏅 ACHIEVEMENT INTEGRATION
 		GameManager.unlock_achievement("MAGNA_CUM_BUDGET")
 		
-	elif printing == "C":
-		end_grade = 1.50
-		final_feedback = "RESULT: STRUGGLED DEFENSE (1.50)"
-		jane_reaction = "Nakaraos… pero sobrang hirap. Kailangan ko pang bumawi."
+	# 🟢 TIER 2: Struggled Defense (3.0) -> Choices: (B, C)
+	elif meeting == "B" and printing == "C":
+		end_grade = 3.00
+		final_feedback = "RESULT: STRUGGLED DEFENSE (3.00)"
+		# Updated dialogue based on image_8b755f.png
+		jane_reaction = "Nakaraos… pero sobrang hirap. Babawi nalang ako next time."
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_red)
 		
+	# 🟢 TIER 3: Passed Defense (2.0) -> Covers: (A, B) // (B, A) // (A, C)
 	else:
-		final_feedback = "RESULT: PASSED DEFENSE (1.25)"
+		end_grade = 2.00
+		final_feedback = "RESULT: PASSED DEFENSE (2.00)"
 		jane_reaction = "Kinaya ko… pero ang dami ko pang pwedeng i-improve."
 		if feedback_label: feedback_label.add_theme_color_override("font_color", color_green)
+
+	if feedback_label:
+		feedback_label.text = final_feedback
+		
+	if grade_label:
+		grade_label.text = str(end_grade)
 
 	if feedback_label:
 		feedback_label.text = final_feedback

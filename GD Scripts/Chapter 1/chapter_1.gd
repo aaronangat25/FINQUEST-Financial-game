@@ -31,7 +31,7 @@ var virtual_bank_instance
 var gray_screen_instance
 
 var BANK_DIALOGUE: Array = [
-	{"speaker": "", "text": "Before anything else, Jane’s parents transferred her P3,000 allowance for her first week."},
+	{"speaker": "", "text": "Before anything else, Jane’s parents transferred her P1,500 allowance for her first week."},
 	{"speaker": "", "text": "This will serve as your starting balance in the FinQuest Bank."},
 	{"speaker": "", "text": "Your money is stored in a virtual bank account."},
 	{"speaker": "", "text": "Every decision affects your balance, so spend it wisely."}
@@ -56,48 +56,58 @@ func _ready() -> void:
 	# ANDROID FIX: Wait a bit longer for scene transitions to settle
 	await get_tree().create_timer(0.3).timeout
 
-	# =================================================================
+# =================================================================
 	# AUTOMATIC DEVELOPER SAFETY INJECTION FOR DIRECT TESTING (F5)
 	# =================================================================
-	DatabaseManager.safe_query_with_bindings("SELECT COUNT(*) as total FROM player_stats WHERE player_id = ?;", [GameManager.player_id])
+	print("[DEVELOPER SAFETY] Checking for default testing profile rows...")
 	
-	var row_exists = false
-	if DatabaseManager.db.query_result.size() > 0 and DatabaseManager.db.query_result[0]["total"] > 0:
-		row_exists = true
+	var random_id = randi_range(100000, 999999)
+	var randomized_username = "user" + str(random_id)
 		
-	if not row_exists:
-		print("[DEVELOPER SAFETY] No data entries found for testing. Injecting default profile rows for Player 1...")
-		DatabaseManager.safe_query("""
-			INSERT OR IGNORE INTO players (id, player_name, gender, job_path) 
-			VALUES (1, 'Jane Dev', 'Female', 'Cafe');
-		""")
-		DatabaseManager.safe_query("""
-			INSERT OR IGNORE INTO player_stats (player_id, bank_cash, on_hand_cash, current_chapter) 
-			VALUES (1, 3000, 0, 2);
-		""")
-		for chapter in range(1, 8):
-			var unlocked = 1 if chapter <= 2 else 0
-			DatabaseManager.safe_query_with_bindings("""
-				INSERT OR IGNORE INTO chapter_progress (player_id, chapter_number, is_unlocked, is_completed) 
-				VALUES (1, ?, ?, 0);
-			""", [chapter, unlocked])
+	# 1. Establish the baseline player record row if it doesn't exist
+	DatabaseManager.safe_query_with_bindings("""
+		INSERT OR IGNORE INTO players (id, player_name, job_path) 
+		VALUES (1, ?, NULL);
+	""", [randomized_username])
+	
+	# 🟢 FIXED: Automatically inject the missing baseline row into player_stats table for Player 1!
+	DatabaseManager.safe_query("""
+		INSERT OR IGNORE INTO player_stats (player_id, bank_cash, on_hand_cash, current_chapter)
+		VALUES (1, 1500, 0, 2);
+	""")
+	
+	for chapter in range(1, 8):
+		var unlocked = 1 if chapter <= 2 else 0
+		DatabaseManager.safe_query_with_bindings("""
+			INSERT OR IGNORE INTO chapter_progress (player_id, chapter_number, is_unlocked, is_completed) 
+			VALUES (1, ?, ?, 0);
+		""", [chapter, unlocked])
 	# =================================================================
 
 	GameManager.load_player_stats()
 	
 	# =================================================================
-	# THE MASTER SANDBOX PROTECTION SYSTEM (ANTI-EXPLOIT WIPE)
+	# THE MASTER SANDBOX PROTECTION SYSTEM (FORCE FRESH START OVERRIDE)
 	# =================================================================
+	print("[FORCE OVERRIDE] Resetting job selection and establishing a fresh runtime sandbox...")
+	
 	GameManager.current_chapter = 2
 	GameManager.on_hand_cash = 0
-	GameManager.bank_cash = 3000
+	GameManager.bank_cash = 1500
+	GameManager.job_path = ""
+	Global.job_choice = ""
 	GameManager.clear_temporary_buffer()
 	
-	print("[SANDBOX RESET] Chapter 1 Initialized. Bank Cash: ₱", GameManager.bank_cash, " | On-Hand Cash: ₱", GameManager.on_hand_cash, " | Active Chapter Tracker: ", GameManager.current_chapter)
+	# Completely clear out old job choices on disk so re-entering starts fresh
+	DatabaseManager.safe_query_with_bindings("""
+		UPDATE players 
+		SET job_path = NULL 
+		WHERE id = ?;
+	""", [GameManager.player_id])
 	
 	DatabaseManager.safe_query_with_bindings("""
 		UPDATE player_stats
-		SET bank_cash = 3000, on_hand_cash = 0, current_chapter = 2
+		SET bank_cash = 1500, on_hand_cash = 0, current_chapter = 2
 		WHERE player_id = ?;
 	""", [GameManager.player_id])
 	# =================================================================
@@ -107,7 +117,12 @@ func _ready() -> void:
 	phone_mini.phone_clicked.connect(_on_phone_clicked)
 	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
-	add_child(currency_hud)
+	if currency_hud:
+		
+		add_child(currency_hud)
+		var withdraw_btn = currency_hud.get_node_or_null("withdraw_btn")
+		if withdraw_btn:
+			withdraw_btn.hide()
 	
 	currency_hud.add_money(GameManager.on_hand_cash)
 	
@@ -116,7 +131,7 @@ func _ready() -> void:
 	
 	jane.modulate.a = 0.0
 	
-	# 🟢 FIXED SEQUENCE: Fire animation loop early while screen is pitch black
+	# FIXED SEQUENCE: Fire animation loop early while screen is pitch black
 	animated_bg.play("idle")
 	
 	# Give the phone GPU a single active processing frame to register texture nodes in the dark
@@ -128,6 +143,7 @@ func _ready() -> void:
 		
 	# Wait smoothly for the bus sequence loop to naturally wrap up its frames
 	await animated_bg.animation_finished
+	
 	
 	jane.appear()
 	await get_tree().create_timer(1.0).timeout
@@ -206,6 +222,11 @@ func _on_virtual_bank_back_clicked() -> void:
 	
 	await get_tree().create_timer(1.0).timeout
 	await TransitionManager.fade_to_black()
+	
+	if currency_hud:
+		var withdraw_btn = currency_hud.get_node_or_null("withdraw_btn")
+		if withdraw_btn:
+			withdraw_btn.show()
 		
 	var dorm_background = TextureRect.new()
 	dorm_background.texture = DORM_BG
@@ -247,21 +268,39 @@ func _on_virtual_bank_back_clicked() -> void:
 	jane_big_2.appear()
 
 func _on_choice_made(selected_choice: String) -> void:
-	Global.job_choice = selected_choice
+	var dynamic_job = ""
 	
 	if selected_choice == "A" or selected_choice == "Cafe":
+		dynamic_job = "Barista"   
 		GameManager.log_choice("chap1_job_path", "A")
 	elif selected_choice == "B" or selected_choice == "Clerk":
+		dynamic_job = "Clerk"
 		GameManager.log_choice("chap1_job_path", "B")
 	elif selected_choice == "C" or selected_choice == "Cashier":
+		dynamic_job = "Cashier"
 		GameManager.log_choice("chap1_job_path", "C")
 	else:
+		dynamic_job = selected_choice
 		GameManager.log_choice("chap1_job_path", selected_choice)
+		
+	# Sync running memory states
+	Global.job_choice = dynamic_job
+	GameManager.job_path = dynamic_job
+	
+	# Instantly overwrite the database cell right upon choice selection
+	print("[DATABASE] Overwriting persistent profile job_path cell with: ", dynamic_job)
+	DatabaseManager.safe_query_with_bindings("""
+		UPDATE players 
+		SET job_path = ? 
+		WHERE id = ?;
+	""", [dynamic_job, GameManager.player_id])
 
 	choose_control.exit()
 	
 	var tween = create_tween()
 	tween.tween_property(jane_big_2, "modulate:a", 0.0, 0.5)
+	
+	
 	
 	await get_tree().create_timer(0.5).timeout
 	TransitionManager.transition_to(NEXT_SCENE)
