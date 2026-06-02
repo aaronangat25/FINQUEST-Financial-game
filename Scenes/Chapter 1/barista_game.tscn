@@ -1,0 +1,103 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwiqjuqnmlwnc"]
+
+[ext_resource type="Texture2D" uid="uid://ds0w8fnnivm0" path="res://Assets/Backgrounds/Chapter 1/barista/coffeebaristabg.png" id="1_86tok"]
+[ext_resource type="Script" uid="uid://cnfl2g2gt4gqs" path="res://GD Scripts/Chapter 1/Chapter 1 Barista/barista_game.gd" id="1_hqnsu"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="2_1lxtk"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="3_hqnsu"]
+[ext_resource type="PackedScene" uid="uid://b03cb50shac20" path="res://Scenes/pause_btn.tscn" id="5_3snkp"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m6t0t"]
+texture = ExtResource("1_86tok")
+
+[node name="barista_game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hqnsu")
+
+[node name="coffeebaristabg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_m6t0t")
+
+[node name="button_layer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="mns_button_container" type="VBoxContainer" parent="button_layer"]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -38.5
+offset_top = -23.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="milktbtn" type="Button" parent="button_layer/mns_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_1lxtk")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_hqnsu")
+theme_override_font_sizes/font_size = 4
+text = "miilk"
+
+[node name="strawberrybtn" type="Button" parent="button_layer/mns_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_1lxtk")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_hqnsu")
+theme_override_font_sizes/font_size = 4
+text = "strawberry"
+autowrap_mode = 2
+
+[node name="enc_button_container" type="VBoxContainer" parent="button_layer"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 5.5
+offset_top = -23.0
+offset_right = 38.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 5
+
+[node name="espressobtn" type="Button" parent="button_layer/enc_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_1lxtk")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_hqnsu")
+theme_override_font_sizes/font_size = 4
+text = "espresso"
+
+[node name="chocolatebtn" type="Button" parent="button_layer/enc_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_1lxtk")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_hqnsu")
+theme_override_font_sizes/font_size = 4
+text = "chocolate"
+autowrap_mode = 2
+
+[node name="pause_btn" parent="." instance=ExtResource("5_3snkp")]
