@@ -24,21 +24,29 @@ var active_gray_screen
 var active_tutorial
 
 func _ready() -> void:
-	# --- AUDIO INITIALIZATION ---
-	# Seamlessly drops the general/menu music and changes to the coffee shop vibe
 	AudioManager.play_coffee_shop_music()
 	
 	currency_hud = CURRENCY_HUD_SCENE.instantiate()
 	add_child(currency_hud)
 	
+	# --- FIXED: USING THE ARCHITECTURE FROM CLERK METHOD ---
+	# Forces a frame wait so the hud's internal code runs, then tells it to auto-update
+	await get_tree().process_frame
+	if currency_hud and currency_hud.has_method("refresh_display"):
+		currency_hud.refresh_display()
+	
 	leo_table.modulate.a = 0.0
 	leo_dialogue.modulate.a = 0.0
 	kylie.modulate.a = 0.0
 	
-	if TransitionManager.color_rect.visible:
-		await TransitionManager.transition_finished
-		
-	_play_barista_sequence()
+	# --- STABLE SYSTEM PROGRESSION EVALUATOR ---
+	if "barista_game_completed" in Global and Global.barista_game_completed:
+		_play_shift_conclusion_sequence()
+	else:
+		if TransitionManager.color_rect.visible:
+			await TransitionManager.transition_finished
+		_play_barista_sequence()
+
 
 func _play_barista_sequence() -> void:
 	await get_tree().create_timer(2.0).timeout
@@ -92,7 +100,6 @@ func _play_barista_sequence() -> void:
 	leo_dialogue.exit(false)
 	active_dialogue_box.queue_free()
 	
-	# --- OPEN PHONE INTERFACE TUTORIAL ---
 	active_gray_screen = GRAY_SCREEN_SCENE.instantiate()
 	add_child(active_gray_screen)
 	
@@ -105,33 +112,39 @@ func _play_barista_sequence() -> void:
 		
 	if back_btn:
 		back_btn.pressed.connect(_on_tutorial_back_pressed)
-	else:
-		print("ERROR: Could not find BackButton in tutorial screen!")
 
 
 func _on_tutorial_back_pressed() -> void:
 	if active_gray_screen: active_gray_screen.queue_free()
 	if active_tutorial: active_tutorial.queue_free()
 	
+	await TransitionManager.fade_to_black()
+	get_tree().change_scene_to_file("res://Scenes/Chapter 1/barista_game.tscn")
+
+
+func _play_shift_conclusion_sequence() -> void:
+	var new_style = StyleBoxTexture.new()
+	new_style.texture = CAFE_INDOOR_BG
+	background.add_theme_stylebox_override("panel", new_style)
+	
+	if TransitionManager.has_method("fade_from_black"):
+		TransitionManager.fade_from_black()
+		
 	await get_tree().create_timer(0.5).timeout
 	
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
+	active_dialogue_box.line_started.connect(_on_dialogue_line_started)
 	
-	active_dialogue_box.is_fading = true 
+	if leo_dialogue:
+		leo_dialogue.modulate.a = 1.0
+		if leo_dialogue.has_method("appear"):
+			leo_dialogue.appear("idle", false)
 	
 	var box_visual = active_dialogue_box.get_node("MarginContainer/texturerectContainer")
 	if box_visual:
-		box_visual.modulate.a = 0.0
-		active_dialogue_box.show() 
-		var tween_in = create_tween()
-		tween_in.tween_property(box_visual, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE)
-		await tween_in.finished
-		
-	await get_tree().create_timer(0.2).timeout
-	
-	leo_dialogue.appear("idle", false) 
-	await get_tree().create_timer(0.6).timeout
+		active_dialogue_box.show()
+		box_visual.modulate.a = 1.0
 	
 	var final_conversation = [
 		{"speaker": "Leo", "text": "You learn fast. Come back if you want shifts."}
@@ -140,16 +153,18 @@ func _on_tutorial_back_pressed() -> void:
 	active_dialogue_box.start_dialogue(final_conversation)
 	await active_dialogue_box.dialogue_finished
 	
-	leo_dialogue.exit(true) 
+	if leo_dialogue and leo_dialogue.has_method("exit"):
+		leo_dialogue.exit(true) 
 	await get_tree().create_timer(0.6).timeout
 	
 	if box_visual:
 		var tween_out = create_tween()
 		tween_out.tween_property(box_visual, "modulate:a", 0.0, 0.5).set_trans(Tween.TRANS_SINE)
 		await tween_out.finished
+		
 	active_dialogue_box.queue_free()
-	
 	_trigger_shift_end_transition()
+
 
 func _trigger_shift_end_transition() -> void:
 	await TransitionManager.fade_to_black()
@@ -171,16 +186,15 @@ func _trigger_shift_end_transition() -> void:
 		await text_out.finished
 		title_label.hide()
 	
-	# --- RESTORE GENERAL BACKGROUND EXPLORATION THEME ---
 	AudioManager.play_chapter_music()
-	
 	get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1_end.tscn")
+
 
 func _on_dialogue_line_started(line_data: Dictionary) -> void:
 	var speaker = line_data.get("speaker", "")
 	if speaker == "Kylie":
 		kylie.appear("idle", true) 
-		leo_dialogue.exit(false)   
+		leo_dialogue.exit(false)    
 	elif speaker == "Leo":
 		leo_dialogue.appear("idle", true)
 		kylie.exit(false)

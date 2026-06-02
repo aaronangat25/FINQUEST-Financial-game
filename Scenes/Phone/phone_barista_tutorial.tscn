@@ -125,14 +125,14 @@ Make drinks by
 following steps
 in correct order
 
-The faster and
-more accurate,
-the higher the
-pay
-
 Mini-Task:
-Make a simple order:
-Iced Latte"
+Make a basic order:
+Iced Latte
+
+Ingredients:
+Espresso
+Milk
+"
 
 [node name="stepsbarista" type="Panel" parent="phonebaristatutorialcontrol/phonebarsitatutorial"]
 layout_mode = 1

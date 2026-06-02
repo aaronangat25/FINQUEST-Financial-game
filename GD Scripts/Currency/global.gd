@@ -11,3 +11,5 @@ var total_expenses: int = 0
 
 var choice_meeting: String = ""
 var choice_printing: String = ""
+
+var barista_game_completed: bool = false

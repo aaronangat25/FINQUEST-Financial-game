@@ -1,0 +1,1494 @@
+[gd_scene load_steps=321 format=3 uid="uid://d0cit4l3kx7kw"]
+
+[ext_resource type="Texture2D" uid="uid://cq8420d3001hi" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_00.png" id="1_3suxe"]
+[ext_resource type="Texture2D" uid="uid://ch00l0r5e42sv" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_01.png" id="2_ramcw"]
+[ext_resource type="Texture2D" uid="uid://bglu57iqaqg2c" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_02.png" id="3_a26xn"]
+[ext_resource type="Texture2D" uid="uid://c3yu0bre7kium" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_03.png" id="4_kadqq"]
+[ext_resource type="Texture2D" uid="uid://c4g6aoncausax" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_04.png" id="5_f8gb1"]
+[ext_resource type="Texture2D" uid="uid://bpueb6uu1otmk" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_05.png" id="6_41yqe"]
+[ext_resource type="Texture2D" uid="uid://c3mck2yd2y67" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_06.png" id="7_f553o"]
+[ext_resource type="Texture2D" uid="uid://dm158h01p03hp" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_07.png" id="8_ds2j0"]
+[ext_resource type="Texture2D" uid="uid://ddmlaordbs63" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_08.png" id="9_ngfyb"]
+[ext_resource type="Texture2D" uid="uid://blxe3ggb4amfd" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_09.png" id="10_wtdlr"]
+[ext_resource type="Texture2D" uid="uid://dxjsyy4lm148o" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_10.png" id="11_2ipd4"]
+[ext_resource type="Texture2D" uid="uid://8w003ey5dtwb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_11.png" id="12_dspht"]
+[ext_resource type="Texture2D" uid="uid://bsycq7epmqv6l" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_12.png" id="13_vrv7y"]
+[ext_resource type="Texture2D" uid="uid://8drcx5bmgo2q" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_13.png" id="14_sjkev"]
+[ext_resource type="Texture2D" uid="uid://cca1jtvgw5ilb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_14.png" id="15_ugmlj"]
+[ext_resource type="Texture2D" uid="uid://bbwlhmhilh1pg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_15.png" id="16_7g1ow"]
+[ext_resource type="Texture2D" uid="uid://bj36mgqudij36" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_16.png" id="17_fi5em"]
+[ext_resource type="Texture2D" uid="uid://b6hv4v00av3ij" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_17.png" id="18_ej5lh"]
+[ext_resource type="Texture2D" uid="uid://dbk6p528vuxmb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_18.png" id="19_fo617"]
+[ext_resource type="Texture2D" uid="uid://cr3wxdhiw47m6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro/sprite_19.png" id="20_1vyy8"]
+[ext_resource type="Texture2D" uid="uid://cbakxviwtm3f8" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_0.png" id="21_ngfyb"]
+[ext_resource type="Texture2D" uid="uid://jdc4n82d2g4y" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_1.png" id="22_wtdlr"]
+[ext_resource type="Texture2D" uid="uid://yo5pjmkl6fm2" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_2.png" id="23_2ipd4"]
+[ext_resource type="Texture2D" uid="uid://bbpr3n3ik02j0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_3.png" id="24_dspht"]
+[ext_resource type="Texture2D" uid="uid://coptohkylhox0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_4.png" id="25_vrv7y"]
+[ext_resource type="Texture2D" uid="uid://b2iwu4mixghc6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_5.png" id="26_sjkev"]
+[ext_resource type="Texture2D" uid="uid://cldfywedetjuj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_6.png" id="27_ugmlj"]
+[ext_resource type="Texture2D" uid="uid://di4v13eix8526" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_intro2/sprite_7.png" id="28_7g1ow"]
+[ext_resource type="Texture2D" uid="uid://bhhl5f7dk7wve" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_00.png" id="29_mwskm"]
+[ext_resource type="Texture2D" uid="uid://cusat2hfbu4ts" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_01.png" id="30_87gs4"]
+[ext_resource type="Texture2D" uid="uid://cgtlulf7iyia4" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_02.png" id="31_dh21j"]
+[ext_resource type="Texture2D" uid="uid://dvckwlny7yhh0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_03.png" id="32_ej655"]
+[ext_resource type="Texture2D" uid="uid://c7nyp7vb55n4y" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_04.png" id="33_ke28u"]
+[ext_resource type="Texture2D" uid="uid://cdf40e4coyqct" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_05.png" id="34_y2wg8"]
+[ext_resource type="Texture2D" uid="uid://degbu7k4i2ujh" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_06.png" id="35_c44se"]
+[ext_resource type="Texture2D" uid="uid://cl3l5eqqrk26o" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_07.png" id="36_nysug"]
+[ext_resource type="Texture2D" uid="uid://curuopt8t80eb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_08.png" id="37_kfbe7"]
+[ext_resource type="Texture2D" uid="uid://dokr13rulgjvv" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_09.png" id="38_ap6we"]
+[ext_resource type="Texture2D" uid="uid://cv1c1fe2ls1b8" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_10.png" id="39_k0qie"]
+[ext_resource type="Texture2D" uid="uid://bdy2iplv6pkct" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_11.png" id="40_5eynb"]
+[ext_resource type="Texture2D" uid="uid://buura41ihu1cn" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_12.png" id="41_uia6a"]
+[ext_resource type="Texture2D" uid="uid://dtivrtrah4ctw" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_13.png" id="42_y4g56"]
+[ext_resource type="Texture2D" uid="uid://ddf8h2lxeh2aa" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_14.png" id="43_733m8"]
+[ext_resource type="Texture2D" uid="uid://brlwosm4ur203" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_15.png" id="44_5fkba"]
+[ext_resource type="Texture2D" uid="uid://bskupeggts6qg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILK/sprite_16.png" id="45_svttl"]
+[ext_resource type="Texture2D" uid="uid://b833771keslcs" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_00.png" id="46_ofoqs"]
+[ext_resource type="Texture2D" uid="uid://dbmfmd04ws24c" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_01.png" id="47_wdbvo"]
+[ext_resource type="Texture2D" uid="uid://qpqwt7iecn4" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_02.png" id="48_pkp1e"]
+[ext_resource type="Texture2D" uid="uid://dokdj2a7govht" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_03.png" id="49_cn6sd"]
+[ext_resource type="Texture2D" uid="uid://dugtg31op3uh3" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_04.png" id="50_mdq7y"]
+[ext_resource type="Texture2D" uid="uid://c5s1cvco0kt27" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_05.png" id="51_ttme2"]
+[ext_resource type="Texture2D" uid="uid://bqgr5hp1hqkkg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_06.png" id="52_ptmcu"]
+[ext_resource type="Texture2D" uid="uid://bddurpvj8qtgx" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_07.png" id="53_u6ti0"]
+[ext_resource type="Texture2D" uid="uid://cm1xfa514kp1m" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_08.png" id="54_12v7a"]
+[ext_resource type="Texture2D" uid="uid://d1ub7emucrwin" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_09.png" id="55_vcoh2"]
+[ext_resource type="Texture2D" uid="uid://3sxvkxrn5wgr" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_10.png" id="56_1l5uj"]
+[ext_resource type="Texture2D" uid="uid://owbp261yavvl" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_11.png" id="57_e7v16"]
+[ext_resource type="Texture2D" uid="uid://b12u66ntwimbu" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_12.png" id="58_7v7rj"]
+[ext_resource type="Texture2D" uid="uid://crxxvo0bxqw1s" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_13.png" id="59_pov4q"]
+[ext_resource type="Texture2D" uid="uid://c67u0ql6khoo5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_14.png" id="60_av7s1"]
+[ext_resource type="Texture2D" uid="uid://cywxmx5lc3m2k" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_15.png" id="61_wac73"]
+[ext_resource type="Texture2D" uid="uid://c7fm2vl8aeo8g" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWBERRY/sprite_16.png" id="62_0mdui"]
+[ext_resource type="Texture2D" uid="uid://rsvoutffvo2e" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_00.png" id="63_dp8or"]
+[ext_resource type="Texture2D" uid="uid://cgjcy33q7j3gp" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_01.png" id="64_8m711"]
+[ext_resource type="Texture2D" uid="uid://dat0g7eb5cxyv" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_02.png" id="65_wsvbv"]
+[ext_resource type="Texture2D" uid="uid://prwmxre82s76" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_03.png" id="66_15xg3"]
+[ext_resource type="Texture2D" uid="uid://coqmq6nnmv6q5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_04.png" id="67_tbecu"]
+[ext_resource type="Texture2D" uid="uid://bev303rycd7gj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_05.png" id="68_tox57"]
+[ext_resource type="Texture2D" uid="uid://b7ggx7be2v4ai" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_06.png" id="69_ren5c"]
+[ext_resource type="Texture2D" uid="uid://bbgbhc4y5sc1s" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_07.png" id="70_ht3ch"]
+[ext_resource type="Texture2D" uid="uid://cpftcbx30tlos" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_08.png" id="71_r063l"]
+[ext_resource type="Texture2D" uid="uid://dyfu570rt84yg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_09.png" id="72_enqvu"]
+[ext_resource type="Texture2D" uid="uid://rojhyin1tywe" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_10.png" id="73_libh2"]
+[ext_resource type="Texture2D" uid="uid://6csmo4ltrchp" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_11.png" id="74_8vkbv"]
+[ext_resource type="Texture2D" uid="uid://bm105qrfhhmcn" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_12.png" id="75_uw7tb"]
+[ext_resource type="Texture2D" uid="uid://ql5ov4m5xf5n" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_13.png" id="76_kqlsy"]
+[ext_resource type="Texture2D" uid="uid://e62n2lk02nun" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_14.png" id="77_q0c46"]
+[ext_resource type="Texture2D" uid="uid://3wr3hmi0d21b" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_15.png" id="78_snlh1"]
+[ext_resource type="Texture2D" uid="uid://dj05esar0vy2g" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSO (1)/sprite_17.png" id="79_scojh"]
+[ext_resource type="Texture2D" uid="uid://ox5m1d7tn6pw" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_00.png" id="80_x0nvt"]
+[ext_resource type="Texture2D" uid="uid://dqaq6d2epcjst" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_01.png" id="81_m587x"]
+[ext_resource type="Texture2D" uid="uid://d1557t3xtj6hn" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_02.png" id="82_5be5r"]
+[ext_resource type="Texture2D" uid="uid://w6xhplqkog8n" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_03.png" id="83_kxsot"]
+[ext_resource type="Texture2D" uid="uid://c0xtfvb8w4q8x" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_04.png" id="84_ohi8s"]
+[ext_resource type="Texture2D" uid="uid://8t3c7sdlp2dd" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_05.png" id="85_4g5ql"]
+[ext_resource type="Texture2D" uid="uid://im6ynkeauc0n" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_06.png" id="86_0e7jo"]
+[ext_resource type="Texture2D" uid="uid://me84mmqc442j" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_07.png" id="87_dot0n"]
+[ext_resource type="Texture2D" uid="uid://dv06dc1p37qgh" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_08.png" id="88_gvkee"]
+[ext_resource type="Texture2D" uid="uid://b3t0ln1oxxpdg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_09.png" id="89_udr1s"]
+[ext_resource type="Texture2D" uid="uid://dcwnbpostp4tm" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_10.png" id="90_osr7h"]
+[ext_resource type="Texture2D" uid="uid://b7g0himsur4pa" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_11.png" id="91_7a8oe"]
+[ext_resource type="Texture2D" uid="uid://u6yn5k84y38e" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_12.png" id="92_x3war"]
+[ext_resource type="Texture2D" uid="uid://b2xmylba8jd1q" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_13.png" id="93_8ygdo"]
+[ext_resource type="Texture2D" uid="uid://v7u0wb17pw23" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_14.png" id="94_q45kb"]
+[ext_resource type="Texture2D" uid="uid://dwv1ox5lvgj5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_15.png" id="95_225r2"]
+[ext_resource type="Texture2D" uid="uid://ua2mq5xoj1m2" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATE/sprite_16.png" id="96_nsm1f"]
+[ext_resource type="Texture2D" uid="uid://c24yrlw7tn5r1" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_00.png" id="97_swlg0"]
+[ext_resource type="Texture2D" uid="uid://dt6b8j654g42m" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_01.png" id="98_io25o"]
+[ext_resource type="Texture2D" uid="uid://becl45umiackb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_02.png" id="99_xc8hh"]
+[ext_resource type="Texture2D" uid="uid://bnwgi47s3ovag" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_03.png" id="100_ufh8h"]
+[ext_resource type="Texture2D" uid="uid://dsxeab4qvio8c" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_04.png" id="101_u8a0b"]
+[ext_resource type="Texture2D" uid="uid://cl550ixc833fj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_05.png" id="102_0rw0h"]
+[ext_resource type="Texture2D" uid="uid://drxw66axvsf8n" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_06.png" id="103_w1a7c"]
+[ext_resource type="Texture2D" uid="uid://chcvathyc1h3d" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_07.png" id="104_ase4q"]
+[ext_resource type="Texture2D" uid="uid://bppixo62eh8gt" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_08.png" id="105_m0hug"]
+[ext_resource type="Texture2D" uid="uid://d07yi81cppwx4" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_09.png" id="106_m2p80"]
+[ext_resource type="Texture2D" uid="uid://dgajd8a7hgf80" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_10.png" id="107_attva"]
+[ext_resource type="Texture2D" uid="uid://cc3xd40chxaha" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_11.png" id="108_37slx"]
+[ext_resource type="Texture2D" uid="uid://dx3fgwvg356tb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_12.png" id="109_vgeom"]
+[ext_resource type="Texture2D" uid="uid://i6bicnfhughh" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_13.png" id="110_4xbyd"]
+[ext_resource type="Texture2D" uid="uid://by76mt2uywlov" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_14.png" id="111_a0t1l"]
+[ext_resource type="Texture2D" uid="uid://ctbrepj0tliv6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_15.png" id="112_oxtcx"]
+[ext_resource type="Texture2D" uid="uid://jgdprlrw6dg0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_16.png" id="113_eifpg"]
+[ext_resource type="Texture2D" uid="uid://cpae4po4x4jly" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_17.png" id="114_xdw8h"]
+[ext_resource type="Texture2D" uid="uid://ceapwr2r0bmho" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_18.png" id="115_mfy4p"]
+[ext_resource type="Texture2D" uid="uid://bwjx47dko1jn1" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_19.png" id="116_e2v2w"]
+[ext_resource type="Texture2D" uid="uid://bk1sdog2krb7e" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_20.png" id="117_7ddis"]
+[ext_resource type="Texture2D" uid="uid://b1encpb7b2rmw" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXSTRAW/sprite_21.png" id="118_d2j7y"]
+[ext_resource type="Texture2D" uid="uid://b1ax3vkyk70j1" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_00.png" id="119_douub"]
+[ext_resource type="Texture2D" uid="uid://dq5wt6qqtp8lt" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_01.png" id="120_sm8xb"]
+[ext_resource type="Texture2D" uid="uid://dxio3mnrwhmu7" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_02.png" id="121_8liau"]
+[ext_resource type="Texture2D" uid="uid://74vu24t2r3se" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_03.png" id="122_c0aqn"]
+[ext_resource type="Texture2D" uid="uid://1lljuyci5tc8" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_04.png" id="123_7u33q"]
+[ext_resource type="Texture2D" uid="uid://d3uw8gpw6gkrm" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_05.png" id="124_ajnpw"]
+[ext_resource type="Texture2D" uid="uid://dn2tjac2sefyi" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_06.png" id="125_d2xa5"]
+[ext_resource type="Texture2D" uid="uid://btsbxgo6gldh6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_07.png" id="126_wfy8i"]
+[ext_resource type="Texture2D" uid="uid://cc03dkge33iyc" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_08.png" id="127_0ja14"]
+[ext_resource type="Texture2D" uid="uid://5pgmh05mk70a" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_09.png" id="128_exjhi"]
+[ext_resource type="Texture2D" uid="uid://bimuaosyorh36" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_10.png" id="129_aqtlo"]
+[ext_resource type="Texture2D" uid="uid://cjgx8np80ck6x" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_11.png" id="130_juxdw"]
+[ext_resource type="Texture2D" uid="uid://dnob1jnun3b7p" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_12.png" id="131_ckxae"]
+[ext_resource type="Texture2D" uid="uid://ba2gtq1c4eacy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_13.png" id="132_le7ed"]
+[ext_resource type="Texture2D" uid="uid://bkhpao53qpahg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_14.png" id="133_l8wl2"]
+[ext_resource type="Texture2D" uid="uid://dbpikqw2qk32e" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_15.png" id="134_d8ut8"]
+[ext_resource type="Texture2D" uid="uid://cmfrseop6pnhe" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_16.png" id="135_qyjhi"]
+[ext_resource type="Texture2D" uid="uid://b4kdtf4unavkl" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_17.png" id="136_rjm7u"]
+[ext_resource type="Texture2D" uid="uid://baahsmra7erhy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_18.png" id="137_rv8gt"]
+[ext_resource type="Texture2D" uid="uid://btdp5h4ldtqp1" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_19.png" id="138_bna62"]
+[ext_resource type="Texture2D" uid="uid://dy0ug7xorgoqv" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_20.png" id="139_31h1c"]
+[ext_resource type="Texture2D" uid="uid://b6h5ifl52gapx" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXESPRESSO/sprite_21.png" id="140_iuuq2"]
+[ext_resource type="Texture2D" uid="uid://dg3fki734fsvq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_00.png" id="141_etqmf"]
+[ext_resource type="Texture2D" uid="uid://c47p3xrqs4ik7" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_01.png" id="142_0l3s5"]
+[ext_resource type="Texture2D" uid="uid://cgaxjkss0ifqf" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_02.png" id="143_4bjkj"]
+[ext_resource type="Texture2D" uid="uid://b0q6eiv74yho0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_03.png" id="144_ok80h"]
+[ext_resource type="Texture2D" uid="uid://dxenfwjvybico" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_04.png" id="145_vufrs"]
+[ext_resource type="Texture2D" uid="uid://2h4wvs7qajfl" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_05.png" id="146_irqfa"]
+[ext_resource type="Texture2D" uid="uid://c1fn0jeycgidq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_06.png" id="147_4ci5s"]
+[ext_resource type="Texture2D" uid="uid://brpmxekd5t633" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_07.png" id="148_cd276"]
+[ext_resource type="Texture2D" uid="uid://b6eyy6hop3k4e" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_08.png" id="149_j2unj"]
+[ext_resource type="Texture2D" uid="uid://c3hd27c5ybxa6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_09.png" id="150_oj7ho"]
+[ext_resource type="Texture2D" uid="uid://dt4o3asu7o55c" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_10.png" id="151_s4k6j"]
+[ext_resource type="Texture2D" uid="uid://6jrt8mt55tg8" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_11.png" id="152_mchgj"]
+[ext_resource type="Texture2D" uid="uid://b0sbp3kd5qw7g" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_12.png" id="153_lrk0e"]
+[ext_resource type="Texture2D" uid="uid://chog3u4ltg4yi" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_13.png" id="154_sxte3"]
+[ext_resource type="Texture2D" uid="uid://dfumqdmo53ys2" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_14.png" id="155_fydhi"]
+[ext_resource type="Texture2D" uid="uid://c0dlbmgpsl1t5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_15.png" id="156_7yqwp"]
+[ext_resource type="Texture2D" uid="uid://c6vuekqk60yor" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_16.png" id="157_dsn6r"]
+[ext_resource type="Texture2D" uid="uid://d2e6313u1cafm" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_17.png" id="158_h3rn1"]
+[ext_resource type="Texture2D" uid="uid://b2upvrr3s207w" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_18.png" id="159_3j6ke"]
+[ext_resource type="Texture2D" uid="uid://cjlapqi4rjgu1" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_19.png" id="160_t3l5p"]
+[ext_resource type="Texture2D" uid="uid://xhj0khvuyig" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_20.png" id="161_devb5"]
+[ext_resource type="Texture2D" uid="uid://cknu5vwtvy6b3" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_MILKXCHOCO/sprite_21.png" id="162_pn8jj"]
+[ext_resource type="Texture2D" uid="uid://deam5hihd2e3c" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_00.png" id="163_etqmf"]
+[ext_resource type="Texture2D" uid="uid://cv1kh81jj8ech" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_01.png" id="164_0l3s5"]
+[ext_resource type="Texture2D" uid="uid://b5sj4mygbiddm" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_02.png" id="165_4bjkj"]
+[ext_resource type="Texture2D" uid="uid://cdnala2wtacuu" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_03.png" id="166_ok80h"]
+[ext_resource type="Texture2D" uid="uid://cx3fu4vlj7hpl" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_04.png" id="167_vufrs"]
+[ext_resource type="Texture2D" uid="uid://cmhi72tiu3pio" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_05.png" id="168_irqfa"]
+[ext_resource type="Texture2D" uid="uid://c3xtgw38ryrkp" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_06.png" id="169_4ci5s"]
+[ext_resource type="Texture2D" uid="uid://camcrv2kasmdj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_07.png" id="170_cd276"]
+[ext_resource type="Texture2D" uid="uid://yp7yv6hpdra4" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_08.png" id="171_j2unj"]
+[ext_resource type="Texture2D" uid="uid://c7xbsjxs2fign" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_09.png" id="172_oj7ho"]
+[ext_resource type="Texture2D" uid="uid://by1xdly5u8wl6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_10.png" id="173_s4k6j"]
+[ext_resource type="Texture2D" uid="uid://w3dahfc8s4w7" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_11.png" id="174_mchgj"]
+[ext_resource type="Texture2D" uid="uid://b2a2qme0bve5y" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_12.png" id="175_lrk0e"]
+[ext_resource type="Texture2D" uid="uid://cpbq42lofo8wy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_13.png" id="176_sxte3"]
+[ext_resource type="Texture2D" uid="uid://b2dot0tcuh0ya" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_14.png" id="177_fydhi"]
+[ext_resource type="Texture2D" uid="uid://ctlwbe6c8yxld" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_15.png" id="178_7yqwp"]
+[ext_resource type="Texture2D" uid="uid://b5ek7eg5cbecp" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_16.png" id="179_dsn6r"]
+[ext_resource type="Texture2D" uid="uid://bnujlrmy5i2y3" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_17.png" id="180_h3rn1"]
+[ext_resource type="Texture2D" uid="uid://bb4scmr1lsxas" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_18.png" id="181_3j6ke"]
+[ext_resource type="Texture2D" uid="uid://tfxw4xnvgm1g" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_19.png" id="182_t3l5p"]
+[ext_resource type="Texture2D" uid="uid://4rv2mmifa8f0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_20.png" id="183_devb5"]
+[ext_resource type="Texture2D" uid="uid://c8fdglgk5twyx" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXMILK/sprite_21.png" id="184_pn8jj"]
+[ext_resource type="Texture2D" uid="uid://c1jd343108jem" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_00.png" id="185_tx6vu"]
+[ext_resource type="Texture2D" uid="uid://c47l6bty856fw" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_01.png" id="186_mle3g"]
+[ext_resource type="Texture2D" uid="uid://dni5ydn6uix1v" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_02.png" id="187_wxk0b"]
+[ext_resource type="Texture2D" uid="uid://cyada20jshrq6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_03.png" id="188_stmn4"]
+[ext_resource type="Texture2D" uid="uid://do6ejk0fyter2" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_04.png" id="189_sy1q3"]
+[ext_resource type="Texture2D" uid="uid://c8cuesv1a6wu5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_05.png" id="190_jwxjg"]
+[ext_resource type="Texture2D" uid="uid://bbl23sbdcconc" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_06.png" id="191_fik37"]
+[ext_resource type="Texture2D" uid="uid://2fi2jxmecmgy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_07.png" id="192_cj8lw"]
+[ext_resource type="Texture2D" uid="uid://bgda3q7xhh5rs" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_08.png" id="193_v6quc"]
+[ext_resource type="Texture2D" uid="uid://be2rbbwf02cox" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_09.png" id="194_pkp8c"]
+[ext_resource type="Texture2D" uid="uid://cbppom85h7i6h" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_10.png" id="195_k08lx"]
+[ext_resource type="Texture2D" uid="uid://m2wad33eri2f" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_11.png" id="196_elref"]
+[ext_resource type="Texture2D" uid="uid://bw4h51vxyug4i" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_12.png" id="197_m2npw"]
+[ext_resource type="Texture2D" uid="uid://dpi80rgon1pep" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_13.png" id="198_36dc2"]
+[ext_resource type="Texture2D" uid="uid://db47620jslx03" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_14.png" id="199_mk478"]
+[ext_resource type="Texture2D" uid="uid://7k4erq2pvof5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_15.png" id="200_3vdk4"]
+[ext_resource type="Texture2D" uid="uid://hv7tbul8h4bj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_16.png" id="201_32d8j"]
+[ext_resource type="Texture2D" uid="uid://dwxl8ju2bdc13" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_17.png" id="202_oo5bx"]
+[ext_resource type="Texture2D" uid="uid://bllrtf8k7an84" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_18.png" id="203_07riy"]
+[ext_resource type="Texture2D" uid="uid://bfw5ngbkl1yly" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_19.png" id="204_sx4sn"]
+[ext_resource type="Texture2D" uid="uid://dy8ntrwj3rgsq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_20.png" id="205_kbap3"]
+[ext_resource type="Texture2D" uid="uid://peet5na4n1id" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_STRAWXESCHOCOLATE/sprite_21.png" id="206_sxjxp"]
+[ext_resource type="Texture2D" uid="uid://snab2xnte78c" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_00.png" id="207_fkdf2"]
+[ext_resource type="Texture2D" uid="uid://c6vqaxajplcwx" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_01.png" id="208_dm7gp"]
+[ext_resource type="Texture2D" uid="uid://dcvlqepu2dulq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_02.png" id="209_qbpng"]
+[ext_resource type="Texture2D" uid="uid://dug5p3xk8a7bj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_03.png" id="210_os2o8"]
+[ext_resource type="Texture2D" uid="uid://b32qlnoi3kkwq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_04.png" id="211_eikhe"]
+[ext_resource type="Texture2D" uid="uid://1kb02utgiw0x" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_05.png" id="212_uan8v"]
+[ext_resource type="Texture2D" uid="uid://wpf5f2e73860" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_06.png" id="213_qpeqb"]
+[ext_resource type="Texture2D" uid="uid://d4do4d0yd37dc" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_07.png" id="214_md8dq"]
+[ext_resource type="Texture2D" uid="uid://bq1avt4p1dkfb" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_08.png" id="215_t5bvk"]
+[ext_resource type="Texture2D" uid="uid://dovpgvxape4th" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_09.png" id="216_74j21"]
+[ext_resource type="Texture2D" uid="uid://eaddn70vc7vj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_10.png" id="217_1jgkg"]
+[ext_resource type="Texture2D" uid="uid://bbqh6355gw6ys" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_11.png" id="218_d0ew3"]
+[ext_resource type="Texture2D" uid="uid://cmgraer0hssfq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_12.png" id="219_nawoh"]
+[ext_resource type="Texture2D" uid="uid://6gx7ai4gvwc" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_13.png" id="220_wcyih"]
+[ext_resource type="Texture2D" uid="uid://bsrkcjid14xxs" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_14.png" id="221_uw8iv"]
+[ext_resource type="Texture2D" uid="uid://dfjlkkohqo5uo" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_15.png" id="222_x6byj"]
+[ext_resource type="Texture2D" uid="uid://rokb3oum2qmk" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_16.png" id="223_hevpo"]
+[ext_resource type="Texture2D" uid="uid://dn8l1utv4ymlv" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_17.png" id="224_njqkv"]
+[ext_resource type="Texture2D" uid="uid://bdxatbsn2xjw6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_18.png" id="225_vk45k"]
+[ext_resource type="Texture2D" uid="uid://xu21xshbp5iy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_19.png" id="226_vesx0"]
+[ext_resource type="Texture2D" uid="uid://dg04tptyf567x" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_20.png" id="227_lj7l5"]
+[ext_resource type="Texture2D" uid="uid://csxsk5krbwa16" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXMILK/sprite_21.png" id="228_pucx3"]
+[ext_resource type="Texture2D" uid="uid://dgykyln6fcf74" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_00.png" id="229_x7m6f"]
+[ext_resource type="Texture2D" uid="uid://cmvb1nimxogug" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_01.png" id="230_fw0ko"]
+[ext_resource type="Texture2D" uid="uid://dr2rgyfbovjdj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_02.png" id="231_ibkxr"]
+[ext_resource type="Texture2D" uid="uid://4i6hknnlngcq" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_03.png" id="232_grx8h"]
+[ext_resource type="Texture2D" uid="uid://dptsmeypcdk01" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_04.png" id="233_ne7b8"]
+[ext_resource type="Texture2D" uid="uid://dsnd1jwkew0lx" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_05.png" id="234_qykji"]
+[ext_resource type="Texture2D" uid="uid://b22ukhili6c4l" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_06.png" id="235_x8rvu"]
+[ext_resource type="Texture2D" uid="uid://bii00ei66t353" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_07.png" id="236_6m034"]
+[ext_resource type="Texture2D" uid="uid://dornh7b0exs5i" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_08.png" id="237_g5dbv"]
+[ext_resource type="Texture2D" uid="uid://bdvplclto4vh0" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_09.png" id="238_hwxpd"]
+[ext_resource type="Texture2D" uid="uid://dmpjmiqm1s7pc" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_10.png" id="239_1u7gl"]
+[ext_resource type="Texture2D" uid="uid://ced5ub0s8ysw8" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_11.png" id="240_lj4yf"]
+[ext_resource type="Texture2D" uid="uid://dxcktkcmti27s" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_12.png" id="241_03wot"]
+[ext_resource type="Texture2D" uid="uid://dm8x44joqkfkw" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_13.png" id="242_7g1sx"]
+[ext_resource type="Texture2D" uid="uid://conrdyj0pej2" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_14.png" id="243_ydmey"]
+[ext_resource type="Texture2D" uid="uid://dqc5x5hxtbca7" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_15.png" id="244_yqw5i"]
+[ext_resource type="Texture2D" uid="uid://mvihtpuyq77x" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_16.png" id="245_swkxp"]
+[ext_resource type="Texture2D" uid="uid://dwj3nokpon3yx" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_17.png" id="246_l4u32"]
+[ext_resource type="Texture2D" uid="uid://qu4tgidx3jol" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_18.png" id="247_7i1xp"]
+[ext_resource type="Texture2D" uid="uid://7so2kco2jb66" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_19.png" id="248_38kxe"]
+[ext_resource type="Texture2D" uid="uid://bq2mmh4ax13sy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_20.png" id="249_ov75j"]
+[ext_resource type="Texture2D" uid="uid://clmtawcyrpdp1" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_CHOCOLATEXSTRAWBERRY/sprite_21.png" id="250_kvlf1"]
+[ext_resource type="Texture2D" uid="uid://6vh81brkjhth" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_00.png" id="251_t5o6n"]
+[ext_resource type="Texture2D" uid="uid://bbe7ybragplmg" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_01.png" id="252_tp8tt"]
+[ext_resource type="Texture2D" uid="uid://dhbn1iw7nr2m6" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_02.png" id="253_e4h5y"]
+[ext_resource type="Texture2D" uid="uid://bjl8h0e00dh8b" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_03.png" id="254_8kx5g"]
+[ext_resource type="Texture2D" uid="uid://b6li0y1ea66fu" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_04.png" id="255_ybbsx"]
+[ext_resource type="Texture2D" uid="uid://xpfc2skw0y6x" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_05.png" id="256_owf6s"]
+[ext_resource type="Texture2D" uid="uid://7p8ywcjdpsqh" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_06.png" id="257_m302r"]
+[ext_resource type="Texture2D" uid="uid://m1i4wtkcuq80" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_07.png" id="258_v5tfg"]
+[ext_resource type="Texture2D" uid="uid://dy5h6cshh4hh7" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_08.png" id="259_4tx7m"]
+[ext_resource type="Texture2D" uid="uid://cexr8r3odb4p3" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_09.png" id="260_tkpvt"]
+[ext_resource type="Texture2D" uid="uid://box72nj53udgj" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_10.png" id="261_558dn"]
+[ext_resource type="Texture2D" uid="uid://br828j1hgkrk5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_11.png" id="262_djx1s"]
+[ext_resource type="Texture2D" uid="uid://c76kmn4ukss4m" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_12.png" id="263_cvlaq"]
+[ext_resource type="Texture2D" uid="uid://d4m6338sduf6i" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_13.png" id="264_ct2l0"]
+[ext_resource type="Texture2D" uid="uid://cp7po6l4b1xp" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_14.png" id="265_60w5y"]
+[ext_resource type="Texture2D" uid="uid://cfdwtc27vn6ki" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_15.png" id="266_7d02d"]
+[ext_resource type="Texture2D" uid="uid://cdjqiyojf3als" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_16.png" id="267_25jjl"]
+[ext_resource type="Texture2D" uid="uid://ib6tpfsvm4ne" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_17.png" id="268_w7nr4"]
+[ext_resource type="Texture2D" uid="uid://ul8mvsb6huj5" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_18.png" id="269_dsiao"]
+[ext_resource type="Texture2D" uid="uid://dwodhdfgqw2ex" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_19.png" id="270_f6leb"]
+[ext_resource type="Texture2D" uid="uid://bw7yahpvv8f7v" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_20.png" id="271_1m37e"]
+[ext_resource type="Texture2D" uid="uid://b7gv5812qebpy" path="res://Assets/Backgrounds/Chapter 1/barista/coffee flavors ui/coffeegame_ESPRESSOXMILK/sprite_21.png" id="272_m485c"]
+[ext_resource type="Texture2D" uid="uid://cvvroa40wp1r7" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite00.png" id="273_25jjl"]
+[ext_resource type="Texture2D" uid="uid://d0du10byuw6xy" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite01.png" id="274_w7nr4"]
+[ext_resource type="Texture2D" uid="uid://dfb7jiaqi7dmv" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite02.png" id="275_dsiao"]
+[ext_resource type="Texture2D" uid="uid://c0w1lexxawfnp" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite03.png" id="276_f6leb"]
+[ext_resource type="Texture2D" uid="uid://dml0lc7r1x7q4" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite04.png" id="277_1m37e"]
+[ext_resource type="Texture2D" uid="uid://dq52crruifjhl" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite05.png" id="278_m485c"]
+[ext_resource type="Texture2D" uid="uid://dombb4x5trhi5" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite06.png" id="279_jjjrd"]
+[ext_resource type="Texture2D" uid="uid://cqi533f26i34o" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite07.png" id="280_ghbcb"]
+[ext_resource type="Texture2D" uid="uid://b7bnj5khg7bv1" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite08.png" id="281_73qeh"]
+[ext_resource type="Texture2D" uid="uid://oc33xa88u5mq" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite09.png" id="282_bpl8q"]
+[ext_resource type="Texture2D" uid="uid://d2cepdolok3tf" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite010.png" id="283_l8ddj"]
+[ext_resource type="Texture2D" uid="uid://dpprgp2b6lxki" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite011.png" id="284_1q5lq"]
+[ext_resource type="Texture2D" uid="uid://caapl563y0482" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite012.png" id="285_je74r"]
+[ext_resource type="Texture2D" uid="uid://c7gmylaubls6c" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite013.png" id="286_s6qpq"]
+[ext_resource type="Texture2D" uid="uid://hprrx8mvpsym" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite014.png" id="287_rwgsx"]
+[ext_resource type="Texture2D" uid="uid://vg15clh5vbkh" path="res://Assets/Backgrounds/Chapter 1/barista/like ui/sprite015.png" id="288_h2dn4"]
+[ext_resource type="Texture2D" uid="uid://btgb1bmbgn0dy" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite00.png" id="289_oxncr"]
+[ext_resource type="Texture2D" uid="uid://dw1l3mjjsc3j7" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite01.png" id="290_4r1jg"]
+[ext_resource type="Texture2D" uid="uid://cv76k238u6fcq" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite02.png" id="291_hmwrb"]
+[ext_resource type="Texture2D" uid="uid://bvvrwu3pskqxg" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite03.png" id="292_kgvel"]
+[ext_resource type="Texture2D" uid="uid://x56ooahmds2l" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite04.png" id="293_vhxqa"]
+[ext_resource type="Texture2D" uid="uid://bfvb2gx3r5yxd" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite05.png" id="294_70ivt"]
+[ext_resource type="Texture2D" uid="uid://c6wsdlc8quqcf" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite06.png" id="295_craws"]
+[ext_resource type="Texture2D" uid="uid://dyghjltbl66lq" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite07.png" id="296_sgcqd"]
+[ext_resource type="Texture2D" uid="uid://dnjhpajqbov7d" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite08.png" id="297_m5r43"]
+[ext_resource type="Texture2D" uid="uid://beswoy8mek5lg" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite09.png" id="298_bdy6e"]
+[ext_resource type="Texture2D" uid="uid://dmsfwepy7qb8g" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite010.png" id="299_ho28e"]
+[ext_resource type="Texture2D" uid="uid://rso5acvuxef4" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite011.png" id="300_fc4cm"]
+[ext_resource type="Texture2D" uid="uid://b1xpu2rg3xmgx" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite012.png" id="301_bo50x"]
+[ext_resource type="Texture2D" uid="uid://dgwjndox4iyuu" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite013.png" id="302_qwdy6"]
+[ext_resource type="Texture2D" uid="uid://tjwrjbl8as6w" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite014.png" id="303_hk1b6"]
+[ext_resource type="Texture2D" uid="uid://b3fem6oemte67" path="res://Assets/Backgrounds/Chapter 1/barista/unlike ui/sprite015.png" id="304_f37cm"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gcbth"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_3suxe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ramcw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_a26xn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_kadqq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_f8gb1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_41yqe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_f553o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ds2j0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ngfyb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_wtdlr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_2ipd4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_dspht")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_vrv7y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_sjkev")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_ugmlj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_7g1ow")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_fi5em")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_ej5lh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_fo617")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_1vyy8")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 15.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fi5em"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_ngfyb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_wtdlr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_2ipd4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_dspht")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_vrv7y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_sjkev")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_ugmlj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_7g1ow")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 15.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ofoqs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("29_mwskm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_87gs4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_dh21j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_ej655")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_ke28u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_y2wg8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_c44se")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_nysug")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_kfbe7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_ap6we")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_k0qie")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_5eynb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_uia6a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_y4g56")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_733m8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_5fkba")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_svttl")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dp8or"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("46_ofoqs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_wdbvo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_pkp1e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_cn6sd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_mdq7y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_ttme2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_ptmcu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_u6ti0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_12v7a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_vcoh2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_1l5uj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_e7v16")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_7v7rj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_pov4q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_av7s1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_wac73")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_0mdui")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x0nvt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("63_dp8or")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_8m711")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_wsvbv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_15xg3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_tbecu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_tox57")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_ren5c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_ht3ch")
+}, {
+"duration": 1.0,
+"texture": ExtResource("71_r063l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_enqvu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("73_libh2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("74_8vkbv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("75_uw7tb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("76_kqlsy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("77_q0c46")
+}, {
+"duration": 1.0,
+"texture": ExtResource("78_snlh1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("79_scojh")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8icoj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("80_x0nvt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("81_m587x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("82_5be5r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("83_kxsot")
+}, {
+"duration": 1.0,
+"texture": ExtResource("84_ohi8s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("85_4g5ql")
+}, {
+"duration": 1.0,
+"texture": ExtResource("86_0e7jo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("87_dot0n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("88_gvkee")
+}, {
+"duration": 1.0,
+"texture": ExtResource("89_udr1s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("90_osr7h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("91_7a8oe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("92_x3war")
+}, {
+"duration": 1.0,
+"texture": ExtResource("93_8ygdo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("94_q45kb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("95_225r2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("96_nsm1f")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_p6p6t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("97_swlg0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("98_io25o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("99_xc8hh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("100_ufh8h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("101_u8a0b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("102_0rw0h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("103_w1a7c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("104_ase4q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("105_m0hug")
+}, {
+"duration": 1.0,
+"texture": ExtResource("106_m2p80")
+}, {
+"duration": 1.0,
+"texture": ExtResource("107_attva")
+}, {
+"duration": 1.0,
+"texture": ExtResource("108_37slx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("109_vgeom")
+}, {
+"duration": 1.0,
+"texture": ExtResource("110_4xbyd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("111_a0t1l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("112_oxtcx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("113_eifpg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("114_xdw8h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("115_mfy4p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("116_e2v2w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("117_7ddis")
+}, {
+"duration": 1.0,
+"texture": ExtResource("118_d2j7y")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tx6vu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("119_douub")
+}, {
+"duration": 1.0,
+"texture": ExtResource("120_sm8xb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("121_8liau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("122_c0aqn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("123_7u33q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("124_ajnpw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("125_d2xa5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("126_wfy8i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("127_0ja14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("128_exjhi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("129_aqtlo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("130_juxdw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("131_ckxae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("132_le7ed")
+}, {
+"duration": 1.0,
+"texture": ExtResource("133_l8wl2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("134_d8ut8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("135_qyjhi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("136_rjm7u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("137_rv8gt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("138_bna62")
+}, {
+"duration": 1.0,
+"texture": ExtResource("139_31h1c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("140_iuuq2")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mle3g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("141_etqmf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("142_0l3s5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("143_4bjkj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("144_ok80h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("145_vufrs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("146_irqfa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("147_4ci5s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("148_cd276")
+}, {
+"duration": 1.0,
+"texture": ExtResource("149_j2unj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("150_oj7ho")
+}, {
+"duration": 1.0,
+"texture": ExtResource("151_s4k6j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("152_mchgj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("153_lrk0e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("154_sxte3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("155_fydhi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("156_7yqwp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("157_dsn6r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("158_h3rn1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("159_3j6ke")
+}, {
+"duration": 1.0,
+"texture": ExtResource("160_t3l5p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("161_devb5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("162_pn8jj")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wxk0b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("163_etqmf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("164_0l3s5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("165_4bjkj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("166_ok80h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("167_vufrs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("168_irqfa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("169_4ci5s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("170_cd276")
+}, {
+"duration": 1.0,
+"texture": ExtResource("171_j2unj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("172_oj7ho")
+}, {
+"duration": 1.0,
+"texture": ExtResource("173_s4k6j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("174_mchgj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("175_lrk0e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("176_sxte3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("177_fydhi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("178_7yqwp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("179_dsn6r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("180_h3rn1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("181_3j6ke")
+}, {
+"duration": 1.0,
+"texture": ExtResource("182_t3l5p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("183_devb5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("184_pn8jj")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fkdf2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("185_tx6vu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("186_mle3g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("187_wxk0b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("188_stmn4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("189_sy1q3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("190_jwxjg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("191_fik37")
+}, {
+"duration": 1.0,
+"texture": ExtResource("192_cj8lw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("193_v6quc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("194_pkp8c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("195_k08lx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("196_elref")
+}, {
+"duration": 1.0,
+"texture": ExtResource("197_m2npw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("198_36dc2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("199_mk478")
+}, {
+"duration": 1.0,
+"texture": ExtResource("200_3vdk4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("201_32d8j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("202_oo5bx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("203_07riy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("204_sx4sn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("205_kbap3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("206_sxjxp")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x7m6f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("207_fkdf2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("208_dm7gp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("209_qbpng")
+}, {
+"duration": 1.0,
+"texture": ExtResource("210_os2o8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("211_eikhe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("212_uan8v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("213_qpeqb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("214_md8dq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("215_t5bvk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("216_74j21")
+}, {
+"duration": 1.0,
+"texture": ExtResource("217_1jgkg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("218_d0ew3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("219_nawoh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("220_wcyih")
+}, {
+"duration": 1.0,
+"texture": ExtResource("221_uw8iv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("222_x6byj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("223_hevpo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("224_njqkv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("225_vk45k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("226_vesx0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("227_lj7l5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("228_pucx3")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t5o6n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("229_x7m6f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("230_fw0ko")
+}, {
+"duration": 1.0,
+"texture": ExtResource("231_ibkxr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("232_grx8h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("233_ne7b8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("234_qykji")
+}, {
+"duration": 1.0,
+"texture": ExtResource("235_x8rvu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("236_6m034")
+}, {
+"duration": 1.0,
+"texture": ExtResource("237_g5dbv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("238_hwxpd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("239_1u7gl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("240_lj4yf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("241_03wot")
+}, {
+"duration": 1.0,
+"texture": ExtResource("242_7g1sx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("243_ydmey")
+}, {
+"duration": 1.0,
+"texture": ExtResource("244_yqw5i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("245_swkxp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("246_l4u32")
+}, {
+"duration": 1.0,
+"texture": ExtResource("247_7i1xp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("248_38kxe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("249_ov75j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("250_kvlf1")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jjjrd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("251_t5o6n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("252_tp8tt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("253_e4h5y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("254_8kx5g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("255_ybbsx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("256_owf6s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("257_m302r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("258_v5tfg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("259_4tx7m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("260_tkpvt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("261_558dn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("262_djx1s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("263_cvlaq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("264_ct2l0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("265_60w5y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("266_7d02d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("267_25jjl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("268_w7nr4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("269_dsiao")
+}, {
+"duration": 1.0,
+"texture": ExtResource("270_f6leb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("271_1m37e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("272_m485c")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oxncr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("273_25jjl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("274_w7nr4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("275_dsiao")
+}, {
+"duration": 1.0,
+"texture": ExtResource("276_f6leb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("277_1m37e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("278_m485c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("279_jjjrd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("280_ghbcb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("281_73qeh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("282_bpl8q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("283_l8ddj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("284_1q5lq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("285_je74r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("286_s6qpq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("287_rwgsx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("288_h2dn4")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 7.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_km76a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("289_oxncr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("290_4r1jg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("291_hmwrb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("292_kgvel")
+}, {
+"duration": 1.0,
+"texture": ExtResource("293_vhxqa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("294_70ivt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("295_craws")
+}, {
+"duration": 1.0,
+"texture": ExtResource("296_sgcqd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("297_m5r43")
+}, {
+"duration": 1.0,
+"texture": ExtResource("298_bdy6e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("299_ho28e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("300_fc4cm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("301_bo50x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("302_qwdy6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("303_hk1b6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("304_f37cm")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 7.0
+}]
+
+[node name="coffee_flavors_ui" type="CanvasLayer"]
+
+[node name="coffee_ui_control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="coffee_ui_intro" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_gcbth")
+animation = &"idle"
+frame = 19
+frame_progress = 1.0
+
+[node name="coffee_ui_intro2" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_fi5em")
+animation = &"idle"
+frame = 7
+frame_progress = 1.0
+
+[node name="coffee_ui_milk" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45.000004, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_ofoqs")
+animation = &"idle"
+frame = 16
+frame_progress = 1.0
+
+[node name="coffee_ui_strawberry" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.33834586, 0.32)
+sprite_frames = SubResource("SpriteFrames_dp8or")
+animation = &"idle"
+frame = 16
+frame_progress = 1.0
+
+[node name="coffee_ui_espresso" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45.000004, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_x0nvt")
+animation = &"idle"
+frame = 16
+frame_progress = 1.0
+
+[node name="coffee_ui_chocolate" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_8icoj")
+animation = &"idle"
+frame = 16
+frame_progress = 1.0
+
+[node name="coffee_ui_milkxstraw" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_p6p6t")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="coffee_ui_milkxespresso" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_tx6vu")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="coffee_ui_milkxchocolate" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_mle3g")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="coffee_ui_strawberryxmilk" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.33834586, 0.32)
+sprite_frames = SubResource("SpriteFrames_wxk0b")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="coffee_ui_strawberryxchocolate" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.33834586, 0.32)
+sprite_frames = SubResource("SpriteFrames_fkdf2")
+animation = &"idle"
+
+[node name="coffee_ui_chocolatexmilk" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_x7m6f")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="coffee_ui_chocolatexstrawberry" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_t5o6n")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="coffee_ui_espressoxmilk" type="AnimatedSprite2D" parent="coffee_ui_control"]
+position = Vector2(45, 80)
+scale = Vector2(0.3383459, 0.32)
+sprite_frames = SubResource("SpriteFrames_jjjrd")
+animation = &"idle"
+frame = 21
+frame_progress = 1.0
+
+[node name="like_and_unlike_anchor" type="Control" parent="coffee_ui_control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -9.5
+offset_top = -31.0
+offset_right = 9.5
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="like_ui" type="AnimatedSprite2D" parent="coffee_ui_control/like_and_unlike_anchor"]
+position = Vector2(8.5, 11)
+scale = Vector2(0.06, 0.06)
+sprite_frames = SubResource("SpriteFrames_oxncr")
+animation = &"idle"
+frame = 15
+frame_progress = 1.0
+
+[node name="unlike_ui" type="AnimatedSprite2D" parent="coffee_ui_control/like_and_unlike_anchor"]
+position = Vector2(8.5, 11)
+scale = Vector2(0.06, 0.06)
+sprite_frames = SubResource("SpriteFrames_km76a")
+animation = &"idle"
