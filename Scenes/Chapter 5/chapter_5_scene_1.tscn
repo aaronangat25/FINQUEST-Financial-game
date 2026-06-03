@@ -66,21 +66,21 @@ scale = Vector2(1.2426955, 1.1460433)
 
 [node name="jane2d" parent="JaneBigAnchor" instance=ExtResource("5_h77nb")]
 
-[node name="KylieDialogueAnchor" type="Control" parent="JaneBigAnchor"]
+[node name="KylieDialogueAnchor" type="Control" parent="."]
 layout_mode = 1
 anchor_left = 0.93200004
 anchor_top = 1.0
 anchor_right = 0.93200004
 anchor_bottom = 1.0
-offset_left = -24.879997
-offset_top = -59.0
-offset_right = 6.8390427
-offset_bottom = -1.7221375
+offset_left = -24.3465
+offset_top = -56.52411
+offset_right = 7.3725433
+offset_bottom = 0.75375366
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.85122335, 1.0300663)
 
-[node name="kylie2d" parent="JaneBigAnchor/KylieDialogueAnchor" instance=ExtResource("6_hggni")]
+[node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("6_hggni")]
 
 [node name="PhoneRinging" type="Panel" parent="."]
 visible = false

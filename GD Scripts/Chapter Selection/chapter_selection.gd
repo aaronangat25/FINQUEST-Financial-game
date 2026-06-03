@@ -70,7 +70,7 @@ func update_selection_ui():
 		
 	print("[DEBUG] Unlocked Chapters Array returned from SQLite: ", unlocked_list)
 	
-	# FIXED: Map visual UI scene index selections to their explicit database tracking IDs cleanly
+	# Map visual UI scene index selections to their explicit database tracking IDs cleanly
 	var target_db_chapter_number = current_view_index
 	
 	# Kumuha ng buong status ng current chapter view mula sa database table
@@ -119,7 +119,7 @@ func update_selection_ui():
 	# INSTANT VISUAL ASSIGNMENT
 	chapter_label.text = title_text
 	
-	# 🟢 ACADEMIC CHECK FOR CHAPTER 5 LOCKOUT
+	# ACADEMIC CHECK FOR CHAPTER 5 LOCKOUT
 	var is_failing_gpa: bool = (GameManager.grades >= 2.75)
 	
 	if current_view_index == 6 and is_failing_gpa:
@@ -127,7 +127,7 @@ func update_selection_ui():
 		set_panel_image(LOGO_LOCKED)
 		adjust_play_button_state(false, false)
 		
-	# 🟢 DYNAMIC EPILOGUE CHECKING LOGIC
+	# DYNAMIC EPILOGUE CHECKING LOGIC
 	elif current_view_index == 7:
 		# Check if they dropped out OR if they unlocked an entry in the player choices/ending table
 		DatabaseManager.safe_query_with_bindings("""
@@ -207,7 +207,7 @@ func _on_play_btn_pressed():
 		print("[SYSTEM ACTION] Action aborted. Chapter 5 is structurally locked.")
 		return
 		
-	# 🟢 SMART EPILOGUE ROUTER (INDEX 7)
+	# --- SMART EPILOGUE ROUTER (INDEX 7) ---
 	if current_view_index == 7:
 		AudioManager.stop_all_music()
 		
@@ -233,14 +233,40 @@ func _on_play_btn_pressed():
 				callable_deferred_transition("res://Scenes/Endings/mid_ending.tscn", "EPILOGUE")
 				return
 				
-			# 🟢 Condition 3: Stop First decision for Bad Ending
+			# Condition 3: Stop First decision for Bad Ending
 			elif path_taken == "Stop":
 				print("[ROUTER] Branching right into Bad Ending Scene.")
 				callable_deferred_transition("res://Scenes/Endings/bad_ending.tscn", "EPILOGUE")
 				return
+				
+			# Condition 4: Business path chosen -> Look up explicit job_path column
+			elif path_taken == "Business":
+				print("[ROUTER] Business path chosen! Checking job_path row configuration from players...")
+				
+				await DatabaseManager.safe_query_with_bindings("""
+					SELECT job_path 
+					FROM players 
+					WHERE id = ? 
+					LIMIT 1;
+				""", [GameManager.player_id])
+				
+				var target_good_ending = "res://Scenes/Endings/good_ending_clerk.tscn"
+				
+				if DatabaseManager.db.query_result.size() > 0:
+					var active_job_path = DatabaseManager.db.query_result[0]["job_path"]
+					if active_job_path == "Barista":
+						target_good_ending = "res://Scenes/Endings/good_ending_cafe.tscn"
+						print("[ROUTER] job_path is Barista. Routing to Good Ending (Cafe).")
+					else:
+						print("[ROUTER] job_path is ", active_job_path, ". Routing to Good Ending (Clerk).")
+				else:
+					print("[ROUTER] Player tracking missing. Defaulting to Clerk ending path context.")
+					
+				callable_deferred_transition(target_good_ending, "EPILOGUE")
+				return
 		
-		# Condition 4: Default fallback (Good Ending)
-		print("[ROUTER] Branching right into standard Good Ending Scene.")
+		# Condition 5: Default ultimate baseline fallback scene context tracker
+		print("[ROUTER] Branching right into standard fallback Ending Scene.")
 		callable_deferred_transition("res://Scenes/Ending/ending.tscn", "EPILOGUE")
 		return
 		
