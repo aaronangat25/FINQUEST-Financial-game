@@ -49,7 +49,7 @@ func _ready() -> void:
 	aisle_btn.pressed.connect(func(): 
 		GameManager.log_choice("chap1_clerk_assistance", "A")
 		GameManager.unlock_achievement("CLERK_PERFECT")
-		_on_store_choice_made(50)
+		_on_store_choice_made(60)
 	)
 	storage_btn.pressed.connect(func(): 
 		GameManager.log_choice("chap1_clerk_assistance", "B")

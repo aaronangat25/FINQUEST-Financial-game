@@ -294,7 +294,7 @@ func _show_money_ui() -> void:
 	active_money_ui = loaded_money_scene.instantiate()
 	add_child(active_money_ui)
 	
-	var base_allowance = 1500
+	var base_allowance = 2000
 	var job_salary = 0
 	var job_display_name = "" 
 	
@@ -315,21 +315,20 @@ func _show_money_ui() -> void:
 	
 	# 🟢 STEP 2: Evaluate using your exact string identifiers
 	if chosen == "Barista" or chosen == "A": 
-		job_salary = 1700
+		job_salary = 2000
 		job_display_name = "Barista"
 	elif chosen == "Clerk" or chosen == "B": 
-		job_salary = 1600
+		job_salary = 1800
 		job_display_name = "Clerk"
 	elif chosen == "Cashier" or chosen == "C": 
-		job_salary = 1500
+		job_salary = 1900
 		job_display_name = "Cashier"
 		
 	if active_money_ui.has_method("play_intro"):
 		await active_money_ui.play_intro(job_display_name, job_salary)
 	
-	# 🟢 STEP 3: Apply the ₱2,000 rent deduction to balance the gameplay loop!
-	var total_payout = (base_allowance + job_salary) - 2000
-	GameManager.stage_finance_change(total_payout, 0, "Weekly Allowance & Salary (Minus ₱2,000 Rent)")
+	var total_payout = (base_allowance + job_salary) - 1000
+	GameManager.stage_finance_change(total_payout, 0, "Weekly Allowance & Salary (Minus ₱1,000 Rent)")
 	
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()

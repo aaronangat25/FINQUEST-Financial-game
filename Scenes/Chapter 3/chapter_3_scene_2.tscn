@@ -154,7 +154,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_hh2xp")
 theme_override_font_sizes/font_size = 4
-text = "A. Buy full meal (–P180,
+text = "A. Buy full meal (–P1180,
 +Energy)"
 
 [node name="budgetmealB_btn" type="Button" parent="ChooseControl7/ChoicesContainer7"]
