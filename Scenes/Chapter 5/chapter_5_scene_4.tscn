@@ -128,7 +128,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 4
-text = "A. Apply for Corporate Job"
+text = "A. Apply for Corporate Job (P500)"
 
 [node name="startBusiness_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
 layout_mode = 2
@@ -138,7 +138,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 4
-text = "B. Start Small Business"
+text = "B. Start Small Business (P1500)"
 autowrap_mode = 2
 
 [node name="stopFirst_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
@@ -149,7 +149,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 4
-text = "C. Stop First / No Immediate Plan"
+text = "C. Stop First / No Immediate Plan (P0)"
 
 [node name="StatsScreen" type="Control" parent="."]
 layout_mode = 1
