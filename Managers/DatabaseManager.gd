@@ -712,6 +712,18 @@ func safe_close_db() -> void:
 		db.close_db()
 		_mutex.unlock()
 		print("[DATABASE] Database closed cleanly without conflicts.")
+		
+# =========================================
+# FETCH HISTORICAL TRANSACTIONS (EXCLUDING ZEROES)
+# =========================================
+func get_recent_wallet_transactions(player_id: int) -> Array:
+	safe_query_with_bindings("""
+		SELECT description, amount 
+		FROM transactions 
+		WHERE player_id = ? AND amount != 0 
+		ORDER BY created_at DESC LIMIT 3;
+	""", [player_id])
+	return db.query_result
 
 # =========================================
 # DELETE SAVE DATA

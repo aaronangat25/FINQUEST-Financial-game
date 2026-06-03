@@ -20,8 +20,11 @@ func _ready() -> void:
 # ADDED VARIABLES SO MAIN SCENE CAN SEND THE TEXT
 func play_intro(job_name: String, job_salary: int) -> void:
 	
-	# Update the text dynamically before it fades in!
-	notif_text.text = "+P1,500 from mom\n2months salary from your\npart time: " + job_name + " + P" + str(job_salary) + "\nrent: -P2000\ntotal: P1200"
+	# 🟢 DYNAMIC TOTAL CALCULATION
+	var calculated_total: int = 1500 + job_salary - 2000
+	
+	# Update the text dynamically using the calculated value before it fades in!
+	notif_text.text = "+P1,500 from mom\n2months salary from your\npart time: " + job_name + " + P" + str(job_salary) + "\nrent: -P2000\ntotal: P" + str(calculated_total)
 	
 	intro_anim.show()
 	intro_anim.play() 
