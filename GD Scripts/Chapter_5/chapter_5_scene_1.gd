@@ -11,7 +11,7 @@ const GRAY_SCREEN_SCENE = preload("res://Scenes/Gray Screen/gray_screen.tscn")
 @onready var jane_talking = $JaneDialogueAnchor/jane2d
 @onready var jane_big_anchor = $JaneBigAnchor
 @onready var jane_big = $JaneBigAnchor/jane2d
-@onready var kylie = $JaneBigAnchor/KylieDialogueAnchor/kylie2d
+@onready var kylie = $KylieDialogueAnchor/kylie2d
 @onready var phone_mini = $PhoneMini
 
 var currency_hud
@@ -22,10 +22,10 @@ var active_gray_screen
 var active_lock_screen
 
 var is_phone_clickable: bool = false
+var is_cutscene_running: bool = false
 
 func _ready() -> void:
 	# --- AUDIO INITIALIZATION ---
-	# Ensures the main ambient exploration track flows steadily into Chapter 5's opening
 	AudioManager.play_chapter_music()
 
 	# --- MASTER DATABASE SYNCHRONIZATION ---
@@ -36,7 +36,7 @@ func _ready() -> void:
 	call_deferred("add_child", currency_hud)
 	currency_hud.show()
 	
-	# Initial clean state layout resets
+	# Initial clean state layout resets to match scene tree layout views
 	if jane_thinking: jane_thinking.modulate.a = 0.0
 	if jane_talking: jane_talking.modulate.a = 0.0
 	if jane_big_anchor: jane_big_anchor.hide()
@@ -46,7 +46,6 @@ func _ready() -> void:
 			
 	await get_tree().process_frame
 	
-	# Force display layout sync immediately so HUD accurately parses previous chapter state
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
 	
@@ -58,6 +57,9 @@ func _ready() -> void:
 
 # --- INTRO DIALOGUE SEQUENCE ---
 func _play_intro_sequence() -> void:
+	if is_cutscene_running: return
+	is_cutscene_running = true
+	
 	await get_tree().create_timer(1.0).timeout
 	
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
@@ -96,11 +98,15 @@ func _play_intro_sequence() -> void:
 		await t_box_out.finished
 	active_dialogue_box.queue_free()
 	
+	is_cutscene_running = false
 	_play_phone_sequence()
 
 
 # --- PHONE APPEARS SEQUENCE ---
 func _play_phone_sequence() -> void:
+	if is_cutscene_running: return
+	is_cutscene_running = true
+	
 	await get_tree().create_timer(0.5).timeout
 	
 	if jane_big_anchor:
@@ -128,18 +134,18 @@ func _play_phone_sequence() -> void:
 	await get_tree().create_timer(1.0).timeout
 	
 	if phone_mini and phone_mini.has_method("trigger_notification"):
-		# Trigger your push notification one-shot sound alert
 		AudioManager.play_sfx("NOTIFICATION")
 		phone_mini.trigger_notification()
 		
 	is_phone_clickable = true
+	is_cutscene_running = false
 
 
 # --- PHONE CLICK DETECTION ---
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if is_phone_clickable:
-			if phone_mini and phone_mini.get_child_count() > 0:
+		if is_phone_clickable and not is_cutscene_running and phone_mini and phone_mini.visible:
+			if phone_mini.get_child_count() > 0:
 				var phone_ui = phone_mini.get_child(0)
 				if phone_ui is Control and phone_ui.get_global_rect().has_point(event.position):
 					_open_lock_screen_5()
@@ -148,6 +154,8 @@ func _input(event: InputEvent) -> void:
 # --- PHONE SYSTEM CONTROLS ---
 func _open_lock_screen_5() -> void:
 	is_phone_clickable = false
+	is_cutscene_running = true
+	
 	if phone_mini: phone_mini.hide()
 	
 	if jane_big and jane_big.visible:
@@ -175,117 +183,85 @@ func _open_lock_screen_5() -> void:
 
 
 func _on_close_btn_pressed() -> void:
+	var close_btn = null
+	if active_lock_screen:
+		close_btn = active_lock_screen.find_child("X_button", true, false)
+		if not close_btn:
+			close_btn = active_lock_screen.find_child("padlockbutton", true, false)
+	if close_btn and close_btn.pressed.is_connected(_on_close_btn_pressed):
+		close_btn.pressed.disconnect(_on_close_btn_pressed)
+
 	if active_lock_screen:
 		active_lock_screen.queue_free()
 		
 	if active_gray_screen:
 		active_gray_screen.queue_free()
 	
+	is_cutscene_running = false
 	_play_kylie_conversation()
 
 
-# --- IN-ROOM KYLIE CONVERSATION SEQUENCE ---
+# --- IN-ROOM KYLIE CONVERSATION SEQUENCE (UN-BREAKABLE MONOLITH) ---
 func _play_kylie_conversation() -> void:
-	if jane_big_anchor:
-		jane_big_anchor.show()
-	if jane_big:
-		jane_big.hide()
-		jane_big.modulate.a = 0.0
+	if is_cutscene_running: return
+	is_cutscene_running = true
 
-	# =====================================================================
-	# --- PIECE 1: Kylie Speaks First ---
-	# =====================================================================
+	if $KylieDialogueAnchor: $KylieDialogueAnchor.show()
+	if $JaneDialogueAnchor: $JaneDialogueAnchor.show()
+		
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.show()
-	
+	active_dialogue_box.is_fading = false
+
+	# Setup Step: Keep both characters fully visible side-by-side on screen
 	if kylie:
 		kylie.show()
-		kylie.modulate.a = 0.0
+		kylie.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		if kylie.has_method("appear"): kylie.appear("idle", false)
-		await create_tween().tween_property(kylie, "modulate:a", 1.0, 0.4).finished
-
-	active_dialogue_box.is_fading = false
-	active_dialogue_box.start_dialogue([{"speaker": "Kylie", "text": "Bestie!! Ready ka na ba magiing officially unemployed?"}])
-	await active_dialogue_box.dialogue_finished
-
-	if kylie:
-		await create_tween().tween_property(kylie, "modulate:a", 0.0, 0.3).finished
-		kylie.hide()
-	active_dialogue_box.queue_free()
-	await get_tree().process_frame
-
-	# =====================================================================
-	# --- PIECE 2: Jane Replies ---
-	# =====================================================================
-	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
-	add_child(active_dialogue_box)
-	active_dialogue_box.show()
-
+		
 	if jane_talking:
 		jane_talking.show()
-		jane_talking.modulate.a = 0.0
+		jane_talking.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		if jane_talking.has_method("appear"): jane_talking.appear("idle", false)
-		await create_tween().tween_property(jane_talking, "modulate:a", 1.0, 0.4).finished
 
-	active_dialogue_box.is_fading = false
-	active_dialogue_box.start_dialogue([{"speaker": "Jane", "text": "HAHA grabe ka. Pero honestly… kinakabahan ako."}])
-	await active_dialogue_box.dialogue_finished
+	# Pass the entire conversation array together to run smoothly on one thread execution loop
+	var seamless_conversation = [
+		{"speaker": "Kylie", "text": "Bestie!! Ready ka na ba maging officially unemployed?"},
+		{"speaker": "Jane", "text": "HAHA grabe ka. Pero honestly… kinakabahan ako."},
+		{"speaker": "Kylie", "text": "Normal lang ‘yan. After graduation, real life na talaga."}
+	]
 
-	if jane_talking:
-		await create_tween().tween_property(jane_talking, "modulate:a", 0.0, 0.3).finished
-		jane_talking.hide()
-	active_dialogue_box.queue_free()
-	await get_tree().process_frame
-
-	# =====================================================================
-	# --- PIECE 3: Kylie Responds ---
-	# =====================================================================
-	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
-	add_child(active_dialogue_box)
-	active_dialogue_box.show()
-
-	if kylie:
-		kylie.show()
-		kylie.modulate.a = 0.0
-		if kylie.has_method("appear"): kylie.appear("idle", false)
-		await create_tween().tween_property(kylie, "modulate:a", 1.0, 0.4).finished
-
-	active_dialogue_box.is_fading = true
-	active_dialogue_box.start_dialogue([{"speaker": "Kylie", "text": "Normal lang ‘yan. After graduation, real life na talaga."}])
-	
-	if active_dialogue_box.has_signal("text_finished"):
-		await active_dialogue_box.text_finished
-	else:
-		await get_tree().create_timer(1.5).timeout 
+	active_dialogue_box.start_dialogue(seamless_conversation)
+	await active_dialogue_box.dialogue_finished 
 		
-	var input_clicked: bool = false
-	while not input_clicked:
-		if Input.is_action_just_pressed("ui_accept") or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			input_clicked = true
-		await get_tree().process_frame
+	await get_tree().create_timer(0.4).timeout
 
-	await get_tree().create_timer(1.0).timeout
-
-	if kylie:
-		var t_kylie_out = create_tween()
-		t_kylie_out.tween_property(kylie, "modulate:a", 0.0, 0.4)
-		await t_kylie_out.finished
-		kylie.hide()
-
-	var box_visual = active_dialogue_box.get_node_or_null("MarginContainer/texturerectContainer")
-	if box_visual:
-		var t_box_out = create_tween()
-		t_box_out.tween_property(box_visual, "modulate:a", 0.0, 0.5)
-		await t_box_out.finished
+	# Smooth cleanup fade loop for both characters at once when dialogue finishes completely
+	var exit_tween = create_tween().set_parallel(true)
+	if kylie: exit_tween.tween_property(kylie, "modulate:a", 0.0, 0.3)
+	if jane_talking: exit_tween.tween_property(jane_talking, "modulate:a", 0.0, 0.3)
 	
-	if jane_big_anchor: jane_big_anchor.hide()
+	var box_visual = active_dialogue_box.get_node_or_null("MarginContainer/texturerectContainer")
+	if box_visual: exit_tween.tween_property(box_visual, "modulate:a", 0.0, 0.4)
+	await exit_tween.finished
+
+	if kylie: kylie.hide()
+	if jane_talking: jane_talking.hide()
+	if $KylieDialogueAnchor: $KylieDialogueAnchor.hide()
+	if $JaneDialogueAnchor: $JaneDialogueAnchor.hide()
+	
 	active_dialogue_box.queue_free()
 
+	is_cutscene_running = false
 	_play_final_jane_dialogue()
+
 
 # --- FINAL JANE DIALOGUE REFLECTION ---
 func _play_final_jane_dialogue() -> void:
+	if is_cutscene_running: return
+	is_cutscene_running = true
+
 	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	add_child(active_dialogue_box)
 	active_dialogue_box.is_fading = true

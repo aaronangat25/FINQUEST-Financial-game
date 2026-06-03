@@ -30,6 +30,10 @@ var active_dialogue_box
 var career_choice: String = ""
 var is_transitioning: bool = false
 
+# Individual tracking flags for dynamic locking states
+var is_corporate_locked: bool = false
+var is_business_locked: bool = false
+
 func _ready() -> void:
 	# Continuous ambient loops moving cleanly through final metrics
 	AudioManager.play_chapter_music()
@@ -118,6 +122,45 @@ func _show_graduation_choices() -> void:
 		if choice_appears_banner: choice_appears_banner.show()
 		if choices_container: choices_container.show()
 		
+		# EVALUATE FINANCIAL BUDGET TIERS (Bank + Hand Cash)
+		var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
+		
+		# Tier 1: Bankruptcy (< ₱500) -> Lock Corporate & Business
+		if total_player_money < 500:
+			is_corporate_locked = true
+			is_business_locked = true
+			
+			if apply_corporate_btn:
+				apply_corporate_btn.modulate = Color("857138")
+				apply_corporate_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			if start_business_btn:
+				start_business_btn.modulate = Color("857138")
+				start_business_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				
+		# Tier 2: Mid-Range (₱500 - ₱1499) -> Unlock Corporate, Lock Business
+		elif total_player_money < 1500:
+			is_corporate_locked = false
+			is_business_locked = true
+			
+			if apply_corporate_btn:
+				apply_corporate_btn.modulate = Color(1, 1, 1, 1)
+				apply_corporate_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+			if start_business_btn:
+				start_business_btn.modulate = Color("857138")
+				start_business_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				
+		# Tier 3: Wealthy (≥ ₱1500) -> Unlock Everything
+		else:
+			is_corporate_locked = false
+			is_business_locked = false
+			
+			if apply_corporate_btn:
+				apply_corporate_btn.modulate = Color(1, 1, 1, 1)
+				apply_corporate_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+			if start_business_btn:
+				start_business_btn.modulate = Color(1, 1, 1, 1)
+				start_business_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		
 		var t_menu = create_tween()
 		t_menu.tween_property(choose_control, "modulate:a", 1.0, 0.5)
 		await t_menu.finished
@@ -134,6 +177,7 @@ func _show_graduation_choices() -> void:
 
 # --- STEP 3: INTERACTIVE BUTTON SELECTION ACTIONS ---
 func _on_corporate_selected() -> void:
+	if is_corporate_locked: return
 	_lock_all_inputs()
 	career_choice = "Corporate"
 	
@@ -141,6 +185,7 @@ func _on_corporate_selected() -> void:
 	_show_stats_summary_screen()
 
 func _on_business_selected() -> void:
+	if is_business_locked: return
 	_lock_all_inputs()
 	career_choice = "Business"
 	
@@ -201,7 +246,7 @@ func _on_final_chapter_exit_pressed() -> void:
 	
 	GameManager.current_chapter = 6
 	
-	# 🟢 FIXED: Branching logic for the Corporate Ending path
+	# 🏢 Corporate Routing Logic
 	if career_choice == "Corporate":
 		print("[ROUTER] Corporate path chosen! Unlocking achievement and routing to Mid Ending.")
 		GameManager.unlock_achievement("MID_ENDING")
@@ -215,9 +260,41 @@ func _on_final_chapter_exit_pressed() -> void:
 		var corporate_ending_path = "res://Scenes/Endings/mid_ending.tscn"
 		_execute_save_and_blackout(corporate_ending_path, false)
 
-	# 🟢 ADD THIS BRANCH FOR THE "STOP FIRST" CHOICE:
+	# 🛑 "Stop First" Routing Logic
 	elif career_choice == "Stop":
-		print("[ROUTER] 'Stop First' path chosen! Routing to Bad Ending.")
+		var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
+		
+		# 🟢 CONDITION A: Bankruptcy path if funds are critically low
+		if total_player_money < 500:
+			print("[ROUTER] 'Stop First' path chosen with less than 500 funds! Routing to Bankrupt Ending.")
+			
+			DatabaseManager.safe_query_with_bindings("""
+				UPDATE chapter_progress 
+				SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+				WHERE player_id = ? AND chapter_number = 7;
+			""", [GameManager.grades, GameManager.player_id])
+			
+			var bankrupt_ending_path = "res://Scenes/Endings/bankrupt_ending.tscn"
+			_execute_save_and_blackout(bankrupt_ending_path, false)
+			
+		# 🟢 CONDITION B: Standard Bad Ending path if funds are above threshold
+		else:
+			print("[ROUTER] 'Stop First' path chosen with valid funds! Routing to Bad Ending.")
+			GameManager.unlock_achievement("BAD_ENDING")
+			
+			DatabaseManager.safe_query_with_bindings("""
+				UPDATE chapter_progress 
+				SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+				WHERE player_id = ? AND chapter_number = 7;
+			""", [GameManager.grades, GameManager.player_id])
+			
+			var bad_ending_path = "res://Scenes/Endings/bad_ending.tscn"
+			_execute_save_and_blackout(bad_ending_path, false)
+	
+	# 💼 Business (Good Ending) Routing Logic
+	elif career_choice == "Business":
+		print("[ROUTER] Business path chosen! Checking job_path from players table...")
+		GameManager.unlock_achievement("GOOD_ENDING")
 		
 		DatabaseManager.safe_query_with_bindings("""
 			UPDATE chapter_progress 
@@ -225,11 +302,28 @@ func _on_final_chapter_exit_pressed() -> void:
 			WHERE player_id = ? AND chapter_number = 7;
 		""", [GameManager.grades, GameManager.player_id])
 		
-		var bad_ending_path = "res://Scenes/Endings/bad_ending.tscn"
-		_execute_save_and_blackout(bad_ending_path, false)
-	
+		DatabaseManager.safe_query_with_bindings("""
+			SELECT job_path 
+			FROM players 
+			WHERE id = ? 
+			LIMIT 1;
+		""", [GameManager.player_id])
+		
+		var chosen_ending_scene = "res://Scenes/Endings/good_ending_clerk.tscn" 
+		
+		if DatabaseManager.db.query_result.size() > 0:
+			var active_job_path = DatabaseManager.db.query_result[0]["job_path"]
+			if active_job_path == "Barista":
+				chosen_ending_scene = "res://Scenes/Endings/good_ending_cafe.tscn"
+				print("[ROUTER] job_path is Barista. Routing to Cafe Business Ending.")
+			else:
+				print("[ROUTER] job_path is " + str(active_job_path) + ". Routing to Clerk/Store Business Ending.")
+		else:
+			print("[ROUTER] Warning: Player record not found. Routing to Clerk fallback scene.")
+			
+		_execute_save_and_blackout(chosen_ending_scene, false)
+		
 	else:
-		# Default fallback progression path context loop
 		var next_scene_path = "res://Scenes/Ending/ending.tscn"
 		_execute_save_and_blackout(next_scene_path, true)
 
@@ -247,8 +341,7 @@ func _on_main_menu_pressed() -> void:
 	
 	GameManager.current_chapter = 6
 	
-	# 🟢 SILENT SAVE: Update the database selection table if they decide to quit here
-	if career_choice == "Corporate":
+	if career_choice == "Corporate" or career_choice == "Business" or career_choice == "Stop":
 		DatabaseManager.safe_query_with_bindings("""
 			UPDATE chapter_progress 
 			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 

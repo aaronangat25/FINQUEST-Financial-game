@@ -141,7 +141,7 @@ func _on_choice_b_selected() -> void:
 	# Trigger transaction sound profile for simple outfit purchase
 	AudioManager.play_sfx("DEDUCT")
 	GameManager.log_choice("chap5_graduation_outfit", "B")
-	GameManager.request_expense_payment(1200, "Purchased a standard simple graduation outfit")
+	GameManager.request_expense_payment(1500, "Purchased a standard simple graduation outfit")
 	
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()
@@ -155,7 +155,7 @@ func _on_choice_c_selected() -> void:
 	# Trigger transaction sound profile for outfit rental dry-cleaning
 	AudioManager.play_sfx("DEDUCT")
 	GameManager.log_choice("chap5_graduation_outfit", "C")
-	GameManager.request_expense_payment(500, "Paid rental and dry cleaning for a borrowed graduation outfit")
+	GameManager.request_expense_payment(1000, "Paid rental and dry cleaning for a borrowed graduation outfit")
 	
 	if currency_hud and currency_hud.has_method("refresh_display"):
 		currency_hud.refresh_display()

@@ -14,7 +14,7 @@ var is_input_active: bool = false
 
 @onready var back_button = $PhoneScreenVirtualControl/VirtualBankScreen/BackTextureButton/BackButton
 
-# 🟢 FIXED: Target label inside the gray panel box using quotation marks to escape numeric notation safely
+# Target label inside the gray panel box using quotation marks to escape numeric notation safely
 @onready var transaction_log_label = get_node("PhoneScreenVirtualControl/VirtualBankScreen/3kfrommomlabel")
 
 func _ready() -> void:
@@ -29,14 +29,15 @@ func _ready() -> void:
 	withdraw_input.text_submitted.connect(_on_withdraw_input_submitted)
 	#back_button.pressed.connect(_on_back_button_pressed)
 	
-	# 🟢 Render the lone single transaction string right on load
+	# Render the lone single transaction string right on load
 	_update_recent_transactions_display()
 
 func _update_balance_text() -> void:
-	# Reads value directly from your global GameManager script
-	balance_label.text = "P" + str(GameManager.bank_cash) + ".00"
+	# 🟢 FIXED: Clamps value to 0 if bank_cash goes negative during the final chapter
+	var display_cash = max(0, GameManager.bank_cash)
+	balance_label.text = "P" + str(display_cash) + ".00"
 
-# 🟢 REFRESH TRANSACTION LOG LABELS (DESCRIPTION ONLY - NO PRICING LABELS)
+# REFRESH TRANSACTION LOG LABELS (DESCRIPTION ONLY - NO PRICING LABELS)
 func _update_recent_transactions_display() -> void:
 	if not transaction_log_label:
 		return
@@ -92,7 +93,7 @@ func _on_deposit_button_pressed() -> void:
 	withdraw_button.disabled = false
 	back_button.disabled = false # Unlock back button
 
-# 🟢 FIXED AND SEPARATED ENTIRELY
+# FIXED AND SEPARATED ENTIRELY
 func _on_withdraw_button_pressed() -> void:
 	deposit_button.disabled = true
 	withdraw_button.disabled = true
