@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://b1rgwpbqucddl"]
 
-[ext_resource type="Script" uid="uid://cw51f2blhijxc" path="res://Scenes/Main Screen/achievement_list.gd" id="1_6mqg7"]
+[ext_resource type="Script" path="res://Scenes/Main Screen/achievement_list.gd" id="1_6mqg7"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="1_7ku6d"]
 [ext_resource type="Theme" uid="uid://c5dfohr52go08" path="res://Assets/Buttons/chapter_selection_btn.tres" id="2_6mqg7"]
 [ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="3_7ku6d"]
@@ -125,7 +125,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "Every Peso Counts"
 
 [node name="Achievement2" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -135,7 +135,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "No-Pasahe Grind"
 
 [node name="Achievement3" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -165,7 +165,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = " Aisle Manager"
 
 [node name="Achievement6" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -175,7 +175,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "Human Calculator"
 
 [node name="Achievement7" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -185,7 +185,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "Academic Weapon"
 
 [node name="Achievement8" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -195,7 +195,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "Inflation Fighter"
 
 [node name="Achievement9" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -205,7 +205,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "Sopas over Starbs"
 
 [node name="Achievement10" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -215,7 +215,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "Magna Cum Budget"
 
 [node name="Achievement11" type="Button" parent="AchievementPanel/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -235,7 +235,7 @@ mouse_filter = 1
 theme = ExtResource("3_7ku6d")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_7ku6d")
-theme_override_font_sizes/font_size = 5
+theme_override_font_sizes/font_size = 4
 text = "CEO of My Own Life"
 
 [node name="DarkBG" type="Panel" parent="."]
