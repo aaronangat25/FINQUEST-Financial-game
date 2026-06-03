@@ -141,7 +141,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("6_ivwhr")
 theme_override_font_sizes/font_size = 4
 text = " A. Face-to-Face Meeting (Cafe)
-(-P120, +Focus)"
+(-P300, +Focus)"
 
 [node name="olcmeetingB_btn" type="Button" parent="ChooseControl9/ChoicesContainer9"]
 layout_mode = 2

@@ -142,7 +142,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_s81hl")
 theme_override_font_sizes/font_size = 4
 text = "A. Print Full Colored Copy
- (-P200, +Presentation)"
+ (-P600, +Presentation)"
 
 [node name="blackandwhiteB_btn" type="Button" parent="ChooseControl10/ChoicesContainer10"]
 layout_mode = 2
@@ -153,7 +153,7 @@ theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_s81hl")
 theme_override_font_sizes/font_size = 4
 text = "B. Print Black & White
- (-P120)"
+ (-P150)"
 autowrap_mode = 2
 
 [node name="digitalC_btn" type="Button" parent="ChooseControl10/ChoicesContainer10"]
