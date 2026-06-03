@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cm8tbio3iitnc"]
+[gd_scene load_steps=10 format=3 uid="uid://cm8tbio3iitnc"]
 
 [ext_resource type="Script" uid="uid://cb8v5psejyqy5" path="res://Scenes/Chapter 5/chapter_5_scene_4.gd" id="1_glthg"]
 [ext_resource type="Texture2D" uid="uid://bqy0pd8uarr4c" path="res://Assets/Backgrounds/Chapter_5/taftbg.png" id="1_odowo"]
@@ -18,18 +18,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.60784316, 0.45882353, 0.23921569, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glthg"]
-bg_color = Color(1, 0.87058824, 0.34901962, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 1
 corner_radius_top_right = 1
 corner_radius_bottom_right = 1
@@ -171,117 +159,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="StatsScreen"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -31.625
-offset_top = -34.0
-offset_right = 31.625
-offset_bottom = 25.25
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_glthg")
-
-[node name="HeaderName" type="Label" parent="StatsScreen/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.108
-anchor_right = 1.0
-anchor_bottom = 0.108
-offset_top = -2.0320003
-offset_bottom = 9.967999
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 0
-theme_override_fonts/font = ExtResource("3_glthg")
-theme_override_font_sizes/font_size = 6
-text = "Final Results Based on Choices"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="MeetingResultName" type="Label" parent="StatsScreen/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.042000003
-anchor_top = 0.39900002
-anchor_right = 0.042000003
-anchor_bottom = 0.39900002
-offset_left = 1.9684999
-offset_top = -2.6407528
-offset_right = 46.5935
-offset_bottom = 3.359249
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("3_glthg")
-theme_override_font_sizes/font_size = 4
-text = "Meeting Setup "
-
-[node name="MeetingResultLabel" type="Label" parent="StatsScreen/Panel/MeetingResultName"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.5000001
-anchor_bottom = 1.5000001
-offset_top = -5.000003
-offset_right = 21.0
-offset_bottom = 2.9999971
-grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("3_glthg")
-theme_override_font_sizes/font_size = 4
-
-[node name="PrintingName" type="Label" parent="StatsScreen/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.66700006
-anchor_bottom = 0.66700006
-offset_left = 4.625
-offset_top = -4.5197525
-offset_right = 44.625
-offset_bottom = 0.4802475
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 0
-theme_override_fonts/font = ExtResource("3_glthg")
-theme_override_font_sizes/font_size = 4
-text = "Printing Decision"
-
-[node name="PrintingLabel" type="Label" parent="StatsScreen/Panel/PrintingName"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.106000006
-anchor_top = 1.3000001
-anchor_right = -0.106000006
-anchor_bottom = 1.3000001
-offset_left = 4.2400002
-offset_top = -2.5000005
-offset_right = 30.24
-offset_bottom = 4.4999995
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("3_glthg")
-theme_override_font_sizes/font_size = 4
-
-[node name="FeedbackLabel" type="Label" parent="StatsScreen/Panel"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -8.5
-offset_right = 20.0
-offset_bottom = -1.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_constants/line_spacing = 0
-theme_override_fonts/font = ExtResource("3_glthg")
-theme_override_font_sizes/font_size = 4
-horizontal_alignment = 1
-
 [node name="Ending_btn" type="Button" parent="StatsScreen"]
 layout_mode = 1
 anchors_preset = -1
@@ -290,9 +167,9 @@ anchor_top = 1.1240001
 anchor_right = 0.512
 anchor_bottom = 1.1240001
 offset_left = -31.330002
-offset_top = -71.59001
+offset_top = -109.59001
 offset_right = 30.669998
-offset_bottom = -63.59001
+offset_bottom = -101.59001
 grow_horizontal = 2
 grow_vertical = 0
 focus_mode = 0
@@ -310,9 +187,9 @@ anchor_top = 1.1240001
 anchor_right = 0.512
 anchor_bottom = 1.1240001
 offset_left = -31.080002
-offset_top = -59.84001
+offset_top = -95.84001
 offset_right = 30.919998
-offset_bottom = -51.84001
+offset_bottom = -87.84001
 grow_horizontal = 2
 grow_vertical = 0
 focus_mode = 0
