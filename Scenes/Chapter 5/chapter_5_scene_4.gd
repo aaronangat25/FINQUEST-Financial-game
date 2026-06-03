@@ -29,6 +29,9 @@ var active_dialogue_box
 
 var career_choice: String = ""
 var is_transitioning: bool = false
+
+# Individual tracking flags for dynamic locking states
+var is_corporate_locked: bool = false
 var is_business_locked: bool = false
 
 func _ready() -> void:
@@ -119,19 +122,43 @@ func _show_graduation_choices() -> void:
 		if choice_appears_banner: choice_appears_banner.show()
 		if choices_container: choices_container.show()
 		
-		# CONDITION: Evaluate total capital availability (Bank + Hand Cash)
+		# EVALUATE FINANCIAL BUDGET TIERS (Bank + Hand Cash)
 		var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
-		if total_player_money < 1500:
+		
+		# Tier 1: Bankruptcy (< ₱500) -> Lock Corporate & Business
+		if total_player_money < 500:
+			is_corporate_locked = true
 			is_business_locked = true
+			
+			if apply_corporate_btn:
+				apply_corporate_btn.modulate = Color("857138")
+				apply_corporate_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			if start_business_btn:
-				# Adjust color to a slightly lighter greyish gold/bronze than before
-				start_business_btn.modulate = Color("857138") 
-				# Completely blocks mouse input states so hover effects are deactivated
+				start_business_btn.modulate = Color("857138")
 				start_business_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		else:
-			is_business_locked = false
+				
+		# Tier 2: Mid-Range (₱500 - ₱1499) -> Unlock Corporate, Lock Business
+		elif total_player_money < 1500:
+			is_corporate_locked = false
+			is_business_locked = true
+			
+			if apply_corporate_btn:
+				apply_corporate_btn.modulate = Color(1, 1, 1, 1)
+				apply_corporate_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 			if start_business_btn:
-				start_business_btn.modulate = Color(1, 1, 1, 1) 
+				start_business_btn.modulate = Color("857138")
+				start_business_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				
+		# Tier 3: Wealthy (≥ ₱1500) -> Unlock Everything
+		else:
+			is_corporate_locked = false
+			is_business_locked = false
+			
+			if apply_corporate_btn:
+				apply_corporate_btn.modulate = Color(1, 1, 1, 1)
+				apply_corporate_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+			if start_business_btn:
+				start_business_btn.modulate = Color(1, 1, 1, 1)
 				start_business_btn.mouse_filter = Control.MOUSE_FILTER_STOP
 		
 		var t_menu = create_tween()
@@ -150,6 +177,7 @@ func _show_graduation_choices() -> void:
 
 # --- STEP 3: INTERACTIVE BUTTON SELECTION ACTIONS ---
 func _on_corporate_selected() -> void:
+	if is_corporate_locked: return
 	_lock_all_inputs()
 	career_choice = "Corporate"
 	
@@ -157,9 +185,7 @@ func _on_corporate_selected() -> void:
 	_show_stats_summary_screen()
 
 func _on_business_selected() -> void:
-	if is_business_locked:
-		return
-		
+	if is_business_locked: return
 	_lock_all_inputs()
 	career_choice = "Business"
 	
@@ -236,16 +262,34 @@ func _on_final_chapter_exit_pressed() -> void:
 
 	# 🛑 "Stop First" Routing Logic
 	elif career_choice == "Stop":
-		print("[ROUTER] 'Stop First' path chosen! Routing to Bad Ending.")
+		var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
 		
-		DatabaseManager.safe_query_with_bindings("""
-			UPDATE chapter_progress 
-			SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
-			WHERE player_id = ? AND chapter_number = 7;
-		""", [GameManager.grades, GameManager.player_id])
-		
-		var bad_ending_path = "res://Scenes/Endings/bad_ending.tscn"
-		_execute_save_and_blackout(bad_ending_path, false)
+		# 🟢 CONDITION A: Bankruptcy path if funds are critically low
+		if total_player_money < 500:
+			print("[ROUTER] 'Stop First' path chosen with less than 500 funds! Routing to Bankrupt Ending.")
+			
+			DatabaseManager.safe_query_with_bindings("""
+				UPDATE chapter_progress 
+				SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+				WHERE player_id = ? AND chapter_number = 7;
+			""", [GameManager.grades, GameManager.player_id])
+			
+			var bankrupt_ending_path = "res://Scenes/Endings/bankrupt_ending.tscn"
+			_execute_save_and_blackout(bankrupt_ending_path, false)
+			
+		# 🟢 CONDITION B: Standard Bad Ending path if funds are above threshold
+		else:
+			print("[ROUTER] 'Stop First' path chosen with valid funds! Routing to Bad Ending.")
+			GameManager.unlock_achievement("BAD_ENDING")
+			
+			DatabaseManager.safe_query_with_bindings("""
+				UPDATE chapter_progress 
+				SET is_unlocked = 1, is_completed = 1, completion_grade = ? 
+				WHERE player_id = ? AND chapter_number = 7;
+			""", [GameManager.grades, GameManager.player_id])
+			
+			var bad_ending_path = "res://Scenes/Endings/bad_ending.tscn"
+			_execute_save_and_blackout(bad_ending_path, false)
 	
 	# 💼 Business (Good Ending) Routing Logic
 	elif career_choice == "Business":
