@@ -13,3 +13,5 @@ var choice_meeting: String = ""
 var choice_printing: String = ""
 
 var barista_game_completed: bool = false
+
+var ending_type: String = ""

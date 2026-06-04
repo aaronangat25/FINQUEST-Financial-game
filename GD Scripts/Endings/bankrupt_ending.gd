@@ -18,7 +18,17 @@ var active_phone_screen_6_1
 
 var is_phone_clickable: bool = false
 
+var initial_black_screen: ColorRect
+
 func _ready() -> void:
+	Global.ending_type = "bankrupt"
+	# --- FIXED: SPAWN AN INSTANT BLACK BLANKET ON FRAME ONE ---
+	initial_black_screen = ColorRect.new()
+	initial_black_screen.name = "InitialBlackScreen"
+	initial_black_screen.color = Color(0, 0, 0, 1)
+	initial_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	initial_black_screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(initial_black_screen)
 	# --- THE PERFECT TRACK FIX ---
 	# Immediately boots up your specialized somber loop track for the bad ending state!
 	if AudioManager.has_method("play_bad_ending_music"):
@@ -32,6 +42,12 @@ func _ready() -> void:
 	
 	await get_tree().process_frame
 	await _run_title_sequence()
+	
+	if initial_black_screen:
+		var fade_tween = create_tween()
+		fade_tween.tween_property(initial_black_screen, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		await fade_tween.finished
+		initial_black_screen.queue_free()
 	
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()

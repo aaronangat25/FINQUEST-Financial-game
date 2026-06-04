@@ -17,7 +17,17 @@ var active_lock_screen
 var is_phone_clickable: bool = false
 var click_blocked_by_timer: bool = false
 
+var initial_black_screen: ColorRect
+
 func _ready() -> void:
+	# --- FIXED: SPAWN AN INSTANT BLACK BLANKET ON FRAME ONE ---
+	initial_black_screen = ColorRect.new()
+	initial_black_screen.name = "InitialBlackScreen"
+	initial_black_screen.color = Color(0, 0, 0, 1)
+	initial_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	initial_black_screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(initial_black_screen)
+	
 	for child in get_tree().root.get_children():
 		if child.has_method("refresh_display") and child.has_method("update_ui"):
 			child.hide()
@@ -44,6 +54,12 @@ func _ready() -> void:
 	# 2. Run the "AFTER GRADUATION" Title Card Sequence
 	await _run_title_sequence()
 	
+	if initial_black_screen:
+		var fade_tween = create_tween()
+		fade_tween.tween_property(initial_black_screen, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		await fade_tween.finished
+		initial_black_screen.queue_free()
+	
 	# 3. Fade away the black curtain background layout smoothly
 	if TransitionManager.has_method("fade_from_black"):
 		await TransitionManager.fade_from_black()
@@ -66,7 +82,7 @@ func _run_title_sequence() -> void:
 		title_label.show()
 		await get_tree().create_timer(1.0).timeout
 		
-		title_label.text = "AFTER\nGRADUATION"
+		title_label.text = "AT\nJANE'S\nDORM"
 		
 		var t1 = create_tween()
 		t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
@@ -261,5 +277,5 @@ func _on_padlock_button_pressed() -> void:
 	# 7. Fade into black overlay screen and shift cleanly to choices layout interface
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
-		
+	Global.ending_type = "dropout"	
 	get_tree().change_scene_to_file("res://Scenes/Game End/game_end_cholce.tscn")
