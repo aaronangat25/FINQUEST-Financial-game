@@ -12,6 +12,10 @@ const CLERK_INDOOR_BG = preload("res://Assets/Backgrounds/Endings/clerkbg.png")
 var active_dialogue_box
 
 func _ready() -> void:
+	
+	for child in get_tree().root.get_children():
+		if child.has_method("refresh_display") and child.has_method("update_ui"):
+			child.hide()
 	AudioManager.play_convenience_store_music()
 	# 1. Anti-Blink Fix: Initialize characters as hidden and invisible on frame one
 	if jane_barista:

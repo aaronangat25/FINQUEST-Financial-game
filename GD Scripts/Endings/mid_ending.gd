@@ -11,6 +11,10 @@ var active_dialogue_box
 
 func _ready() -> void:
 	
+	for child in get_tree().root.get_children():
+		if child.has_method("refresh_display") and child.has_method("update_ui"):
+			child.hide()
+	
 	AudioManager.play_chapter_music()
 	# 1. Start completely invisible via native node settings
 	if jane_office:

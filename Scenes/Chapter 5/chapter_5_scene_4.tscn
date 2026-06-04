@@ -128,7 +128,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 4
-text = "A. Apply for Corporate Job (P500)"
+text = "A. Apply for Corporate Job (P1000)"
 
 [node name="startBusiness_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
 layout_mode = 2
@@ -138,7 +138,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_glthg")
 theme_override_font_sizes/font_size = 4
-text = "B. Start Small Business (P1500)"
+text = "B. Start Small Business (P2000)"
 autowrap_mode = 2
 
 [node name="stopFirst_btn" type="Button" parent="ChooseControl11/ChoicesContainer10"]
