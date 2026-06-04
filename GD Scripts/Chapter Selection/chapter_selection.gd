@@ -235,11 +235,10 @@ func _on_play_btn_pressed():
 				
 			# Condition 3: Stop First decision with balance checking logic
 			elif path_taken == "Stop":
-				# 🟢 CALCULATE BALANCE METRICS FROM SAVED VALUES
 				var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
 				
-				if total_player_money < 500:
-					print("[ROUTER] Historical records show Stop chosen with < 500 funds. Routing to Bankrupt Ending.")
+				if total_player_money < 1000:
+					print("[ROUTER] Historical records show Stop chosen with < 1000 funds. Routing to Bankrupt Ending.")
 					callable_deferred_transition("res://Scenes/Endings/bankrupt_ending.tscn", "EPILOGUE")
 				else:
 					print("[ROUTER] Historical records show Stop chosen with valid funds. Routing to Bad Ending.")

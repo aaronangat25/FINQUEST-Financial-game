@@ -18,6 +18,10 @@ var is_phone_clickable: bool = false
 var click_blocked_by_timer: bool = false
 
 func _ready() -> void:
+	for child in get_tree().root.get_children():
+		if child.has_method("refresh_display") and child.has_method("update_ui"):
+			child.hide()
+			
 	AudioManager.play_bad_ending_music()
 	# 1. Initialize everything to invisible so they don't blink on scene start
 	if jane_big:

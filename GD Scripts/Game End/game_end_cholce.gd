@@ -89,7 +89,7 @@ func _on_restart_btn_pressed() -> void:
 		WHERE player_id = ? AND chapter_number > 1;
 	""", [GameManager.player_id])
 	
-	# Force reset Chapter 1 (Prologue) state back to unlocked but uncompleted
+	# Force reset Chapter 1  state back to unlocked but uncompleted
 	DatabaseManager.db.query_with_bindings("""
 		UPDATE chapter_progress 
 		SET is_unlocked = 1, is_completed = 0 
@@ -150,10 +150,10 @@ func _on_restart_btn_pressed() -> void:
 	if AudioManager.has_method("play_chapter_music"):
 		AudioManager.play_chapter_music()
 		
-	# STEP 3: Now that the buttons are gone and it's pitch black, fade the "PROLOGUE" title IN
+	# STEP 3: Now that the buttons are gone and it's pitch black, fade the "CHAPTER 1" title IN
 	var title_label = TransitionManager.get_node_or_null("TitleLabel")
 	if title_label:
-		title_label.text = "PROLOGUE"
+		title_label.text = "Chapter 1"
 		title_label.modulate.a = 0.0
 		title_label.show()
 		
@@ -165,8 +165,8 @@ func _on_restart_btn_pressed() -> void:
 	# Hold on the completed title card for 1.5 seconds so the player can read it comfortably
 	await get_tree().create_timer(1.5).timeout
 		
-	# Swap the scene over to the prologue blueprint file
-	get_tree().change_scene_to_file("res://Scenes/Prologue/prologue.tscn")
+	# Swap the scene over to the chapter 1e blueprint file
+	get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1.tscn")
 
 
 # --- MAIN MENU BUTTON LOGIC ---

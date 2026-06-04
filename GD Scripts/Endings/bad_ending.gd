@@ -10,6 +10,9 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 var active_dialogue_box
 
 func _ready() -> void:
+	for child in get_tree().root.get_children():
+		if child.has_method("refresh_display") and child.has_method("update_ui"):
+			child.hide()
 	
 	AudioManager.play_bad_ending_music()
 	# 1. Initialize elements to hidden so they don't flash on launch

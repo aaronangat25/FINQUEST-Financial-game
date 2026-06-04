@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 # =========================================
-# FINQUEST REUSABLE PAUSE UTILITY
+# FINQUEST REUSABLE PAUSE UTILITY (FIXED)
 # =========================================
 
 # NODE PATHS BASED ON YOUR EXACT TREE
@@ -15,7 +15,6 @@ extends CanvasLayer
 # =========================================
 func _ready():
 	# FORCE MAXIMUM OVERLAP PRIORITY
-	# Setting this layer index high guarantees it renders over all other nodes!
 	layer = 10
 
 	# 1. Ensure the overlay menu is hidden when the chapter first boots up
@@ -34,16 +33,15 @@ func _ready():
 # DYNAMIC RUNTIME PERFORMANCE MONITOR
 # =========================================
 func _process(_delta: float) -> void:
-	# Keep tracking the root tree scene to see if SavingScreen is currently running
+	# Keep tracking the root tree scene to see if SavingScreen or transitions are active
 	var current_scene_root = get_tree().current_scene
 	if current_scene_root:
 		var saving_overlay = current_scene_root.get_node_or_null("SavingScreen")
 		
-		if saving_overlay and saving_overlay.visible:
-			# If saving screen is running, hide this entire layer from view instantly
+		# Hide pause button completely if saving or transitions are busy
+		if (saving_overlay and saving_overlay.visible) or TransitionManager.is_transitioning:
 			hide()
 		else:
-			# If no saving screen is running, make sure the pause button is visible
 			show()
 
 # =========================================
@@ -57,6 +55,11 @@ func _on_pause_button_pressed():
 		if saving_overlay and saving_overlay.visible:
 			print("[SYSTEM] Pause blocked: Saving screen is currently active.")
 			return
+			
+	# Intercept and block layout actions if transition animations are processing
+	if TransitionManager.is_transitioning:
+		print("[SYSTEM] Pause blocked: Scene transition in progress.")
+		return
 
 	print("[SYSTEM] Game paused.")
 	

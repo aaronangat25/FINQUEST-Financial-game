@@ -126,7 +126,7 @@ func _show_graduation_choices() -> void:
 		var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
 		
 		# Tier 1: Bankruptcy (< ₱500) -> Lock Corporate & Business
-		if total_player_money < 500:
+		if total_player_money < 1000:
 			is_corporate_locked = true
 			is_business_locked = true
 			
@@ -137,8 +137,8 @@ func _show_graduation_choices() -> void:
 				start_business_btn.modulate = Color("857138")
 				start_business_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				
-		# Tier 2: Mid-Range (₱500 - ₱1499) -> Unlock Corporate, Lock Business
-		elif total_player_money < 1500:
+		# Tier 2: Mid-Range (₱999 - ₱1999) -> Unlock Corporate, Lock Business
+		elif total_player_money < 2000:
 			is_corporate_locked = false
 			is_business_locked = true
 			
@@ -149,7 +149,7 @@ func _show_graduation_choices() -> void:
 				start_business_btn.modulate = Color("857138")
 				start_business_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				
-		# Tier 3: Wealthy (≥ ₱1500) -> Unlock Everything
+		# Tier 3: Wealthy (≥ ₱2000) -> Unlock Everything
 		else:
 			is_corporate_locked = false
 			is_business_locked = false
@@ -265,8 +265,8 @@ func _on_final_chapter_exit_pressed() -> void:
 		var total_player_money = GameManager.bank_cash + GameManager.on_hand_cash
 		
 		# 🟢 CONDITION A: Bankruptcy path if funds are critically low
-		if total_player_money < 500:
-			print("[ROUTER] 'Stop First' path chosen with less than 500 funds! Routing to Bankrupt Ending.")
+		if total_player_money < 1000:
+			print("[ROUTER] 'Stop First' path chosen with less than 1000 funds! Routing to Bankrupt Ending.")
 			
 			DatabaseManager.safe_query_with_bindings("""
 				UPDATE chapter_progress 
