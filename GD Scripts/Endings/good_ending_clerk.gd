@@ -11,7 +11,16 @@ const CLERK_INDOOR_BG = preload("res://Assets/Backgrounds/Endings/clerkbg.png")
 
 var active_dialogue_box
 
+var initial_black_screen: ColorRect
+
 func _ready() -> void:
+	# --- FIXED: SPAWN AN INSTANT BLACK BLANKET ON FRAME ONE ---
+	initial_black_screen = ColorRect.new()
+	initial_black_screen.name = "InitialBlackScreen"
+	initial_black_screen.color = Color(0, 0, 0, 1)
+	initial_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	initial_black_screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(initial_black_screen)
 	
 	for child in get_tree().root.get_children():
 		if child.has_method("refresh_display") and child.has_method("update_ui"):
@@ -34,6 +43,11 @@ func _ready() -> void:
 	# --- AUDIO ENGINE TRANSITION ---
 	# Crossfades smoothly from the general exploration track into your supermarket music loop
 	
+	if initial_black_screen:
+		var fade_tween = create_tween()
+		fade_tween.tween_property(initial_black_screen, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		await fade_tween.finished
+		initial_black_screen.queue_free()
 	
 	# 3. Fade away the initial black screen smoothly
 	if TransitionManager.has_method("fade_from_black"):
@@ -210,5 +224,5 @@ func _play_good_ending_sequence() -> void:
 		
 	# 💾 DATABASE FLUSH: Safely commits the correct "GOOD_ENDING" key to SQLite
 	GameManager.flush_buffer_to_database()
-		
+	Global.ending_type = "good_clerk"	
 	get_tree().change_scene_to_file("res://Scenes/Game End/game_end_cholce.tscn")

@@ -1,0 +1,74 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3u8xlijq8nok"]
+
+[ext_resource type="Script" uid="uid://pi28ffqygyii" path="res://GD Scripts/Main Menu/quit_btn.gd" id="1_673im"]
+[ext_resource type="Theme" uid="uid://b2x7ljctgir0w" path="res://Assets/Buttons/main_menu_btn.tres" id="1_ryn2d"]
+[ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_673im"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_673im"]
+bg_color = Color(0, 0, 0, 0.7058824)
+
+[node name="quit_btn" type="CanvasLayer"]
+script = ExtResource("1_673im")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_673im")
+
+[node name="menu_button_container" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -11.0
+offset_top = -38.787994
+offset_right = 11.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 5
+
+[node name="cancel_btn" type="Button" parent="Panel/menu_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_ryn2d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_673im")
+theme_override_font_sizes/font_size = 6
+text = "cancel"
+autowrap_mode = 2
+
+[node name="quit_btn" type="Button" parent="Panel/menu_button_container"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_ryn2d")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_673im")
+theme_override_font_sizes/font_size = 6
+text = "quit"
+
+[node name="confirmation_label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.5
+offset_top = 39.0
+offset_right = 41.0
+offset_bottom = 69.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_673im")
+theme_override_font_sizes/font_size = 10
+text = "are you sure you want to quit?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

@@ -9,7 +9,17 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 
 var active_dialogue_box
 
+var initial_black_screen: ColorRect
+
 func _ready() -> void:
+	# --- FIXED: SPAWN AN INSTANT BLACK BLANKET ON FRAME ONE ---
+	initial_black_screen = ColorRect.new()
+	initial_black_screen.name = "InitialBlackScreen"
+	initial_black_screen.color = Color(0, 0, 0, 1)
+	initial_black_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	initial_black_screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(initial_black_screen)
+	
 	for child in get_tree().root.get_children():
 		if child.has_method("refresh_display") and child.has_method("update_ui"):
 			child.hide()
@@ -24,6 +34,12 @@ func _ready() -> void:
 	
 	# 2. Run the "AFTER GRADUATION" Title Card Sequence
 	await _run_title_sequence()
+	
+	if initial_black_screen:
+		var fade_tween = create_tween()
+		fade_tween.tween_property(initial_black_screen, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		await fade_tween.finished
+		initial_black_screen.queue_free()
 	
 	# 3. Fade away the black transition screen smoothly
 	if TransitionManager.has_method("fade_from_black"):
@@ -163,5 +179,5 @@ func _play_bad_ending_sequence() -> void:
 	# 9. Fade into black overlay screen and switch over to game_end_choice.tscn
 	if TransitionManager.has_method("fade_to_black"):
 		await TransitionManager.fade_to_black()
-		
+	Global.ending_type = "bad"	
 	get_tree().change_scene_to_file("res://Scenes/Game End/game_end_cholce.tscn")

@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=3 uid="uid://bm8vkvjpdnxv1"]
+
+[ext_resource type="Script" uid="uid://bgyor0ykhrjc1" path="res://GD Scripts/Intro Screen/intro_screen.gd" id="1_l80rw"]
+[ext_resource type="Texture2D" uid="uid://b5c3q7u1t3jn3" path="res://Assets/Logo/hbdvonlogo/sprite00.png" id="1_xq6rb"]
+[ext_resource type="Texture2D" uid="uid://by1hrndmqwtqv" path="res://Assets/Logo/hbdvonlogo/sprite01.png" id="2_l80rw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l80rw"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0va3o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xq6rb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_l80rw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}]
+
+[node name="intro_screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l80rw")
+
+[node name="blackbg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l80rw")
+
+[node name="hbdvonanchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -27.5
+offset_right = 31.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="hbdvon_logo" type="AnimatedSprite2D" parent="hbdvonanchor"]
+position = Vector2(31, 23.5)
+scale = Vector2(0.1525, 0.156875)
+sprite_frames = SubResource("SpriteFrames_0va3o")
+animation = &"idle"
+frame_progress = 0.24345042
