@@ -66,7 +66,7 @@ func _run_title_sequence() -> void:
 		title_label.show()
 		await get_tree().create_timer(1.0).timeout
 		
-		title_label.text = "AFTER\nGRADUATION"
+		title_label.text = "BEFORE\nGRADUATION"
 		
 		var t1 = create_tween()
 		t1.tween_property(title_label, "modulate:a", 1.0, 1.0)
