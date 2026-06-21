@@ -443,7 +443,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"idle",
-"speed": 23.0
+"speed": 40.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4e1bi"]
@@ -556,7 +556,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
-"speed": 30.0
+"speed": 40.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_gfgi7"]
@@ -744,7 +744,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"idle",
-"speed": 25.0
+"speed": 40.0
 }]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wt8p4"]

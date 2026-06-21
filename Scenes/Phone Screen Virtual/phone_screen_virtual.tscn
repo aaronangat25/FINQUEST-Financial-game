@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dmbsghhget1vy"]
+[gd_scene load_steps=27 format=3 uid="uid://dmbsghhget1vy"]
 
 [ext_resource type="Texture2D" uid="uid://bok3bkft5eo2m" path="res://Assets/Phone/virtual bank account screen3.png" id="1_ddnp5"]
 [ext_resource type="Script" uid="uid://cvn4b3ereh0t1" path="res://GD Scripts/Phone Screen Virtual/phone_screen_virtual.gd" id="1_xv5v7"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c4pghvhsm3ep7" path="res://Assets/Phone/deposit.png" id="3_s6fx2"]
 [ext_resource type="Texture2D" uid="uid://cmw33dxhwbo0q" path="res://Assets/Phone/withdraw.png" id="4_xv5v7"]
 [ext_resource type="Texture2D" uid="uid://crg3emmh02ldf" path="res://Assets/Phone/back button.png" id="6_s7r38"]
+[ext_resource type="Script" uid="uid://blwth2y40daf7" path="res://GD Scripts/Button Animations/back_button.gd" id="7_kkxsg"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s6fx2"]
 texture = ExtResource("1_ddnp5")
@@ -342,6 +343,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_rncna")
 theme_override_styles/hover = SubResource("StyleBoxTexture_b41jc")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_e4h5l")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_s7r38")
+script = ExtResource("7_kkxsg")
 
 [node name="DepositWarningLabel" type="Label" parent="PhoneScreenVirtualControl"]
 layout_mode = 1

@@ -227,7 +227,7 @@ func _play_kylie_conversation() -> void:
 
 	# Pass the entire conversation array together to run smoothly on one thread execution loop
 	var seamless_conversation = [
-		{"speaker": "Kylie", "text": "Bestie!! Ready ka na ba maging officially unemployed?"},
+		{"speaker": "Kylie", "text": "Bestie!! Ready ka na ba magiing officially unemployed?"},
 		{"speaker": "Jane", "text": "HAHA grabe ka. Pero honestly… kinakabahan ako."},
 		{"speaker": "Kylie", "text": "Normal lang ‘yan. After graduation, real life na talaga."}
 	]

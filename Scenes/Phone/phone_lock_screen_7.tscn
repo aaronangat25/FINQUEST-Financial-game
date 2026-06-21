@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://ca13t6dnd6qn7"]
+[gd_scene load_steps=12 format=3 uid="uid://ca13t6dnd6qn7"]
 
 [ext_resource type="Texture2D" uid="uid://cjg7vbywtdh8y" path="res://Assets/Phone/phone blank screen.png" id="1_o6jrk"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_j762n"]
 [ext_resource type="Texture2D" uid="uid://cliwybcpq1gk4" path="res://Assets/Phone/padlock.png" id="3_22wk6"]
+[ext_resource type="Script" uid="uid://blwth2y40daf7" path="res://GD Scripts/Button Animations/back_button.gd" id="4_j762n"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wvnxx"]
 texture = ExtResource("1_o6jrk")
@@ -144,3 +145,4 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_67isw")
 theme_override_styles/hover = SubResource("StyleBoxTexture_7evc6")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_b18u6")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_dydgc")
+script = ExtResource("4_j762n")

@@ -22,7 +22,7 @@ animations = [{
 script = ExtResource("1_jlet4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(12, 16)
-scale = Vector2(0.002229404, 0.0024200801)
+position = Vector2(12.5, 16)
+scale = Vector2(0.029239763, 0.032)
 sprite_frames = SubResource("SpriteFrames_mky7j")
 animation = &"idle"
