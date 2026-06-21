@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://cgosq8fnfbc3k"]
+[gd_scene load_steps=17 format=3 uid="uid://cgosq8fnfbc3k"]
 
 [ext_resource type="Texture2D" uid="uid://c8pscykde6dol" path="res://Assets/Phone/phone message app screen.png" id="1_852ga"]
 [ext_resource type="Texture2D" uid="uid://cplo7g32y1xtv" path="res://Assets/Phone/sis app icon.png" id="2_2hri1"]
 [ext_resource type="FontFile" uid="uid://b8heu0ql6ws58" path="res://Font/edit_undo/editundo.ttf" id="2_je6fy"]
 [ext_resource type="Texture2D" uid="uid://b2yrvp5g5u3p1" path="res://Assets/Money UI/pop up star.png" id="4_2hri1"]
 [ext_resource type="Texture2D" uid="uid://crg3emmh02ldf" path="res://Assets/Phone/back button.png" id="5_7jrf4"]
+[ext_resource type="Script" uid="uid://blwth2y40daf7" path="res://GD Scripts/Button Animations/back_button.gd" id="6_urkgf"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_je6fy"]
 texture = ExtResource("1_852ga")
@@ -229,3 +230,4 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_iouwg")
 theme_override_styles/hover = SubResource("StyleBoxTexture_7llrf")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_xdokt")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ui84m")
+script = ExtResource("6_urkgf")

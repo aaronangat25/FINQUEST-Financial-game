@@ -46,6 +46,11 @@ var DORM_DIALOGUE: Array = [
 ]
 
 func _ready() -> void:
+	if TransitionManager.has_method("fade_from_black"):
+		TransitionManager.fade_from_black()
+	elif TransitionManager.has_method("fade_from_black_instant"):
+		TransitionManager.fade_from_black_instant()
+	
 	# Wait for database to be fully ready
 	while not DatabaseManager.is_ready:
 		await get_tree().process_frame

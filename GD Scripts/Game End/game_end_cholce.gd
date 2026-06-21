@@ -9,7 +9,6 @@ extends Control
 @onready var main_menu_btn = $menu_button_container/mainmenubtn
 @onready var menu_button_container = $menu_button_container
 
-# 🏅 FIXED REFERENCE: Re-added your ending label node reference
 @onready var ending_label = $ending_label
 
 # A clean script flag to block inputs without breaking textures
@@ -18,22 +17,19 @@ var is_transitioning: bool = false
 func _ready() -> void:
 	is_transitioning = false
 	
-	# 1. Instantly strip away the black transition screen as soon as this menu initializes
+	# --- FIXED: Only drop the curtain for THIS choice screen when it loads ---
 	if TransitionManager.has_method("fade_from_black_instant"):
 		TransitionManager.fade_from_black_instant()
 	elif TransitionManager.has_method("fade_from_black"):
 		TransitionManager.fade_from_black()
 		
-	# --- RESET VISIBILITY STATES ON LOAD ---
 	if menu_button_container:
 		menu_button_container.show()
 		menu_button_container.modulate.a = 1.0
 		menu_button_container.mouse_filter = Control.MOUSE_FILTER_STOP
 		
-	# 🏅 FIXED ACTION: Updates display text using explicit tracking tokens
 	_update_ending_label_text()
 		
-	# 2. Connect button signals manually
 	if restart_btn and not restart_btn.pressed.is_connected(_on_restart_btn_pressed):
 		restart_btn.pressed.connect(_on_restart_btn_pressed)
 		
@@ -41,13 +37,11 @@ func _ready() -> void:
 		main_menu_btn.pressed.connect(_on_main_menu_btn_pressed)
 
 
-# --- VARIABLE CONDITION EVALUATOR ---
 func _update_ending_label_text() -> void:
 	if not ending_label: return
 	
 	var ending_text: String = "ENDING"
 	
-	# 1. PRIMARY CONDITION: Check explicit global variable type markers
 	if "ending_type" in Global and Global.ending_type != "":
 		match Global.ending_type:
 			"good_cafe":
@@ -63,7 +57,6 @@ func _update_ending_label_text() -> void:
 			"bad":
 				ending_text = "BAD ENDING"
 				
-	# 2. AUTOMATIC FALLBACK: If tracking token is missing, read stored scene data string
 	if ending_text == "ENDING":
 		var automated_path: String = ""
 		if "current_scene" in GameManager and GameManager.current_scene != "":
@@ -98,9 +91,6 @@ func _on_restart_btn_pressed() -> void:
 	if menu_button_container:
 		menu_button_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# =================================================================
-	# 1. RUNTIME RAM & STATS RESYNC (With Achievement Preservation)
-	# =================================================================
 	var saved_achievements = {}
 	if "unlocked_achievements" in GameManager:
 		saved_achievements = GameManager.unlocked_achievements.duplicate()
@@ -109,7 +99,7 @@ func _on_restart_btn_pressed() -> void:
 	if "currency" in Global: Global.currency = 0
 	if "choice_meeting" in Global: Global.choice_meeting = ""
 	if "choice_printing" in Global: Global.choice_printing = ""
-	if "ending_type" in Global: Global.ending_type = "" # Clear global variable tracking state
+	if "ending_type" in Global: Global.ending_type = "" 
 
 	if "on_hand_cash" in GameManager: GameManager.on_hand_cash = 0
 	if "bank_cash" in GameManager: GameManager.bank_cash = 0
@@ -128,9 +118,6 @@ func _on_restart_btn_pressed() -> void:
 	if "unlocked_achievements" in GameManager:
 		GameManager.unlocked_achievements = saved_achievements
 
-	# =================================================================
-	# 2. DATABASE PROGRESSION RESET PIPELINE (Customized Selective Clear)
-	# =================================================================
 	DatabaseManager.db.query_with_bindings("""
 		UPDATE chapter_progress 
 		SET is_unlocked = 0, is_completed = 0 
@@ -170,11 +157,9 @@ func _on_restart_btn_pressed() -> void:
 	if GameManager.has_method("flush_buffer_to_database"):
 		GameManager.flush_buffer_to_database()
 	
-	print("[DATABASE] SQLite parameters synchronized. Stored achievements kept untouched for QA metrics.")
+	print("[DATABASE] SQLite parameters synchronized.")
 
-	# =================================================================
-	# 3. VISUAL TRANSITION SEQUENCING
-	# =================================================================
+	# --- VISUAL TRANSITION SEQUENCING ---
 	if menu_button_container:
 		var t_menu = create_tween()
 		t_menu.tween_property(menu_button_container, "modulate:a", 0.0, 0.5)
@@ -200,6 +185,14 @@ func _on_restart_btn_pressed() -> void:
 		await t_text.finished
 		
 	await get_tree().create_timer(1.5).timeout
+	
+	if title_label:
+		var t_fade_out = create_tween()
+		t_fade_out.tween_property(title_label, "modulate:a", 0.0, 0.5)
+		await t_fade_out.finished
+		title_label.hide()
+	
+	# Change the scene to Chapter 1
 	get_tree().change_scene_to_file("res://Scenes/Chapter 1/chapter_1.tscn")
 
 
@@ -207,8 +200,6 @@ func _on_restart_btn_pressed() -> void:
 func _on_main_menu_btn_pressed() -> void:
 	if is_transitioning: return
 	is_transitioning = true
-	
-	print("Main Menu button clicked! Leaving game over screen...")
 	
 	if menu_button_container:
 		menu_button_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -221,12 +212,9 @@ func _on_main_menu_btn_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scenes/Main Screen/main_screen.tscn")
 
 
-# =================================================================
-# ANDROID HARDWARE / OS GESTURE BACK INTERCEPTOR
-# =================================================================
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		_handle_android_back_button()
 
 func _handle_android_back_button() -> void:
-	print("[MOBILE SAFETY LOCK] User pressed Android back on choices panel. Request ignored safely.")
+	print("[MOBILE SAFETY LOCK] Request ignored safely.")
