@@ -173,12 +173,22 @@ func _play_choice_sequence() -> void:
 		tween_choice.tween_property(choose_control_8, "modulate:a", 1.0, 0.5)
 
 func _on_grocery_choice_pressed(choice: String) -> void:
+	# 🟢 SPECIFIC CHANGE: Map price criteria matching matrix definitions
+	var cost = 0
+	if choice == "A": cost = 1100
+	elif choice == "B": cost = 450
+	elif choice == "C": cost = 200
+	
+	# 🟢 SPECIFIC CHANGE: Intercept immediately if pocket cash is insufficient
+	if not GameManager.verify_pocket_cash(cost):
+		return # Aborts execution; keeps button choices fully active for the player
+		
+	# The rest of your original button processing code continues safely below:
 	if branded_btn: branded_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if generic_btn: generic_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if essentials_btn: essentials_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# --- SAFE RAM STAGING REDIRECTION ---
-	# Pass choice tracking and financial adjustments into the memory staging buffers
 	GameManager.log_choice("chap3_grocery_choice", choice)
 	
 	# Trigger the transaction cash deduction sound feedback profile

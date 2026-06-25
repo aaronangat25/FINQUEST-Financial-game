@@ -200,7 +200,16 @@ func _on_resto_pressed() -> void:
 	execute_food_transition(RESTO_BG, 350)
 
 # --- THE TRANSITION LOGIC ---
+# --- THE TRANSITION LOGIC ---
 func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
+	# 🟢 NEW: THE POCKET CASH INTERCEPT GATE
+	# If on_hand_cash is less than the food cost, this pops up the window, 
+	# unlocks the choice buttons, and exits the function immediately.
+	if not GameManager.verify_pocket_cash(cost):
+		choices_locked = false
+		return
+
+	# Otherwise, they can afford it! The rest of your code runs untouched safely:
 	# Trigger your cash deduction wallet swipe sound effect
 	AudioManager.play_sfx("DEDUCT")
 	

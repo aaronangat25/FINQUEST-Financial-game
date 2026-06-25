@@ -506,6 +506,13 @@ func _play_study_choice_sequence() -> void:
 		tween_choice.tween_property(choose_control_5, "modulate:a", 1.0, 0.5)
 
 func _on_study_cafe_pressed() -> void:
+	# 🟢 NEW: POCKET CASH VALIDATION GATE (Costs ₱200)
+	if not GameManager.verify_pocket_cash(200):
+		# Re-enable button interaction filters if the validation fails
+		if study_cafe_btn: study_cafe_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		if study_lounge_btn: study_lounge_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		return
+
 	_process_study_choice("Cafe")
 
 func _on_study_lounge_pressed() -> void:
@@ -619,6 +626,13 @@ func _play_travel_choice_sequence() -> void:
 		tween_choice.tween_property(choose_control_6, "modulate:a", 1.0, 0.5)
 
 func _on_ride_tricycle_pressed() -> void:
+	# 🟢 NEW: POCKET CASH VALIDATION GATE (Costs ₱40)
+	if not GameManager.verify_pocket_cash(40):
+		# Re-enable button interaction filters if the validation fails
+		if ride_tricycle_btn: ride_tricycle_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		if walk_btn: walk_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		return
+
 	_process_travel_choice("Tricycle")
 
 func _on_walk_pressed() -> void:

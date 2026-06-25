@@ -132,6 +132,10 @@ func _show_choices() -> void:
 
 
 func _on_choice_a_pressed() -> void:
+	# 🟢 SPECIFIC CHANGE: Colored option costs ₱600
+	if not GameManager.verify_pocket_cash(600):
+		return # Intercepts; prevents proceeding while keeping selection buttons interactive
+		
 	Global.choice_printing = "A" 
 	# Trigger deduction sound effect for colored copy purchase
 	AudioManager.play_sfx("DEDUCT")
@@ -139,6 +143,10 @@ func _on_choice_a_pressed() -> void:
 
 
 func _on_choice_b_pressed() -> void:
+	# 🟢 SPECIFIC CHANGE: Black & White option costs ₱150
+	if not GameManager.verify_pocket_cash(150):
+		return # Intercepts; prevents proceeding while keeping selection buttons interactive
+		
 	Global.choice_printing = "B" 
 	# Trigger deduction sound effect for grayscale copy purchase
 	AudioManager.play_sfx("DEDUCT")
@@ -146,6 +154,7 @@ func _on_choice_b_pressed() -> void:
 	
 
 func _on_choice_c_pressed() -> void:
+	# 🟢 SPECIFIC CHANGE: Digital copy option costs ₱0 (No gate necessary, allows free choice pass)
 	Global.choice_printing = "C" 
 	_handle_choice_reaction(0, "Tipid… pero baka makaapekto sa evaluation.")
 
