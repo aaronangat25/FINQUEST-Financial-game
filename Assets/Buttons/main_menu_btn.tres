@@ -1,6 +1,6 @@
-[gd_resource type="Theme" load_steps=21 format=4 uid="uid://b2x7ljctgir0w"]
+[gd_resource type="Theme" load_steps=23 format=4 uid="uid://b2x7ljctgir0w"]
 
-[ext_resource type="Texture2D" uid="uid://dd26fhv85ydya" path="res://Assets/Buttons/tempbtn (3).png" id="1_2plks"]
+[ext_resource type="Texture2D" uid="uid://brou7juo2bdqk" path="res://Assets/Buttons/tempbtn (4).png" id="2_2plks"]
 
 [sub_resource type="Image" id="Image_w614v"]
 data = {
@@ -1470,8 +1470,23 @@ expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2plks"]
+load_path = "res://.godot/imported/tempbtn (5).png-a4561f9cc735717e79687de4e7ec237e.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b54jf"]
+texture = SubResource("CompressedTexture2D_2plks")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+expand_margin_left = 5.0
+expand_margin_top = 2.0
+expand_margin_right = 4.0
+expand_margin_bottom = 2.0
+region_rect = Rect2(70, 103, 260, 71)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_npkbj"]
-texture = ExtResource("1_2plks")
+texture = ExtResource("2_2plks")
 texture_margin_left = 1.0
 texture_margin_top = 1.0
 texture_margin_right = 1.0
@@ -1483,7 +1498,7 @@ expand_margin_bottom = 2.0
 region_rect = Rect2(70, 15, 260, 72)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w614v"]
-texture = ExtResource("1_2plks")
+texture = SubResource("CompressedTexture2D_2plks")
 texture_margin_left = 1.0
 texture_margin_top = 1.0
 texture_margin_right = 1.0
@@ -1492,16 +1507,16 @@ expand_margin_left = 4.0
 expand_margin_top = 1.0
 expand_margin_right = 3.0
 expand_margin_bottom = 1.0
-region_rect = Rect2(70, 103, 260, 71)
+region_rect = Rect2(70, 190, 260, 72)
 
 [resource]
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
 Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
-Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_hover_color = Color(0.6616454, 0.2826022, 0.19231486, 1)
 Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 1)
-Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.6627451, 0.28235295, 0.19215687, 1)
 Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
 Button/colors/icon_focus_color = Color(1, 1, 1, 1)
 Button/colors/icon_hover_color = Color(1, 1, 1, 1)
@@ -1516,6 +1531,6 @@ Button/font_sizes/font_size = 16
 Button/fonts/font = SubResource("FontFile_t7rhn")
 Button/styles/disabled = SubResource("StyleBoxFlat_ujfqw")
 Button/styles/focus = SubResource("StyleBoxFlat_tlqm7")
-Button/styles/hover = SubResource("StyleBoxTexture_npkbj")
+Button/styles/hover = SubResource("StyleBoxTexture_b54jf")
 Button/styles/normal = SubResource("StyleBoxTexture_npkbj")
 Button/styles/pressed = SubResource("StyleBoxTexture_w614v")
