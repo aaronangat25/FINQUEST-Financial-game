@@ -37,6 +37,7 @@ var current_chapter_description : String = ""
 # =================================================================
 
 const NOTIFICATION_SCENE = preload("res://Scenes/AchievementNotificatioon/achievement_notification.tscn")
+const WITHDRAW_NOTIF_SCENE = preload("res://Scenes/Withdraw Notification/withdraw_notif.tscn")	
 
 # Temporary runtime staging cache for achievements earned mid-chapter
 var buffered_achievements : Array = []
@@ -234,28 +235,47 @@ func stage_finance_change(bank_delta: int, pocket_delta: int, description: Strin
 # SMART DEBIT CARD FALLBACK PAYMENT SYSTEM
 # =================================================================
 func request_expense_payment(total_cost: int, description: String) -> void:
+	# 🟢 REVISED: We completely removed the Bank Debit Card fallback scenario.
+	# This function now strictly handles standard wallet deductions because 
+	# the choice was already pre-verified by verify_pocket_cash() beforehand.
 	var bank_delta: int = 0
-	var pocket_delta: int = 0
+	var pocket_delta: int = -total_cost
 	
-	# Scenario A: Player has enough physical pocket cash to cover it all
-	if on_hand_cash >= total_cost:
-		pocket_delta = -total_cost
-		print("[PAYMENT] Covered completely by Pocket Cash: ₱", total_cost)
-		
-	# Scenario B: Pocket cash is NOT enough. Time to use the Bank Debit Card fallback!
-	else:
-		# Calculate how much we are short after draining all pocket money
-		var remaining_balance_needed: int = total_cost - on_hand_cash
-		
-		# Pocket loses whatever is currently left in it (drains to ₱0)
-		pocket_delta = -on_hand_cash
-		
-		# Bank loses the rest of the bill
-		bank_delta = -remaining_balance_needed
-		print("[PAYMENT FALLBACK] Pocket cash insufficient. Draining pocket by ₱", on_hand_cash, " | Deducting remaining ₱", remaining_balance_needed, " from Bank account.")
-		
-	# Feed the calculated split directly into your safe runtime staging buffer
+	print("[PAYMENT] Cost of ₱", total_cost, " deducted directly from Pocket Cash.")
+	
+	# Feed the direct pocket deduction straight into your safe runtime staging buffer
 	stage_finance_change(bank_delta, pocket_delta, description)
+	
+# =================================================================
+# GLOBAL POCKET CASH VALIDATION GATEKEEPER
+# =================================================================
+## Checks if the player has enough physical on-hand cash.
+## Returns TRUE if they can afford it. 
+## Returns FALSE if broke, automatically displaying the global popup overlay.
+func verify_pocket_cash(cost: int) -> bool:
+	if on_hand_cash >= cost:
+		return true
+		
+	print("[CASH_GATE] Intercepted! Player has insufficient on-hand funds for this choice.")
+	
+	# Instantiate the notification node directly onto the root viewport overlay
+	var notif_instance = WITHDRAW_NOTIF_SCENE.instantiate()
+	get_tree().root.add_child(notif_instance)
+	
+	# Set maximum canvas rendering priority over active level screens
+	if notif_instance is CanvasLayer:
+		notif_instance.layer = 150
+		
+	# Automatically locate the button and wire up the deletion sequence loop cleanly
+	var ok_btn = notif_instance.find_child("OkButton", true, false)
+	if ok_btn:
+		ok_btn.pressed.connect(func():
+			if AudioManager.has_method("play_sfx"):
+				AudioManager.play_sfx("CLICK")
+			notif_instance.queue_free()
+		)
+		
+	return false
 
 # =================================================================
 # STAGE A NARRATIVE CHOICE TO BUFFER

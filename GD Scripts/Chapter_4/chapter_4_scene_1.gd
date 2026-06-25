@@ -409,6 +409,10 @@ func _play_final_jane_dialogue() -> void:
 
 # CHOICE BRANCHES
 func _on_choice_a_pressed() -> void:
+	# 🟢 SPECIFIC CHANGE: Face-to-Face option requires ₱300 pocket cash based on your reaction logic
+	if not GameManager.verify_pocket_cash(300):
+		return # Intercepts; prevents proceeding while keeping selection buttons interactive
+		
 	Global.choice_meeting = "A"
 	# Trigger your cash deduction wallet swipe sound effect for transit costs
 	AudioManager.play_sfx("DEDUCT")

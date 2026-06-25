@@ -122,6 +122,17 @@ func _play_choice_sequence() -> void:
 		tween_choice.tween_property(choose_control_7, "modulate:a", 1.0, 0.5)
 
 func _on_meal_choice_pressed(choice: String) -> void:
+	# 🟢 SPECIFIC CHANGE: Determine price threshold dynamically based on choice
+	var cost = 0
+	if choice == "A": cost = 180
+	elif choice == "B": cost = 90
+	elif choice == "C": cost = 40
+	
+	# 🟢 SPECIFIC CHANGE: Intercept immediately if pocket cash is insufficient
+	if not GameManager.verify_pocket_cash(cost):
+		return # Aborts execution; keeps button choices fully active for the player
+		
+	# The rest of your original button processing code continues safely below:
 	fullmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	budgetmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	skipmeal_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -135,7 +146,6 @@ func _on_meal_choice_pressed(choice: String) -> void:
 		GameManager.request_expense_payment(90, "Purchased budget meal at campus canteen")
 	elif choice == "C":
 		GameManager.request_expense_payment(40, "Skipped meal for snacks later due to inflation")
-		# ACHIEVEMENT INTEGRATION: Unlocks instantly when extreme frugality habit is chosen
 		GameManager.unlock_achievement("SOPAS_STARBUCKS")
 	
 	if currency_hud and currency_hud.has_method("refresh_display"):

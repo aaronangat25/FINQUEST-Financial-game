@@ -120,7 +120,12 @@ func _show_graduation_choices() -> void:
 
 
 # --- STEP 3: CHOICE BUTTON CALLBACKS ---
+# --- STEP 3: CHOICE BUTTON CALLBACKS ---
 func _on_choice_a_selected() -> void:
+	# 🟢 SPECIFIC CHANGE: New Outfit + Dinner costs ₱2500
+	if not GameManager.verify_pocket_cash(2500):
+		return # Intercepts early; menu layout remains fully active and unblocked
+
 	_disable_all_buttons()
 	graduation_choice = "A"
 	
@@ -135,6 +140,10 @@ func _on_choice_a_selected() -> void:
 	_handle_immediate_reflection(jane_big_anchor, "Deserve ko rin naman siguro ito…")
 
 func _on_choice_b_selected() -> void:
+	# 🟢 SPECIFIC CHANGE: Simple Outfit + Dinner costs ₱1500
+	if not GameManager.verify_pocket_cash(1500):
+		return # Intercepts early; menu layout remains fully active and unblocked
+
 	_disable_all_buttons()
 	graduation_choice = "B"
 	
@@ -149,6 +158,10 @@ func _on_choice_b_selected() -> void:
 	_handle_immediate_reflection(jane_big_anchor2, "Simple pero memorable pa rin.")
 
 func _on_choice_c_selected() -> void:
+	# 🟢 SPECIFIC CHANGE: Borrow Outfit + Small Celebration costs ₱1000
+	if not GameManager.verify_pocket_cash(1000):
+		return # Intercepts early; menu layout remains fully active and unblocked
+
 	_disable_all_buttons()
 	graduation_choice = "C"
 	
@@ -161,7 +174,6 @@ func _on_choice_c_selected() -> void:
 		currency_hud.refresh_display()
 		
 	_handle_immediate_reflection(jane_big_anchor3, "Mas importante ang future kaysa isang araw lang ng gastos.")
-
 
 # --- STEP 4: DIRECT SELECTION REFLECTION ---
 func _handle_immediate_reflection(target_anchor: Control, jane_reflection: String) -> void:
