@@ -19,12 +19,17 @@ const DIALOGUE_BOX_SCENE = preload("res://Scenes/Dialogue Box/dialogue_box.tscn"
 @onready var jane = $JaneBigAnchor/jane2d
 @onready var phone_mini = $PhoneMini
 @onready var kylie = $KylieDialogueAnchor/kylie2d
+@onready var jane_dialogue = $JaneDialogueAnchor/jane2d
 
 # --- CHOICE UI REFERENCES ---
 @onready var choose_control_2 = $ChooseControl2
 @onready var karinderya_btn = $ChooseControl2/ChoicesContainer2/KarinderyaA_btn
 @onready var fastfood_btn = $ChooseControl2/ChoicesContainer2/FastfoodB_btn
 @onready var resto_btn = $ChooseControl2/ChoicesContainer2/RestoC_btn
+
+# --- NOTIFICATION UI REFERENCES ---
+@onready var notif_deduc = $Notifdeduc
+@onready var notif_deduc_text = $Notifdeduc/Notifdeducpanel/Notifdeducttext
 
 var currency_hud 
 var active_background: TextureRect 
@@ -36,11 +41,15 @@ var active_dialogue_box
 var choices_locked: bool = true
 
 func _ready() -> void:
+
 	get_viewport().size_changed.connect(_on_window_resized)
 	_on_window_resized()
 	
 	choose_control_2.hide()
 	choose_control_2.modulate.a = 0.0
+	
+	if notif_deduc:
+		notif_deduc.hide()
 	
 	karinderya_btn.pressed.connect(_on_karinderya_pressed)
 	fastfood_btn.pressed.connect(_on_fastfood_pressed)
@@ -54,8 +63,6 @@ func _ready() -> void:
 	
 	phone_mini.phone_clicked.connect(_on_phone_clicked)
 	
-	# 🟢 TRIGGER MORNING SUNRISE AUDIO TRANSITION
-	# Fires both sound effect nodes simultaneously via AudioManager's sound mapping system
 	_play_morning_ambience()
 	
 	if TransitionManager.color_rect.visible:
@@ -91,7 +98,6 @@ func _play_sunrise_sequence() -> void:
 	await get_tree().create_timer(0.5).timeout
 	await TransitionManager.fade_from_black()
 	
-	# Keep the ambient general chapter music running smoothly
 	AudioManager.play_chapter_music()
 	
 	jane.appear()
@@ -100,9 +106,9 @@ func _play_sunrise_sequence() -> void:
 	phone_mini.appear()
 	await get_tree().create_timer(1.0).timeout
 	
-	# Text notification alert one-shot
 	AudioManager.play_sfx("NOTIFICATION")
 	phone_mini.trigger_notification()
+
 
 func _on_phone_clicked() -> void:
 	phone_mini.hide()
@@ -120,6 +126,7 @@ func _on_phone_clicked() -> void:
 		padlock_btn.pressed.connect(_on_padlock_pressed)
 	else:
 		print("ERROR: Could not find padlock. Check the node path!")
+
 
 func _on_padlock_pressed() -> void:
 	if active_gray_screen: active_gray_screen.queue_free()
@@ -176,41 +183,36 @@ func _on_padlock_pressed() -> void:
 	await tween_choices.finished
 	choices_locked = false
 
+
 # --- FOOD CHOICE HANDLERS ---
 
 func _on_karinderya_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
-	
 	GameManager.log_choice("chap1_breakfast_spending", "A")
 	execute_food_transition(KARINDERYA_BG, 60)
+
 
 func _on_fastfood_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
-	
 	GameManager.log_choice("chap1_breakfast_spending", "B")
 	execute_food_transition(FASTFOOD_BG, 120)
+
 
 func _on_resto_pressed() -> void:
 	if choices_locked: return
 	choices_locked = true
-	
 	GameManager.log_choice("chap1_breakfast_spending", "C")
 	execute_food_transition(RESTO_BG, 350)
 
-# --- THE TRANSITION LOGIC ---
+
 # --- THE TRANSITION LOGIC ---
 func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
-	# 🟢 NEW: THE POCKET CASH INTERCEPT GATE
-	# If on_hand_cash is less than the food cost, this pops up the window, 
-	# unlocks the choice buttons, and exits the function immediately.
 	if not GameManager.verify_pocket_cash(cost):
 		choices_locked = false
 		return
 
-	# Otherwise, they can afford it! The rest of your code runs untouched safely:
-	# Trigger your cash deduction wallet swipe sound effect
 	AudioManager.play_sfx("DEDUCT")
 	
 	GameManager.request_expense_payment(cost, "Chapter 1 Sandbox Breakfast Spending")
@@ -229,8 +231,127 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 	await get_tree().create_timer(1.0).timeout
 	await TransitionManager.fade_from_black()
 	
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(1.5).timeout
 	
+	if notif_deduc_text:
+		if cost == 60:
+			notif_deduc_text.text = "– P60 was reducted to your\nallowance."
+		elif cost == 120:
+			notif_deduc_text.text = "– P120 was reducted to your\nallowance."
+		elif cost == 350:
+			notif_deduc_text.text = "– P350 was reducted to your\nallowance."
+			
+	if notif_deduc:
+		notif_deduc.show()
+		
+	await get_tree().create_timer(2.0).timeout
+	if notif_deduc:
+		notif_deduc.hide()
+		
+	jane_dialogue.hide()
+	jane_dialogue.modulate.a = 0.0
+	kylie.hide()
+	kylie.modulate.a = 1.0
+	
+	active_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
+	add_child(active_dialogue_box)
+	
+	var inner_box = active_dialogue_box.get_node("MarginContainer")
+	if inner_box:
+		inner_box.modulate.a = 0.0
+		var tween_box_in = create_tween()
+		tween_box_in.tween_property(inner_box, "modulate:a", 1.0, 0.4)
+		await tween_box_in.finished
+	
+	var line_1_text = ""
+	if cost == 60:
+		line_1_text = "Ang sarap naman dito, parang lutong bahay talaga!"
+	elif cost == 120:
+		line_1_text = "Ang sarap dito, fast food service nga!"
+	elif cost == 350:
+		line_1_text = "Wow, ang ganda naman dito! Medyo mahal nga lang."
+
+	var unified_dialogue = [
+		{
+			"speaker": "Jane",
+			"text": line_1_text
+		},
+		{
+			"speaker": "Kylie",
+			"text": "Sa totoo lang! Ano, Jane, tara na? May shift ka pa sa training mo."
+		},
+		{
+			"speaker": "Jane",
+			"text": "Alright, tara na!"
+		}
+	]
+	
+	# Using array structure to safely bypass lambda scope pass-by-value quirks
+	var dialogue_state = [false]
+	active_dialogue_box.dialogue_finished.connect(func(): dialogue_state[0] = true)
+	
+	active_dialogue_box.start_dialogue(unified_dialogue)
+	
+	jane_dialogue.show()
+	if jane_dialogue.has_method("appear"):
+		jane_dialogue.appear("idle", false)
+	else:
+		var tween_jane_in = create_tween()
+		tween_jane_in.tween_property(jane_dialogue, "modulate:a", 1.0, 0.4)
+		await tween_jane_in.finished
+
+	var current_tracked_speaker = "Jane"
+	
+	while not dialogue_state[0] and is_instance_valid(active_dialogue_box) and active_dialogue_box.visible:
+		await get_tree().process_frame
+		
+		var text_node = active_dialogue_box.get_node_or_null("MarginContainer/texturerectContainer/TextLabel")
+		if text_node:
+			var current_visible_text = text_node.text
+			
+			# (UNTOUCHED LINES 1 AND 2)
+			if current_visible_text.begins_with("Sa") and current_tracked_speaker != "Kylie":
+				current_tracked_speaker = "Kylie"
+				jane_dialogue.hide()
+				kylie.show()
+				if kylie.get_node_or_null("AnimatedSprite2D"):
+					kylie.get_node("AnimatedSprite2D").play("idle")
+					
+			elif current_visible_text.begins_with("Al") and current_tracked_speaker != "Jane":
+				current_tracked_speaker = "Jane"
+				kylie.hide()
+				jane_dialogue.show()
+				if jane_dialogue.get_node_or_null("AnimatedSprite2D"):
+					jane_dialogue.get_node("AnimatedSprite2D").play("idle")
+					
+		if not active_dialogue_box.is_inside_tree():
+			break
+	
+	# 🟢 FIXED OUTRO RULES: Removed the duplicate await freeze bug completely
+	if jane_dialogue.has_method("exit"):
+		jane_dialogue.exit(true)
+	
+	# Force explicit master alpha modulation tracking over Jane to guarantee visual cleanup
+	var tween_char_out = create_tween()
+	tween_char_out.tween_property(jane_dialogue, "modulate:a", 0.0, 0.4)
+	await tween_char_out.finished
+	
+	jane_dialogue.hide()
+	kylie.hide()
+	
+	# Spacing buffer break window before starting box animations
+	await get_tree().create_timer(0.15).timeout 
+	
+	# Dialogue box fades out last safely
+	if inner_box and is_instance_valid(active_dialogue_box):
+		var tween_box_out = create_tween()
+		tween_box_out.tween_property(inner_box, "modulate:a", 0.0, 0.3)
+		await tween_box_out.finished
+		
+	if is_instance_valid(active_dialogue_box):
+		active_dialogue_box.queue_free()
+	
+	# --- SCENE TRANSITION AND MINI-GAME HANDOFFS ---
 	var time_skip_layer = CanvasLayer.new()
 	time_skip_layer.layer = 128 
 	
@@ -245,8 +366,6 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 	slow_fade_in.tween_property(time_skip_black, "color:a", 1.0, 2.0).set_trans(Tween.TRANS_SINE)
 	await slow_fade_in.finished
 	
-	# --- EXPLICIT CROSS-FADE BRANCH INTERFACE FOR MINI-GAMES ---
-	# Automatically cross-fades background music loops depending on player profile path!
 	if Global.chapter_1_cafe_choice == "A":
 		AudioManager.play_coffee_shop_music()
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_barista.tscn")
@@ -256,6 +375,7 @@ func execute_food_transition(new_bg: Texture2D, cost: int) -> void:
 	elif Global.chapter_1_cafe_choice == "C":
 		AudioManager.play_convenience_store_music()
 		TransitionManager.transition_to("res://Scenes/Chapter 1/chapter_1_cashier.tscn")
+
 
 func _on_window_resized():
 	var screen_size = get_viewport_rect().size

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dvdk20ki36r7p"]
+[gd_scene load_steps=21 format=3 uid="uid://dvdk20ki36r7p"]
 
 [ext_resource type="Texture2D" uid="uid://b4eefiwad4a1q" path="res://Assets/Backgrounds/Chapter 1/sunrise/sprite_00.png" id="1_3wr00"]
 [ext_resource type="Script" uid="uid://b3jhjlsdshqo3" path="res://GD Scripts/Chapter 1/Chapter 1 Scene 2/chapter_1_scene_2.gd" id="1_h01dw"]
@@ -68,6 +68,18 @@ corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glh36"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
 [node name="chapter_1_scene_2" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -116,6 +128,21 @@ grow_vertical = 0
 
 [node name="kylie2d" parent="KylieDialogueAnchor" instance=ExtResource("14_2p08c")]
 scale = Vector2(0.8412055, 0.97059065)
+
+[node name="JaneDialogueAnchor" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.067
+anchor_top = 1.006
+anchor_right = 0.067
+anchor_bottom = 1.006
+offset_left = -0.03000021
+offset_top = -56.96
+offset_right = 39.97
+offset_bottom = 0.039993286
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="jane2d" parent="JaneDialogueAnchor" instance=ExtResource("12_o4xrn")]
 
 [node name="ChooseControl2" type="Control" parent="."]
 layout_mode = 1
@@ -205,5 +232,45 @@ theme_override_fonts/font = ExtResource("15_im627")
 theme_override_font_sizes/font_size = 4
 text = "C. Resto– P350
  (Expensive, overspending)"
+
+[node name="Notifdeduc" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -43.5
+offset_top = -26.0
+offset_right = 43.5
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Notifdeducpanel" type="Panel" parent="Notifdeduc"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glh36")
+
+[node name="Notifdeducttext" type="Label" parent="Notifdeduc/Notifdeducpanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("15_im627")
+theme_override_font_sizes/font_size = 6
+text = "– P60 was reducted to your
+allowance."
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="pause_btn" parent="." instance=ExtResource("17_glh36")]
